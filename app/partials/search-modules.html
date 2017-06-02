@@ -1,0 +1,78 @@
+
+
+<style type="text/css">
+    input[type=text] {
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    padding: 10px;
+}
+
+/* When the input field gets focus, change its width to 100% */
+input[type=text]:focus {
+    width: 95%;
+}
+</style>
+
+<div class="container"> 
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Install from Module Repository (https://modules.openmrs.org/modules) </h2> 
+        </div>
+    </div>
+
+    <div class="panel panel-primary"  ng-hide="startupsuccessMsg">
+        <div class="panel-heading">Search Modules</div>
+        <div class="panel-body">
+            <form style="margin-bottom: 15px;">
+            <input type="text" name="search" placeholder="Search Modules.."  ng-model="searchText" ng-change="change(text)"/>
+            </form>
+
+            <table ng-if="moduleFound==true">
+                    <tr>
+                        <th> Name </th>
+                        <th> Version </th>
+                        <th> Author </th>
+                        <th> Discription </th>
+                        <th> Action </th>
+                    </tr>
+                    <tbody>
+                    <tr ng-repeat="module in modules">
+                        <td> {{module[1]}} </td>
+                        <td> {{module[2]}} </td>
+                        <td> {{module[3]}} </td>
+                        <td> {{module[4]}} </td>
+                        <td>
+                            <button ng-click='trysearch(module[0])'> Install </button> 
+                        </td>
+                    </tr>
+                    </tbody>
+            </table>  
+
+<!--             <table ng-if="moduleFound==true">
+                    <tr>
+                        <th> Module </th>
+                        <th> Description </th>
+                        <th> Action </th>
+                    </tr>
+                    <tbody>
+                    <tr ng-repeat="module in modules">
+                        <td> {{module.name}} </td>
+                        <td> {{module.description}} </td>
+                        <td>
+                            <button ng-click=''> Install </button> 
+                        </td>
+                    </tr>
+                    </tbody>
+            </table>   -->    
+
+            <div class="alert alert-info text-center" ng-if="moduleFound==false">
+                No Modules found.
+            </div>
+
+        </div>
+    </div>
+
+
+<li ng-repeat="entry in entries">
+<span class="{{entry.classname}}"><a href="{{entry.link}}">{{entry.title}} - {{entry.info}}</a></span>
+</li>

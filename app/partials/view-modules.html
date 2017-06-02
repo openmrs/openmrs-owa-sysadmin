@@ -1,0 +1,122 @@
+ 
+
+<div>
+<h2>Manage Module</h2>
+
+<!-- <div id="content" class="container">
+    <div id="home-container">
+        <div id="apps">
+            <a href="#" class="button app big" >                
+                <i class="Icon-search"></i>                
+                <span>Sample</span>
+            </a>  
+        </div>
+    </div>
+</div>
+ -->
+
+
+	<h3 ng-show="classAdded">{{classAdded}} has been added.</h3>
+<form method="post" class="box">
+	<button ng-click='go("/class-list/add-class")'>Add/Upgrade Modules</button>
+	<button ng-click='go("/class-list/add-class")'>Check for Updates</button>
+
+	<table class="layout display responsive-table">
+		<tbody><tr>
+			<th> Status </th>
+			<th> Name </th>
+			<th> Author </th>
+			<th> Version </th>
+			<th> Description </th>
+			<th colspan="2"> Actions </th>
+		</tr>
+		
+			<tr ng-repeat="class in classes"> 
+				<!--  <td valign="top"><input type="checkbox" ng-model="selected[class.uuid]" name="conceptClassId" value="{{class.uuid}}"></td>  -->
+				<td valign="top">
+					<img src="img/running-module.png" ng-if="class.started == true" height="20" style="top: 5px;left: auto;" /> 
+					
+
+					<img src="img/stopped-module.png" ng-if="class.started != true" height="20" style="top: 5px;left: auto;"/> 
+					<!--  <span class="tooltiptext" ng-if="class.started != true" >Module is Stopped</span> -->
+				</td>
+
+				<td valign="top">
+					<a href="#/module-show/{{class.uuid}}">{{class.display}}</a>				
+				</td>
+				<td valign="top">{{class.author}}</td>
+				<td valign="top">{{class.version}}</td>
+				<td valign="top">{{class.description}}</td>
+				<td valign="top" >
+					<button ng-click='go("/class-list/add-class")' ng-if="class.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
+					<button ng-click='go("/class-list/add-class")' ng-if="class.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
+
+				<!-- 	<img src="img/stop-new.png" ng-if="class.started == true" /> 
+					<img src="img/start-new.png" ng-if="class.started != true"/> -->
+				</td>
+				<td valign="top"> 
+					<button ng-click=''> <img src="img/trash.gif" /></button>
+				</td>
+			</tr>
+		
+	</tbody></table>	
+	
+	<input type="submit" value="Delete Selected Concept Classes" ng-click="deleteSelected()">
+</form>
+</div>
+
+
+
+<style>
+/*.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+*/
+button {
+    postion: relative;
+    text-align: right;
+    vertical-align: middle;
+}
+
+button img {
+    position: relative;
+    padding-right: 7px;
+  	vertical-align: middle;
+  	display: inline-block;
+
+}
+</style>

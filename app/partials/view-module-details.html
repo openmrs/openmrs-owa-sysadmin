@@ -1,0 +1,70 @@
+ 
+
+<div>
+<h2> Module Information</h2>
+ <br/>
+<h2> Module Name : {{singleClass.display}}</h2>
+
+ 
+  
+  <button ng-click='go("/class-list/add-class")' ng-if="class.started != true"> Start Module</button>
+  <button ng-click='go("/class-list/add-class")' ng-if="class.started == true"> Stop Module</button>
+  <button ng-click='go("/class-list/add-class")'>Check for Updates</button>
+
+	<table class="layout display responsive-table">
+		<tbody>
+		
+			<tr> 
+				<td valign="top"><b>Module Name</b></td>
+				<td valign="top">{{singleClass.name}}</td>
+			</tr>
+      <tr> 
+        <td valign="top"><b>Display Name</b></td>
+        <td valign="top">{{singleClass.display}}</td>
+      </tr>
+      <tr> 
+        <td valign="top"><b>Module Description</b></td>
+        <td valign="top">{{singleClass.description}}</td>
+      </tr>
+      <tr> 
+        <td valign="top"><b>Author Name</b></td>
+        <td valign="top">{{singleClass.author}}</td>
+      </tr>
+      <tr> 
+        <td valign="top"><b>Module Version</b></td>
+        <td valign="top">{{singleClass.version}}</td>
+      </tr>
+      <tr> 
+        <td valign="top"><b>Current Status</b></td>
+        <td valign="top">{{singleClass.started}}</td>
+      </tr>
+      <tr> 
+        <td valign="top"><b>Required OpenMRS Version</b></td>
+        <td valign="top">{{singleClass.requireOpenmrsVersion}}</td>
+      </tr>
+
+	</tbody>
+  </table>	
+	
+  <h2> Aware of Modules</h2>
+  <table class="layout display responsive-table">
+    <tbody>
+      <tr ng-repeat="class in singleClass.awareOfModules"> 
+          <td> {{class}}</td>
+      </tr>
+  </tbody>
+  </table>  
+
+  <h2> Required Modules</h2>
+  <table class="layout display responsive-table">
+    <tbody>
+      <tr ng-repeat="class in singleClass.requiredModules"> 
+          <td> {{class}}</td>
+      </tr>
+  </tbody>
+  </table>  
+ 
+</div>
+
+
+ 

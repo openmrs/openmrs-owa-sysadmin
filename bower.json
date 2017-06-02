@@ -1,0 +1,26 @@
+{
+  "name": "ModuleManagement",
+  "authors": [
+    "suthagar23"
+  ],
+  "description": "Open Web App for OpenMRS Module Management",
+  "license": "MPL-2.0",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "modernizr": "3.3.1",
+    "angular": "1.4.x",
+    "angular-mocks": "1.4.x",
+    "angular-route": "1.4.x",
+    "angular-resource": "1.4.x",
+    "ng-file-upload": "^12.2.13",
+    "angular-upload": "^1.0.12",
+    "angular-xml": "^2.2.2"
+  }
+}

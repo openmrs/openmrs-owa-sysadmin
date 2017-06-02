@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "name": "Module Management - OWA",
+  "description": "OWA under development for Module Management functionalities ",
+  "launch_path": "managemodule.html",
+  "icons": {
+    "48": "/img/omrs-button.png"
+  },
+  "developer": {
+    "name": "suthagar23",
+    "url": "https://github.com/suthagar23/openmrs-owa-admin-module"
+  },
+  "default_locale": "en",
+    "activities": {
+      "openmrs": {
+        "href": "*"
+      }
+    }
+}

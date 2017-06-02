@@ -1,0 +1,40 @@
+{
+  "name": "Manage Module",
+  "version": "0.1.0",
+  "description": "Open Web App for OpenMRS Module Management ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rkorytkowski/openmrs-owa-admin-module"
+  },
+  "dependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-zip": "^3.0.2",
+    "main-bower-files": "^2.11.1",
+    "openmrs-contrib-uicommons": "^0.4.3",
+    "wiredep": "^3.0.0"
+  },
+  "devDependencies": {
+    "gulp-livereload": "^3.8.1",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.21",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-jasmine": "^0.3.7",
+    "orchestrator": "^0.3.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "OpenMRS",
+    "Open",
+    "Web",
+    "App"
+  ],
+  "author": "suthagar23",
+  "license": "MPL-2.0"
+}

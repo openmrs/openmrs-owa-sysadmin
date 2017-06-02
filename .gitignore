@@ -1,0 +1,12 @@
+node_modules
+bower_components
+dist
+app-old-files
+BK
+config.json
+test
+.idea
+
+*~
+.project
+.settings
