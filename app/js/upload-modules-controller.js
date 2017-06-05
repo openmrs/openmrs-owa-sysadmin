@@ -80,13 +80,9 @@ myApp.controller('uploadModuleCtrl', ['$scope', 'fileUpload','$http', function($
                 //console.log(status);
                // console.log(headers);
                 //console.log(config);
-
                 //console.log("JSON : ", JsonSuccessResponse);
                 //$scope.PostDataResponse = JsonSuccessResponse;
-
-                
                 //console.log("Name : ",moduleName);
-
                 //file.result = status;
                 //$scope.errorMsg ='Name -' + moduleName;
                 console.log("FINISHED");
