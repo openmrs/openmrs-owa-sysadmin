@@ -92,7 +92,7 @@ myApp.controller('uploadModuleCtrl', ['$scope', 'fileUpload','$http', function($
                 console.log("FINISHED");
 
                 var moduleName = JsonSuccessResponse["org.openmrs.module.Module"].name;
-                $scope.uplodedsuccessMsg=moduleName+" Module has been loaded"
+                $scope.uplodedsuccessMsg=moduleName+" has been loaded"
                 $scope.responseJsonData=JsonSuccessResponse;
 
 
@@ -100,7 +100,7 @@ myApp.controller('uploadModuleCtrl', ['$scope', 'fileUpload','$http', function($
                 if (typeof(JsonSuccessResponse["org.openmrs.module.Module"].startupErrorMessage) == "undefined")
                     {
                         // Started Successfully
-                        $scope.startupsuccessMsg=moduleName+" Module has been loaded and started Successfully"
+                        $scope.startupsuccessMsg=moduleName+" has been loaded and started Successfully"
                     }
                 else{
                         //start up Error Found 

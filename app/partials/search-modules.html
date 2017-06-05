@@ -7,6 +7,8 @@
     padding: 10px;
 }
 
+
+
 /* When the input field gets focus, change its width to 100% */
 input[type=text]:focus {
     width: 95%;
@@ -14,13 +16,58 @@ input[type=text]:focus {
 </style>
 
 <div class="container"> 
+
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <h2>Install from Module Repository (https://modules.openmrs.org/modules) </h2> 
         </div>
     </div>
 
-    <div class="panel panel-primary"  ng-hide="startupsuccessMsg">
+
+    <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startupsuccessMsg}}
+    </div>
+
+    <div ng-show="startuperrorMsg">
+        <div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{uplodedsuccessMsg}}
+        </div>
+        <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{startuperrorMsg}}
+        </div>
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{uploadederrorMsg}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{downloadErrorMsg}}
+    </div>
+    
+
+     <div class="row" ng-if="isDownloading==true">
+        <div class="col-md-12 col-xs-12 text-center center-block">
+            <h3 style="text-align: center;">Please Wait until download complete!</h3>
+            <img src="img/inprogress.gif" >
+        </div>
+    </div>
+
+    <div class="row" ng-if="isUploading==true">
+        <div class="col-md-12 col-xs-12 text-center center-block">
+            <h3 style="text-align: center;">Please Wait until upload Finished!</h3>
+            <img src="img/inprogress.gif" >
+        </div>
+    </div>
+
+
+
+    <div class="panel panel-primary"  ng-hide="isDownloading && isUploading">
         <div class="panel-heading">Search Modules</div>
         <div class="panel-body">
             <form style="margin-bottom: 15px;">
@@ -72,7 +119,4 @@ input[type=text]:focus {
         </div>
     </div>
 
-
-<li ng-repeat="entry in entries">
-<span class="{{entry.classname}}"><a href="{{entry.link}}">{{entry.title}} - {{entry.info}}</a></span>
-</li>
+ 
