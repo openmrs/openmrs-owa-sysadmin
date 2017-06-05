@@ -40,7 +40,7 @@ You need to setup a server (first time only) as follows:
 
 ````
 mvn openmrs-sdk:setup-platform -DserverId=adminmodule
-mvn openmrs-sdk:install -DartifactId=owa -Dversion=1.4-SNAPSHOT -DserverId=adminmodule
+mvn openmrs-sdk:install -DartifactId=owa -Dversion=1.7-SNAPSHOT -DserverId=adminmodule
 mvn openmrs-sdk:install -DartifactId=webservices.rest -Dversion=2.13 -DserverId=adminmodule
 mvn openmrs-sdk:install -DartifactId=uiframework -Dversion=3.6 -DserverId=adminmodule
 mvn openmrs-sdk:install -DartifactId=uicommons -Dversion=1.7 -DserverId=adminmodule
