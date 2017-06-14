@@ -1,7 +1,7 @@
  
 console.log(' managemodule : Arrived');
 var managemodule = angular.module('managemodule', 
-		['ngRoute', 'managemoduleController', 'moduleServices','uploadModuleController','seacrchModuleController']);
+		['ngRoute', 'managemoduleController', 'moduleServices','uploadModuleController','seacrchModuleController','systemInfoController']);
 console.log(' managemodule: Initilized');
 
 managemodule.config(['$routeProvider',
@@ -22,6 +22,10 @@ managemodule.config(['$routeProvider',
                         when('/install-from-module-repository', {
                           templateUrl: 'partials/search-modules.html',
                             controller: 'searchModuleCtrl'
+                        }).
+                        when('/system-info', {
+                          templateUrl: 'partials/system-info.html',
+                          controller: 'systeminfoCtrl',
                         }).
                         when('/upload-module', {
                         	templateUrl: 'partials/upload-module.html',
