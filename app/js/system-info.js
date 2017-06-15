@@ -5,38 +5,76 @@ myApp.controller('systeminfoCtrl', ['$scope','$http', function($scope,$http){
     
 
     $scope.getSystemInfo = function(){
+
+        $scope.dataLoading=true;
+        //delete previous data values
+        if(typeof($scope.openmrsInformation)!=undefined){
+            delete $scope.openmrsInformation;
+        }
+        if(typeof($scope.javaRuntimeEnvironmentInformation)!=undefined){
+            delete $scope.javaRuntimeEnvironmentInformation;
+        }
+        if(typeof($scope.memoryInformation)!=undefined){
+            delete $scope.memoryInformation;
+        }
+        if(typeof($scope.dataBaseInformation)!=undefined){
+            delete $scope.dataBaseInformation;
+        }
+        if(typeof($scope.moduleInformation)!=undefined){
+            delete $scope.moduleInformation;
+        }
+
         var restUrl = "http://localhost:8080/openmrs/ws/rest/v1/systeminformation";
         console.log("getSystemInfo ");
 
         $http.get(restUrl, {headers: {'Accept': '*/*;q=0.8'}})
          .success(function (data) {
-               // console.log("waiting ennded..");
-               // var x2js = new X2JS();
-               // var JsonSuccessResponse = x2js.xml_str2json(data);
-            
-                var openmrsInformation = data.SystemInfo["SystemInfo.title.openmrsInformation"];
+                $scope.dataLoading=false;
 
-               console.log("Successfully retrieved SystemInfo");
+                if (typeof(data.SystemInfo["SystemInfo.title.openmrsInformation"]) != "undefined")
+                {
+                    var openmrsInformation = data.SystemInfo["SystemInfo.title.openmrsInformation"];
+                    console.dir(openmrsInformation);
+                    console.log(openmrsInformation["SystemInfo.OpenMRSInstallation.systemDate"]);
+                }
+                else { console.log("Couldn't fetch the openmrsInformation data"); }
+
+                if (typeof(data.SystemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"]) != "undefined")
+                {
+                    var javaRuntimeEnvironmentInformation = data.SystemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"];
+                }
+                else { console.log("Couldn't fetch the javaRuntimeEnvironmentInformation data"); }
+
+                if (typeof(data.SystemInfo["SystemInfo.title.memoryInformation"]) != "undefined")
+                {
+                    var memoryInformation = data.SystemInfo["SystemInfo.title.memoryInformation"];
+                }
+                else { console.log("Couldn't fetch the memoryInformation data"); }
+
+                if (typeof(data.SystemInfo["SystemInfo.title.dataBaseInformation"]) != "undefined")
+                {
+                    var dataBaseInformation = data.SystemInfo["SystemInfo.title.dataBaseInformation"];
+                }
+                else { console.log("Couldn't fetch the dataBaseInformation data"); }
+
+                if (typeof(data.SystemInfo["SystemInfo.title.moduleInformation"]) != "undefined")
+                {
+                    var moduleInformation = data.SystemInfo["SystemInfo.title.moduleInformation"];
+                }
+                else { console.log("Couldn't fetch the moduleInformation data"); }
+
+
+
+                console.log("Successfully retrieved SystemInfo");
                 console.dir(openmrsInformation);
                 
-              //  console.log(openmrsInformation);
-                // if (typeof(JsonSuccessResponse["org.openmrs.module.Module"].startupErrorMessage) == "undefined")
-                //     {
-                //         // Started Successfully
-                //        // $scope.startupsuccessMsg=moduleName+" has been loaded and started Successfully"
-                //     }
-                // else{
-                //         //start up Error Found 
-                //         //$scope.startuperrorMsg="Could not start "+moduleName+" Module."
-                // }
+
                  
 
             })
             .error(function (data) {
                 //console.log("err");
-                $scope.isUploading=false;
-                var x2js = new X2JS();
-                var JsonErrorResponse = x2js.xml_str2json(data);
+                $scope.dataLoading=false;
 
                 console.log("ERROR SystemInfo");
 

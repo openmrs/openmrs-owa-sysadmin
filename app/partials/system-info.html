@@ -1,10 +1,47 @@
-    <div class="panel panel-primary"  ng-hide="isDownloading && isUploading">
-        <div class="panel-heading">Search Info</div>
-        <div class="panel-body">
-            <form style="margin-bottom: 15px;">
-             <button ng-click="getSystemInfo()" class="center-block">Get System Info</button>
-   
+ 
 
-            </form>
-        </div>
-    </div>
+<div class="container" data-ng-init="getSystemInfo()">
+	<div class="page-header">
+		<h2>System Information</h2>
+	</div>
+	<div class="row" ng-if="dataLoading==true">
+		<div class="col-md-12 col-xs-12 text-center center-block">
+			<img src="img/inprogress.gif" >
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary" ng-show="openmrsInformation">
+				<div class="panel-heading">
+					<b>OpenMRS Information </b> 
+				</div>
+				<div class="panel-body">
+					<div class="panel-body">
+						
+						<table class="">
+							<tbody>
+								<tr>
+									<td> System Date </td>
+									<td> {{openmrsInformation["SystemInfo.OpenMRSInstallation.systemDate"]}} </td>
+								</tr>
+								<tr>
+									<td> System Time </td>
+									<td> {{openmrsInformation["SystemInfo.OpenMRSInstallation.systemTime"]}} </td>
+								</tr>
+								<tr>
+									<td> OpenMRS Version </td>
+									<td> {{openmrsInformation["SystemInfo.OpenMRSInstallation.openmrsVersion"]}} </td>
+								</tr>
+								<tr>
+									<td> Host Name </td>
+									<td> {{openmrsInformation["SystemInfo.OpenMRSInstallation.hostname"]}} </td>
+								</tr>
+							</tbody>
+						</table>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
