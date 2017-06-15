@@ -33,40 +33,40 @@ myApp.controller('systeminfoCtrl', ['$scope','$http', function($scope,$http){
 
                 if (typeof(data.SystemInfo["SystemInfo.title.openmrsInformation"]) != "undefined")
                 {
-                    var openmrsInformation = data.SystemInfo["SystemInfo.title.openmrsInformation"];
-                    console.dir(openmrsInformation);
-                    console.log(openmrsInformation["SystemInfo.OpenMRSInstallation.systemDate"]);
+                    $scope.openmrsInformation = data.SystemInfo["SystemInfo.title.openmrsInformation"];
+                    //console.dir(openmrsInformation);
+                   // console.log(openmrsInformation["SystemInfo.OpenMRSInstallation.systemDate"]);
                 }
                 else { console.log("Couldn't fetch the openmrsInformation data"); }
 
                 if (typeof(data.SystemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"]) != "undefined")
                 {
-                    var javaRuntimeEnvironmentInformation = data.SystemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"];
+                    $scope.javaRuntimeEnvironmentInformation = data.SystemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"];
                 }
                 else { console.log("Couldn't fetch the javaRuntimeEnvironmentInformation data"); }
 
                 if (typeof(data.SystemInfo["SystemInfo.title.memoryInformation"]) != "undefined")
                 {
-                    var memoryInformation = data.SystemInfo["SystemInfo.title.memoryInformation"];
+                    $scope.memoryInformation = data.SystemInfo["SystemInfo.title.memoryInformation"];
                 }
                 else { console.log("Couldn't fetch the memoryInformation data"); }
 
                 if (typeof(data.SystemInfo["SystemInfo.title.dataBaseInformation"]) != "undefined")
                 {
-                    var dataBaseInformation = data.SystemInfo["SystemInfo.title.dataBaseInformation"];
+                    $scope.dataBaseInformation = data.SystemInfo["SystemInfo.title.dataBaseInformation"];
                 }
                 else { console.log("Couldn't fetch the dataBaseInformation data"); }
 
                 if (typeof(data.SystemInfo["SystemInfo.title.moduleInformation"]) != "undefined")
                 {
-                    var moduleInformation = data.SystemInfo["SystemInfo.title.moduleInformation"];
+                    $scope.moduleInformation = data.SystemInfo["SystemInfo.title.moduleInformation"];
                 }
                 else { console.log("Couldn't fetch the moduleInformation data"); }
 
 
 
                 console.log("Successfully retrieved SystemInfo");
-                console.dir(openmrsInformation);
+                //console.dir(openmrsInformation);
                 
 
                  
