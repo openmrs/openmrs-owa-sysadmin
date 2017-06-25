@@ -1,0 +1,96 @@
+  <style type="text/css">
+ 	table {width:100%;}
+ 	tr td {word-wrap:break-word;}
+ 	/*style="word-wrap:break-word"*/
+ </style>
+ 
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12 col-xs-12">
+			<h2>Manage Module</h2>
+		</div>
+	</div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startModuleSuccess}}
+    </div>
+    <div class="alert alert-success alert-dismissable" ng-show="stopModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{stopModuleSuccess}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="startModuleError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startModuleError}}
+    </div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Module Details </b> 
+		</div>
+		<div class="panel-body">
+
+				<div style="padding-bottom: 10px;">
+					<a href="#/upload-module"><button>Add/Upgrade Modules</button></a>
+					<a href="#/install-from-module-repository"><button>Search Modules</button></a>
+					<button ng-click=''>Check for Updates</button>
+
+					<button ng-click='StartAllModules()' style="float: right;">Start All</button>
+				</div>
+				
+
+				<table class="layout display responsive-table">
+					<tbody>
+						<tr>
+							<th style="max-width: 40px;"> Status </th>
+							<th> Name </th>
+							<th> Author </th>
+							<th style="max-width: 60px;"> Version </th>
+							<th> Description </th>
+							<th colspan="2" style="max-width: 90px;"> Actions </th>
+						</tr>
+
+						<tr ng-repeat="class in classes"> 
+							<td valign="top" style="max-width: 30px;">
+								<img src="img/running-module.png" ng-if="class.started == true" height="20" style="top: 5px;left: auto;" /> 
+								<img src="img/stopped-module.png" ng-if="class.started != true" height="20" style="top: 5px;left: auto;"/> 
+							</td>
+							<td valign="top">
+								<a href="#/module-show/{{class.uuid}}">{{class.display}}</a>				
+							</td>
+							<td valign="top">{{class.author}}</td>
+							<td valign="top" style="max-width: 60px;">{{class.version}}</td>
+							<td valign="top">{{class.description}}</td>
+							<td valign="top" >
+								<button ng-click='CommonStopModule()' ng-if="class.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
+								<button ng-click='CommonStartModule()' ng-if="class.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
+							</td>
+							<td valign="top"> 
+								<button ng-click=''> <img src="img/trash.gif" /></button>
+							</td>
+						</tr>
+					</tbody>
+					</table>	
+			 
+			</div>
+		</div>
+	</div>
+
+
+	<style>
+		button {
+			postion: relative;
+			text-align: right;
+			vertical-align: middle;
+		}
+
+		button img {
+			position: relative;
+			padding-right: 7px;
+			vertical-align: middle;
+			display: inline-block;
+
+		}
+	</style>

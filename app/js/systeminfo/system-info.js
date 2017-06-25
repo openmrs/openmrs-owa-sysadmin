@@ -1,13 +1,16 @@
-var myApp = angular.module('systemInfoController', []);
+// SystemInfoModule module initilation
+var SystemInfoModule = angular.module('systemInfoController', ['OWARoutes']);
 
-
-myApp.controller('systeminfoCtrl', ['$scope','$http', function($scope,$http){
+// SystemInfo Controller used for system-info.html 
+SystemInfoModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil', function($scope,$http,OWARoutesUtil){
     
-
+    // getSystemInfo() used to get all System Infromation
     $scope.getSystemInfo = function(){
-
+        // variable dataLoading used to indicate data fetching status
+        // set True to indicate data fetching is just started
         $scope.dataLoading=true;
-        //delete previous data values
+
+        //delete previous initilized data values
         if(typeof($scope.openmrsInformation)!=undefined){
             delete $scope.openmrsInformation;
         }
@@ -24,18 +27,18 @@ myApp.controller('systeminfoCtrl', ['$scope','$http', function($scope,$http){
             delete $scope.moduleInformation;
         }
 
-        var restUrl = "http://localhost:8080/openmrs/ws/rest/v1/systeminformation";
-        console.log("getSystemInfo ");
+        var restUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/systeminformation";
 
+        // REST GET Calls 
+        // Request should add the */* formats as response
         $http.get(restUrl, {headers: {'Accept': '*/*;q=0.8'}})
          .success(function (data) {
+                // set False to indicate data fetching is completed
                 $scope.dataLoading=false;
 
                 if (typeof(data.SystemInfo["SystemInfo.title.openmrsInformation"]) != "undefined")
                 {
                     $scope.openmrsInformation = data.SystemInfo["SystemInfo.title.openmrsInformation"];
-                    //console.dir(openmrsInformation);
-                   // console.log(openmrsInformation["SystemInfo.OpenMRSInstallation.systemDate"]);
                 }
                 else { console.log("Couldn't fetch the openmrsInformation data"); }
 
@@ -63,17 +66,10 @@ myApp.controller('systeminfoCtrl', ['$scope','$http', function($scope,$http){
                 }
                 else { console.log("Couldn't fetch the moduleInformation data"); }
 
-
-
                 console.log("Successfully retrieved SystemInfo");
-                //console.dir(openmrsInformation);
-                
-
-                 
-
             })
             .error(function (data) {
-                //console.log("err");
+                
                 $scope.dataLoading=false;
 
                 console.log("ERROR SystemInfo");

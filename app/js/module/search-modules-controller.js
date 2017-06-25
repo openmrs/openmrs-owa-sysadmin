@@ -1,7 +1,7 @@
-     var app = angular.module('seacrchModuleController',['base64']);
+     var app = angular.module('seacrchModuleController',['base64','OWARoutes']);
 
      
-     app.controller('searchModuleCtrl', function($scope, $http, $timeout) {
+     app.controller('searchModuleCtrl','OWARoutesUtil', function($scope, $http, OWARoutesUtil) {
      	$scope.modules=[];
       $scope.searchText = null;
       $scope.change = function(text) {
@@ -13,6 +13,7 @@
        var columns="Action%2CName%2CVersion%2CAuthor%2CDescription";
        var displayStart=0;
        var displayLength=15;
+
        var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
 
        $http({
@@ -72,7 +73,7 @@
 
     
         console.log("POST started...");
-        var uploadUrl = "http://localhost:8080/openmrs/ws/rest/v1/module1/?";
+        var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/?";
 
         $scope.isUploading=true;
         //delete previous uploading messages
@@ -148,41 +149,4 @@
 
 
 
-    //  +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      //  WORKING - MODULE SEARCH 
-    //  +++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-      // app.controller('instantSearchCtrl', function($scope, $http, $timeout) {
-     	// $scope.modules=[];
-      //   $scope.searchText = null;
-      //   $scope.change = function(text) {
-      //   	$scope.moduleFound=false;
-      //   	$scope.modules=[];
-
-      //       valtosend = $scope.searchText;
-      //       $http.get('https://modules.openmrs.org/modulus/api/search?q=' + valtosend)
-    		// 	.success(function(data) {
-
-      //       	//console.log(data.totalCount);
-      //       	  if(data.totalCount>0){
-      //       	  	// Modules Found
-      //       	  	$scope.moduleFound=true;
-      //       	  	$scope.modules = data.items;
-      //       	  }
-      //       	  else {
-      //       	  	// No Modules Found
-      //       	  	$scope.moduleFound=false;
-      //       	  }
-
-    		// 	   console.log('Data Retrived');
-    		// 	})
-    		// 	.error(function(data, status) {
-    		// 	  console.error('Repos error', status, data);
-    		// 	})
-    		// 	.finally(function() {
-    		// 	  console.log("finally finished search");
-    		// 	});
-
-      //       };
-      //   });
-
+    

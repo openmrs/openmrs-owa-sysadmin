@@ -1,6 +1,6 @@
-var myApp = angular.module('uploadModuleController', []);
+var uploadModule = angular.module('uploadModuleController', ['OWARoutes']);
 
-myApp.directive('fileModel', ['$parse', function ($parse) {
+uploadModule.directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -16,37 +16,21 @@ myApp.directive('fileModel', ['$parse', function ($parse) {
     };
 }]);
 
-myApp.service('fileUpload', ['$http', function ($http) {
-   
-    this.uploadFileToUrl = function(file, uploadUrl){
-        var fd = new FormData();
-        fd.append('file', file);
 
-        $http.post(uploadUrl, fd, {
-            transformRequest: angular.identity,
-            headers: {
-            'Content-Type': undefined ,  
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
-        })
-       
-    }
-}]);
-
-myApp.controller('uploadModuleCtrl', ['$scope', 'fileUpload','$http', function($scope, fileUpload,$http){
+uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil', function($scope,$http,OWARoutesUtil){
     
     $scope.PostDataResponse ='';
     $scope.ResponseDetails ='';
 
     $scope.uploadFile = function(){
         var file = $scope.myFile;
-        //console.log('file is ' );
-       // console.dir(file);
-        var uploadUrl = "http://localhost:8080/openmrs/ws/rest/v1/module/?";
-       //fileUpload.uploadFileToUrl(file, uploadUrl);
+
+        var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/?";
+
         var fd = new FormData();
         fd.append('file', file);
 
-        //console.log("waiting stated..");
+
         $scope.isUploading=true;
 
         //delete previous uploading messages
@@ -69,23 +53,11 @@ myApp.controller('uploadModuleCtrl', ['$scope', 'fileUpload','$http', function($
             'Content-Type': undefined ,  
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
         }) .success(function (data, status, headers, config) {
-               // console.log("waiting ennded..");
+
                 $scope.isUploading=false;
                 var x2js = new X2JS();
                 var JsonSuccessResponse = x2js.xml_str2json(data);
             
-
-
-                //console.log("XML : ", data);
-                //console.log(status);
-               // console.log(headers);
-                //console.log(config);
-                //console.log("JSON : ", JsonSuccessResponse);
-                //$scope.PostDataResponse = JsonSuccessResponse;
-                //console.log("Name : ",moduleName);
-                //file.result = status;
-                //$scope.errorMsg ='Name -' + moduleName;
-               // console.log("FINISHED");
 
                 var moduleName = JsonSuccessResponse["org.openmrs.module.Module"].name;
                 $scope.uplodedsuccessMsg=moduleName+" has been loaded"
@@ -102,10 +74,6 @@ myApp.controller('uploadModuleCtrl', ['$scope', 'fileUpload','$http', function($
                         //start up Error Found 
                         $scope.startuperrorMsg="Could not start "+moduleName+" Module."
                 }
-                 
-
-                //["org.openmrs.module.Module"].advicePoints
-               // $scope.PostDataResponse = data.org.openmrs.module.Module.name;
             })
             .error(function (data, status, header, config) {
                 //console.log("err");
@@ -130,9 +98,6 @@ myApp.controller('uploadModuleCtrl', ['$scope', 'fileUpload','$http', function($
                 }
                 
             });
-        // file.upload.then(function (response) {
-        //     $scope.PostDataResponse = response.data;
-        // });
 
     };
     

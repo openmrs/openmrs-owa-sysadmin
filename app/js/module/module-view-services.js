@@ -1,7 +1,7 @@
  
-var moduleServices = angular.module('moduleServices', ['ngResource']);
+var moduleServicesModule = angular.module('moduleServices', ['ngResource','OWARoutes']);
  
-moduleServices
+moduleServicesModule
 .factory('Util', [function(){
 	return {
 		/**
@@ -13,9 +13,9 @@ moduleServices
 		}
 	}
 }])
-.factory('Classes',['$resource', 'Util', function($resource, Util){
+.factory('Classes',['$resource', 'Util','OWARoutesUtil', function($resource, Util, OWARoutesUtil){
 	// console.log(' Service Classed : Started');
-	return $resource('http://localhost:8080/openmrs/ws/rest/v1/module/:uuid?:mode', {}, 
+	return $resource(OWARoutesUtil.getOpenmrsUrl()+'/ws/rest/v1/module/:uuid?:mode', {}, 
 			//Returns all classes as results object
 				{getAll: {method:'GET', params:{mode : 'v=full'}, isArray:false},
 			//Returns single class

@@ -21,29 +21,36 @@
       </div>
       <span class="app-title">System Administration</span>
     </header>
-    <div id="body-wrapper" ng-view></div>
+    <div id="body-wrapper" ng-view>
+      
+    </div>
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--   <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script> -->
+ 
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   
+
+   
     <!-- bower:js -->
     <!-- endbower -->
     <!-- owa scripts -->
     <script src="js/moduleManagerStartUp.js"></script>
-    <script src="js/module-route-management.js"></script>
+    <script src="js/OWA-route.js"></script>
+
+    <script src="js/main/route-management.js"></script>
     <!-- <script src="js/app.js"></script> -->
-    <script src="js/module-view-services.js"></script>
-    <script src="js/module-view-controllers.js"></script>
-    <script src="js/system-info.js"></script>
-     
-    <script src="js/upload-modules-controller.js"></script> 
-    <script src="js/xml2json.min.js"></script> 
+    <script src="js/module/module-view-services.js"></script>
+    <script src="js/module/module-view-controllers.js"></script>
+    <script src="js/module/search-modules-controller.js"></script> 
+    <script src="js/module/upload-modules-controller.js"></script> 
 
-    <script src="js/search-modules-controller.js"></script> 
+    <script src="js/systeminfo/system-info.js"></script>
 
-
-     <script src="js/angular-base64.js"></script> 
+    <script src="js/lib/xml2json.min.js"></script> 
+    <script src="js/lib/angular-base64.js"></script> 
 
   </body>
 </html>

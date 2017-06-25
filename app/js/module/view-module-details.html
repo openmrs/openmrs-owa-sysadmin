@@ -1,0 +1,90 @@
+ 
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 col-xs-12">
+      <h2>Manage Information</h2>
+    </div>
+  </div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startModuleSuccess}}
+    </div>
+    <div class="alert alert-success alert-dismissable" ng-show="stopModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{stopModuleSuccess}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="startModuleError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startModuleError}}
+    </div>
+
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <b> Module Name : {{singleClass.display}}  </b> 
+    </div>
+    <div class="panel-body">
+
+      <div style="padding-bottom: 10px;">
+        <button ng-click="StartModule(singleClass.uuid)" ng-if="singleClass.started != true"> Start Module</button>
+        <button ng-click="StopModule(singleClass.uuid)" ng-if="singleClass.started == true"> Stop Module</button>
+
+        <button ng-click='go("/class-list/add-class")'>Check for Updates</button>
+      </div>
+      <table class="layout display responsive-table">
+        <tbody>
+         <tr> 
+          <td valign="top"><b>Module Name</b></td>
+          <td valign="top">{{singleClass.name}}</td>
+        </tr>
+        <tr> 
+          <td valign="top"><b>Display Name</b></td>
+          <td valign="top">{{singleClass.display}}</td>
+        </tr>
+        <tr> 
+          <td valign="top"><b>Module Description</b></td>
+          <td valign="top">{{singleClass.description}}</td>
+        </tr>
+        <tr> 
+          <td valign="top"><b>Author Name</b></td>
+          <td valign="top">{{singleClass.author}}</td>
+        </tr>
+        <tr> 
+          <td valign="top"><b>Module Version</b></td>
+          <td valign="top">{{singleClass.version}}</td>
+        </tr>
+        <tr> 
+          <td valign="top"><b>Current Status</b></td>
+          <td valign="top">{{singleClass.started}}</td>
+        </tr>
+        <tr> 
+          <td valign="top"><b>Required OpenMRS Version</b></td>
+          <td valign="top">{{singleClass.requireOpenmrsVersion}}</td>
+        </tr>
+      </tbody>
+    </table>	
+    <h2> Aware of Modules</h2>
+    <table class="layout display responsive-table">
+      <tbody>
+        <tr ng-repeat="class in singleClass.awareOfModules"> 
+          <td> {{class}}</td>
+        </tr>
+      </tbody>
+    </table>  
+    <h2> Required Modules</h2>
+    <table class="layout display responsive-table">
+      <tbody>
+        <tr ng-repeat="class in singleClass.requiredModules"> 
+          <td> {{class}}</td>
+        </tr>
+      </tbody>
+    </table>  
+  </div>
+</div>
+</div>
+
