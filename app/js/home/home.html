@@ -1,44 +1,35 @@
 <openmrs-breadcrumbs links="vm.links"></openmrs-breadcrumbs>
-<div id="body-wrapper">
-    <div id="content" class="container">
-        <h6><i class="icon-book">&nbsp;</i>{{"Concept.header" | translate}}</h6>
-        <ul id="menu">
-            <li>
-                <a href="#/concept">
-                    {{"Concept.manage" | translate}}
-                </a>
-            </li>
-            <li>
-                <a href="#/class">
-                    {{"ConceptClass.manage" | translate}}
-                </a>
-            </li>
-            <li>
-                <a href="#/reference">
-                    {{"ConceptReferenceTerm.manage" | translate}}
-                </a>
-            </li>
-            <li>
-                <a href="#/source">
-                    {{"ConceptSource.manage" | translate}}
-                </a>
-            </li>
 
-            <li class="active">
-                <a href="#/datatype">
-                    {{"ConceptDatatype.manage" | translate}}
-                </a>
-            </li>
-            <li>
-                <a href="#/conceptstopword">
-                    {{"ConceptStopWord.manage" | translate}}
-                </a>
-            </li>
-            <li>
-                <a href="#/drug">
-                    {{"ConceptDrug.manage" | translate}}
-                </a>
-            </li>
-        </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>System Administration</h2>
+        </div>
     </div>
-</div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Welcome to OpenMRS System Administration!
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-body">
+            <a href="#/module-show" class="button app big" >                
+             <i class=""></i>                
+             <span>Modules</span>
+            </a> 
+
+            <a href="#/system-info" class="button app big" >                
+             <i class=""></i>                
+             <span>SystemInfo</span>
+            </a> 
+
+            <a href="" class="button app big" >                
+             <i class=""></i>                
+             <span>Encounters</span>
+            </a> 
+        </div>
+    </div>
+</div>    
+
+ 

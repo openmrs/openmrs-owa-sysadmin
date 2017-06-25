@@ -1,7 +1,7 @@
-     var app = angular.module('seacrchModuleController',['base64','OWARoutes']);
+     var SearchRepoModule = angular.module('seacrchModuleController',['base64','OWARoutes']);
 
      
-     app.controller('searchModuleCtrl','OWARoutesUtil', function($scope, $http, OWARoutesUtil) {
+     SearchRepoModule.controller('searchModuleCtrl', function($scope, $http, OWARoutesUtil) {
      	$scope.modules=[];
       $scope.searchText = null;
       $scope.change = function(text) {
