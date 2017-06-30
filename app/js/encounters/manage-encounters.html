@@ -1,0 +1,80 @@
+
+<div class="container"> 
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Manage Encounters</h2>
+        </div>
+    </div>
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">Encounter Summary</div>
+        <div class="panel-body">
+            <table>
+                <tr>
+                    <td>Patient*</td>
+                    <td><input type="text" placeholder="Enter Patient name"></td>td>
+                </tr>
+                 <tr>
+                    <td>Location</td>
+                    <td><input type="text" placeholder="Enter Patient name"></td>td>
+                </tr>
+                 <tr>
+                    <td>Encounter Date*</td>
+                    <td><input type="text" placeholder="Enter Patient name"></td>td>
+                </tr>
+                 <tr>
+                    <td>Visit</td>
+                    <td><input type="text" placeholder="Enter Patient name"></td>td>
+                </tr>
+            </table>
+            
+        </div>
+    </div>
+    
+    
+    <div class="panel panel-primary">
+        <div class="panel-heading">Providers</div>
+        <div class="panel-body">
+            
+				<div style="padding-bottom: 10px;">
+					<a href=""><button>Add Provider</button></a>
+				</div>
+            
+            <form style="margin-bottom: 15px;">
+            <input type="text" name="search" placeholder="Search Encounters.."  ng-model="searchText" ng-change="change()"/>
+            </form>
+
+            <table ng-if="encounterFound==true">
+                    <tr>
+                        <th> Role</th>
+                        <th> Provider Name</th>
+                        <th> Identifier </th>
+                        <th> Action </th>
+                    </tr>
+                    <tbody>
+                    <tr ng-repeat="encounter in searchedEncounterData">
+                        <td> {{encounter.patient.display}} </td>
+                        <td> {{encounter.encounterType.display}} </td>
+                        <td> {{encounter.form.display}} </td>
+                        <td> <li ne-repeat="provider in encounter.encounterProviders"> {{provider.display}}  </li></td>
+                        <td> {{encounter.location.display}} </td>
+                        <td> <a href=""><button>Remove</button></a></td>
+                    </tr>
+                    </tbody>
+            </table>   
+
+            <div class="alert alert-info text-center" ng-if="encounterFound==false">
+                No Providers found.
+            </div>
+
+        </div>
+    </div>
+    
+    <div style="padding-bottom: 10px;">
+        <a href=""><button>Save Encounter</button></a>
+         <a href=""><button>Cancel</button></a>
+    </div>
+    
+    
+</div>

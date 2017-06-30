@@ -1,10 +1,16 @@
-     var SearchRepoModule = angular.module('seacrchModuleController',['base64','OWARoutes']);
+     var SearchRepoModule = angular.module('seacrchModuleController',['OWARoutes']);
 
      
-     SearchRepoModule.controller('searchModuleCtrl', function($scope, $http, OWARoutesUtil) {
-     	$scope.modules=[];
-      $scope.searchText = null;
-      $scope.change = function(text) {
+     SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil','$rootScope', function($scope, $http, OWARoutesUtil, $rootScope) {
+         
+      // *** /OpenMRS breadcrumbs ***  
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Home","#"],["Modules","#/module-show"], ["Search Module","#/install-from-module-repository"]]});
+      // *** /OpenMRS breadcrumbs ***
+         
+         
+       $scope.modules=[];
+       $scope.searchText = null;
+       $scope.change = function(text) {
        $scope.moduleFound=false;
        $scope.modules=[];
 
@@ -145,7 +151,8 @@
     });
 
     };
-    });
+         
+    }]);
 
 
 

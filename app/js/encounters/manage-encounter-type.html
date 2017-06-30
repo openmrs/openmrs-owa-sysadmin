@@ -1,0 +1,104 @@
+
+<div class="container" data-ng-init="getEncounterTypes()"> 
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Encounter Type Management</h2>
+        </div>
+    </div>
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">Current Encounter Types</div>
+        <div class="panel-body">
+            
+            <div style="padding-bottom: 10px;">
+                <button data-toggle="modal" data-target="#addEncounterModal">Add Encounter Types</button>
+              
+            </div>
+ 
+            
+            
+            <form style="margin-bottom: 15px;">
+            <input type="text" name="search" placeholder="Search Encounter Type.."  ng-model="searchText" ng-change="searchEncounterTypes()" style="width:97%;"/>
+            </form>
+
+            <table ng-if="encounterTypeFound==true">
+                    <tr>
+                        <th> Status</th>
+                        <th> name </th>
+                        <th> Description </th>
+                        <th> Action</th>
+                    </tr>
+                    <tbody>
+                    <tr ng-repeat="encounterType in searchedEncounterTypeData">
+                        <td valign="top" style="max-width: 30px;">
+				            <img src="img/running-module.png" ng-if="encounterType.retired != true" height="20" style="top: 5px;left: auto;" /> 
+				            <img src="img/stopped-module.png" ng-if="encounterType.retired == true" height="20" style="top: 5px;left: auto;"/> 
+				        </td>
+                        <td> <b>{{encounterType.display}} </b></td>
+                        <td> {{encounterType.description}} </td>
+                        <td> <button ng-click="encounterTypeEdit(encounterType.uuid)">Edit</button> </td>
+                    </tr>
+                    </tbody>
+            </table>   
+
+            <div class="alert alert-danger text-center" ng-if="encounterTypeFound==false">
+                No Encounter Types found.
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addEncounterModal" role="dialog" data-ng-init="getPrivilege()">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Encounter Type</h5>
+      </div>
+    <form>
+      <div class="modal-body">
+          <div class="container">
+              
+        <!--          For Edit Encounter Type      -->
+        <input hidden="" type="text" id="encounterTypeName" ng-model="encounterTypeUuid">
+          
+          <div class="form-group">
+            <label for="name">Name</label> 
+            <input type="text" id="encounterTypeName" ng-model="encounterTypeName">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+              <textarea id="encounterTypeDescription" ng-model="encounterTypeDescription"> </textarea>
+          </div>
+            <div class="form-group">
+            <label for="description">Edit privilege</label>
+              <select class="form-control" id="editPrivilege">
+                <option ng-repeat="privilege in PrivilegeData" value="privilege.uuid">{{privilege.display}}</option>
+              </select>
+          </div>
+            
+            <p</p>
+            <div class="form-group">
+            <label for="description">View privilege</label>
+              <select class="form-control" id="viewPrivilege">
+                <option ng-repeat="privilege in PrivilegeData" value="privilege.uuid">{{privilege.display}}</option>
+              </select>
+          </div>
+       
+          </div>
+              
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="saveEncounterType()">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+
+ 

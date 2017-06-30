@@ -2,7 +2,7 @@
 
 
 
-<div class="container">
+<div class="container" data-ng-init="getModuleViewDetails()">
   <div class="row">
     <div class="col-md-12 col-xs-12">
       <h2>Manage Information</h2>
@@ -26,52 +26,52 @@
 
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <b> Module Name : {{singleClass.display}}  </b> 
+      <b> Module Name : {{ModuleViewData.display}}  </b> 
     </div>
     <div class="panel-body">
 
       <div style="padding-bottom: 10px;">
-        <button ng-click="StartModule(singleClass.uuid)" ng-if="singleClass.started != true"> Start Module</button>
-        <button ng-click="StopModule(singleClass.uuid)" ng-if="singleClass.started == true"> Stop Module</button>
+        <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true"> <i class="icon-play"> </i> Start Module</button>
+        <button ng-click="StopModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
 
-        <button ng-click='go("/class-list/add-class")'>Check for Updates</button>
+        <button ng-click='go("/class-list/add-class")'> <i class="icon-repeat"> </i> Check for Updates</button>
       </div>
       <table class="layout display responsive-table">
         <tbody>
          <tr> 
           <td valign="top"><b>Module Name</b></td>
-          <td valign="top">{{singleClass.name}}</td>
+          <td valign="top">{{ModuleViewData.name}}</td>
         </tr>
         <tr> 
           <td valign="top"><b>Display Name</b></td>
-          <td valign="top">{{singleClass.display}}</td>
+          <td valign="top">{{ModuleViewData.display}}</td>
         </tr>
         <tr> 
           <td valign="top"><b>Module Description</b></td>
-          <td valign="top">{{singleClass.description}}</td>
+          <td valign="top">{{ModuleViewData.description}}</td>
         </tr>
         <tr> 
           <td valign="top"><b>Author Name</b></td>
-          <td valign="top">{{singleClass.author}}</td>
+          <td valign="top">{{ModuleViewData.author}}</td>
         </tr>
         <tr> 
           <td valign="top"><b>Module Version</b></td>
-          <td valign="top">{{singleClass.version}}</td>
+          <td valign="top">{{ModuleViewData.version}}</td>
         </tr>
         <tr> 
           <td valign="top"><b>Current Status</b></td>
-          <td valign="top">{{singleClass.started}}</td>
+          <td valign="top">{{ModuleViewData.started}}</td>
         </tr>
         <tr> 
           <td valign="top"><b>Required OpenMRS Version</b></td>
-          <td valign="top">{{singleClass.requireOpenmrsVersion}}</td>
+          <td valign="top">{{ModuleViewData.requireOpenmrsVersion}}</td>
         </tr>
       </tbody>
     </table>	
     <h2> Aware of Modules</h2>
     <table class="layout display responsive-table">
       <tbody>
-        <tr ng-repeat="class in singleClass.awareOfModules"> 
+        <tr ng-repeat="class in ModuleViewData.awareOfModules"> 
           <td> {{class}}</td>
         </tr>
       </tbody>
@@ -79,7 +79,7 @@
     <h2> Required Modules</h2>
     <table class="layout display responsive-table">
       <tbody>
-        <tr ng-repeat="class in singleClass.requiredModules"> 
+        <tr ng-repeat="class in ModuleViewData.requiredModules"> 
           <td> {{class}}</td>
         </tr>
       </tbody>

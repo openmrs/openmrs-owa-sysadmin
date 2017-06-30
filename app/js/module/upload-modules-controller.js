@@ -17,7 +17,11 @@ uploadModule.directive('fileModel', ['$parse', function ($parse) {
 }]);
 
 
-uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil', function($scope,$http,OWARoutesUtil){
+uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', function($scope,$http,OWARoutesUtil,$rootScope){
+
+      // *** /OpenMRS breadcrumbs ***  
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Home","#"],["Modules","#/module-show"], ["Upload Module","#/upload-module"]]});
+      // *** /OpenMRS breadcrumbs ***
     
     $scope.PostDataResponse ='';
     $scope.ResponseDetails ='';

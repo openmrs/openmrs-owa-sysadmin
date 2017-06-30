@@ -2,7 +2,11 @@
 var SystemInfoModule = angular.module('systemInfoController', ['OWARoutes']);
 
 // SystemInfo Controller used for system-info.html 
-SystemInfoModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil', function($scope,$http,OWARoutesUtil){
+SystemInfoModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', function($scope,$http,OWARoutesUtil,$rootScope){
+    
+      // *** /OpenMRS breadcrumbs ***  
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Home","#"],["SystemInfo","#/system-info"]]});
+      // *** /OpenMRS breadcrumbs ***
     
     // getSystemInfo() used to get all System Infromation
     $scope.getSystemInfo = function(){

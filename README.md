@@ -1,10 +1,10 @@
 <img src="https://cloud.githubusercontent.com/assets/668093/12567089/0ac42774-c372-11e5-97eb-00baf0fccc37.jpg" alt="OpenMRS"/>
 
-# Module Management - GSoC 2017 Project
+# System Administration  - GSoC 2017 Project
 
-This repository contains the OpenMRS Module Management OpenMRS Open Web App developed for [MetaData Management in Admin UI Project](https://wiki.openmrs.org/display/projects/More+Metadata+Management+in+AdminUI).
+This repository contains the Open Web App developed for System Administration modules [MetaData Management in Admin UI Project](https://wiki.openmrs.org/display/projects/More+Metadata+Management+in+AdminUI).
 
-> Module Management functionality implemented as an OWA for OpenMRS
+> System Administration modules functionality implemented as an OWA for OpenMRS
 
 For further documentation about OpenMRS Open Web Apps see [the wiki page](https://wiki.openmrs.org/display/docs/Open+Web+Apps+Module).
 

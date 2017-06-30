@@ -1,0 +1,63 @@
+<header>
+    <div class="logo">
+        <a href="/openmrs/referenceapplication/home.page">
+            <img src="/openmrs/ms/uiframework/resource/uicommons/images/logo/openmrs-with-title-small.png">
+        </a>
+    </div>
+    
+    <ul class="user-options">
+        <li class="identifier" style="cursor: pointer;">
+            <i class="icon-user small"></i>
+            admin
+            
+            <i class="icon-caret-down appui-icon-caret-down link" style="display: inline-block;"></i><i class="icon-caret-up link appui-toggle" style="display: none;"></i>
+                <ul id="user-account-menu" class="appui-toggle" style="display: none;">
+                    
+                    <li>
+                        <a id="" href="/openmrs/adminui/myaccount/myAccount.page">
+                            My Account
+                        </a>
+                    </li>
+                    
+                </ul>
+            
+        </li>
+        <li class="change-location">
+            <a href="javascript:void(0);" class="">
+                <i class="icon-map-marker small"></i>
+                <span id="selected-location" data-bind="text: text" location-uuid="2131aff8-2e2a-480a-b7ab-4ac53250262b">Isolation Ward</span>
+                
+                    <i class="link icon-caret-down"></i>
+                
+            </a>
+        </li>
+        <li class="logout">
+            <a href="/openmrs/appui/header/logout.action?successUrl=openmrs">
+                Logout
+                <i class="icon-signout small"></i>
+            </a>
+        </li>
+    </ul>
+
+    <div id="session-location" style="display: none;">
+        <div id="spinner" style="position:absolute; display:none">
+            <img src="/openmrs/ms/uiframework/resource/uicommons/images/spinner.gif">
+        </div>
+        <ul class="select">
+            
+            <li class="" locationuuid="b1a8b05e-3542-4037-bbd3-998ee9c40574" locationid="6" locationname="Inpatient Ward">Inpatient Ward</li>
+            
+            <li class="selected" locationuuid="2131aff8-2e2a-480a-b7ab-4ac53250262b" locationid="4" locationname="Isolation Ward">Isolation Ward</li>
+            
+            <li class="" locationuuid="7fdfa2cb-bc95-405a-88c6-32b7673c0453" locationid="3" locationname="Laboratory">Laboratory</li>
+            
+            <li class="" locationuuid="58c57d25-8d39-41ab-8422-108a0c277d98" locationid="7" locationname="Outpatient Clinic">Outpatient Clinic</li>
+            
+            <li class="" locationuuid="7f65d926-57d6-4402-ae10-a5b3bcbf7986" locationid="2" locationname="Pharmacy">Pharmacy</li>
+            
+            <li class="" locationuuid="6351fcf4-e311-4a19-90f9-35667d99a8af" locationid="5" locationname="Registration Desk">Registration Desk</li>
+            
+        </ul>
+    </div>
+    
+</header>

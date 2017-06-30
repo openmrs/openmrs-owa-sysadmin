@@ -26,8 +26,8 @@ var plugins = gulpLoadPlugins();
 var THIS_APP_ID = 'ManageModule';
 
 var htmlGlob = ['app/**/*.html'];
-var resourcesGlob = ['app/**/*.{png,svg,jpg,gif}', 'app/**/*.{css,less}',
-  'app/**/*.js', 'app/manifest.webapp','app-old-files/openhmis.inventory-2.3.4.omod','app-old-files/owa-1.7.0.omod','app-old-files/fake-omod.omod', /* list extra resources here */ ];
+var resourcesGlob = ['app/**/*.{png,svg,jpg,gif}', 'app/**/*.{css,less}', 
+  'app/**/*.js', 'app/**/*.{ttf,woff}', 'app/manifest.webapp','app-old-files/openhmis.inventory-2.3.4.omod','app-old-files/owa-1.7.0.omod','app-old-files/fake-omod.omod', /* list extra resources here */ ];
 
 var Server = require('karma').Server;
 
