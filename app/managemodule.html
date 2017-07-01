@@ -23,22 +23,25 @@
     </div>
     
     <ul class="user-options" data-ng-init="getOpenMRSSession()">
-        <li class="identifier" style="cursor: pointer;">
-            <i class="icon-user small"></i>
-                {{OpenMRSSessionData.user.display}}
+        
+        <li class="change-location dropdown" style="background:rgba(0,0,0,0); position:relative; float:none; top:0px;">
+            <a href="" class="dropdown-toggle" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="icon-user small"></i>
+                <span id="selected-location" data-bind="text: text" location-uuid="{{OpenMRSSessionData.sessionLocation.uuid}}">
+                {{OpenMRSSessionData.user.display}}</span>
+                <i class="link icon-caret-down"></i>
+            </a>
             
-            <i class="icon-caret-down appui-icon-caret-down link" style="display: inline-block;"></i><i class="icon-caret-up link appui-toggle" style="display: none;"></i>
-                <ul id="user-account-menu" class="appui-toggle" style="display: none;">
-                    
-                    <li>
-                        <a id="" href="/openmrs/adminui/myaccount/myAccount.page">
-                            My Account
-                        </a>
-                    </li>
-                    
-                </ul>
-            
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                <a href="/openmrs/adminui/myaccount/myAccount.page">
+            <button class="dropdown-item dropdown-item-OpenMRSheader" type="button" >My Account</button>
+              </a>
+                   
+          </div>  
         </li>
+       
+ 
+            
         <li class="change-location dropdown" style="background:rgba(0,0,0,0); position:relative; float:none; top:0px;">
             <a href="" class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="icon-map-marker small"></i>
@@ -53,12 +56,7 @@
                    
           </div>  
         </li>
-        <li>
- 
-     
-   
-            
-        </li>
+         
         <li class="logout">
             <a href="/openmrs/appui/header/logout.action?successUrl=openmrs">
                 Logout

@@ -271,6 +271,124 @@ managemoduleController.controller('ModuleListCtrl',
         });
     }
     
+ 
+   $scope.checkModuleUpdate = function (moduleUuid, currentVersion){
+       var searchValue = moduleUuid;
+       var column_count=1;
+       var columns="CVersion";
+       var displayStart=0;
+       var displayLength=15;
+
+       var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
+       
+       if(typeof($scope.moduleUpdateURL)!=undefined){
+            delete $scope.moduleUpdateURL;
+        }
+       $scope.moduleNewUpdateFound="0"; // working
+       $http({
+         method: 'JSONP', 
+         url: urll
+       })
+       .success(function(data) {
+         if(data.iTotalDisplayRecords>0)
+                {
+            	  	// Modules Found
+                    console.log("REST New Version : " + data.aaData[0][2]);
+                    var compateValue = version_compare(currentVersion, data.aaData[0][2]);
+                    if(compateValue==0){
+                        // Same Version
+                        $scope.moduleNewUpdateFound="-1"; // same version
+                    }
+                    else if(compateValue==1){
+                        // New Version Found
+                        $scope.moduleNewUpdateFound="1"; // found
+                        $scope.moduleUpdateURL=data.aaData[0][0];
+                    }
+                    else if(compateValue==-1){
+                        // Upto Data - Server contains older version
+                        $scope.moduleNewUpdateFound="-1"; // no need of update
+                    }
+                    console.log(data.aaData[0][2] + " , " + currentVersion + " : " + compateValue)
+            	  }
+            	  else 
+                  {
+            	  	// No Modules Found
+                    console.log("Error");
+            	  	$scope.moduleNewUpdateFound=false;
+            	  }
+              })
+       .error(function(data, status) {
+            console.error('Repos error', status, data);
+            $scope.moduleNewUpdateFound=false;
+       });
+        
+   }
+
+// ******* Version Compare ********
+/*
+Split a version string into components and map prefixes and suffixes to integers.
+Examples:
+- 1.0
+- 2.0.4
+- 1.4RC
+- 0.7beta
+*/
+function version_bits(version) {
+    console.log(version);
+   //  console.log(typeof(version);
+    version = version.replace(/(\d+)([^\d\.]+)/, "$1.$2");
+    version = version.replace(/([^\d\.]+)(\d+)/, "$1.$2");    
+    var parts = version.split('.'), 
+        rmap = {
+            'rc' : -1,
+            'pre' : -2,            
+            'beta' : -3,
+            'b' : -3,            
+            'alpha' : -4,
+            'a' : -4,            
+        },
+        v, n;
+    
+    var bits = [];
+    for (var i = 0; i < parts.length; ++i) {
+        v = parts[i];
+            
+        n = parseInt(v, 10);
+        if ( isNaN(n) ) {
+            n = rmap[v] || -1;
+        }
+        bits.push(n);
+    }    
+    return bits;
+}
+
+/*
+Compare different software version strings.
+Returns 0 if same, -1 if version2 is older or 1 if version2 is newer.
+*/
+function version_compare(version1, version2) {
+    console.log(version1+" , "+version2)
+    var v1parts = version_bits(version1);
+    var v2parts = version_bits(version2);
+    var v2, v1;
+    
+    for (var i = 0; i < Math.max(v1parts.length, v2parts.length); ++i) {
+        v1 = v1parts[i] || 0;
+        v2 = v2parts[i] || 0;
+        
+        if (v2 > v1) {
+            return 1;
+        }
+        else if (v1 > v2) {
+            return -1;
+        }
+    }
+        
+    return 0;
+}
+// ******* Version Compare ********
+
+            
 }]);
 
 

@@ -23,7 +23,18 @@
         {{startModuleError}}
     </div>
 
-
+    <div class="alert alert-success alert-dismissable" ng-if="moduleNewUpdateFound==1">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Newest version of this module is avialable for upgrade! 
+          <button ng-click="StopModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-show="moduleUpdateURL" style="margin-left:15px;"> <i class="icon-upload"> </i> Update</button>
+    </div>
+    
+    <div class="alert alert-info alert-dismissable" ng-show="moduleNewUpdateFound==-1">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Module version is upto date. No updates found!
+    </div>
+    
+    
   <div class="panel panel-primary">
     <div class="panel-heading">
       <b> Module Name : {{ModuleViewData.display}}  </b> 
@@ -34,7 +45,7 @@
         <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true"> <i class="icon-play"> </i> Start Module</button>
         <button ng-click="StopModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
 
-        <button ng-click='go("/class-list/add-class")'> <i class="icon-repeat"> </i> Check for Updates</button>
+        <button ng-click="checkModuleUpdate(ModuleViewData.uuid,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
       </div>
       <table class="layout display responsive-table">
         <tbody>
