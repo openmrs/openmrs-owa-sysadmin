@@ -5,7 +5,7 @@ var SystemInfoModule = angular.module('systemInfoController', ['OWARoutes']);
 SystemInfoModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', function($scope,$http,OWARoutesUtil,$rootScope){
     
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Home","#"],["SystemInfo","#/system-info"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SystemInfo","#/system-info"]]});
       // *** /OpenMRS breadcrumbs ***
     
     // getSystemInfo() used to get all System Infromation
@@ -80,9 +80,9 @@ SystemInfoModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil',
 
                 // if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
                 //     // File Error Catched
-                //     if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry.string) != "undefined"){
+                //     if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined"){
                 //         // Error Message given
-                //        // $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry.string;
+                //        // $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
                 //     }
                 //     else{
                 //         // Unknown Error Message

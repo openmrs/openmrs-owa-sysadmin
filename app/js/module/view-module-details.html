@@ -26,7 +26,7 @@
     <div class="alert alert-success alert-dismissable" ng-if="moduleNewUpdateFound==1">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         Newest version of this module is avialable for upgrade! 
-          <button ng-click="StopModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-show="moduleUpdateURL" style="margin-left:15px;"> <i class="icon-upload"> </i> Update</button>
+          <button ng-click="updateModule(moduleUpdateURL)" ng-show="moduleUpdateURL" style="margin-left:15px;"> <i class="icon-upload"> </i> Update</button>
     </div>
     
     <div class="alert alert-info alert-dismissable" ng-show="moduleNewUpdateFound==-1">
@@ -34,6 +34,52 @@
         Module version is upto date. No updates found!
     </div>
     
+
+<!--    Module Upgrade Notifications-->
+    
+    <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startupsuccessMsg}}
+    </div>
+
+    <div ng-show="startuperrorMsg">
+        <div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{uplodedsuccessMsg}}
+        </div>
+        <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{startuperrorMsg}}
+        </div>
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{uploadederrorMsg}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{downloadErrorMsg}}
+    </div>
+    
+
+     <div class="row" ng-if="isDownloading==true">
+        <div class="col-md-12 col-xs-12 text-center center-block">
+            <h3 style="text-align: center;">Please Wait until download complete!</h3>
+            <img src="img/inprogress.gif" >
+        </div>
+    </div>
+
+    <div class="row" ng-if="isUploading==true">
+        <div class="col-md-12 col-xs-12 text-center center-block">
+            <h3 style="text-align: center;">Please Wait until upload Finished!</h3>
+            <img src="img/inprogress.gif" >
+        </div>
+    </div>
+    
+<!--    Module Upgrade Notifications-->
+
     
   <div class="panel panel-primary">
     <div class="panel-heading">
@@ -45,7 +91,7 @@
         <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true"> <i class="icon-play"> </i> Start Module</button>
         <button ng-click="StopModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
 
-        <button ng-click="checkModuleUpdate(ModuleViewData.uuid,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
+        <button ng-click="checkModuleUpdate(ModuleViewData.name,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
       </div>
       <table class="layout display responsive-table">
         <tbody>

@@ -4,7 +4,7 @@ var encounters = angular.module('encountersController', ['OWARoutes']);
 encounters.controller('searchEncounterCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', function($scope,$http,OWARoutesUtil,$rootScope){
     
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Home","#"],["Encounters","#/search-encounters"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Encounters","#/search-encounters"]]});
       // *** /OpenMRS breadcrumbs ***    
     
     $scope.searchText = null;

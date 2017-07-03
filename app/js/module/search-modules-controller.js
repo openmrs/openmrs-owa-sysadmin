@@ -4,7 +4,7 @@
      SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil','$rootScope', function($scope, $http, OWARoutesUtil, $rootScope) {
          
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Home","#"],["Modules","#/module-show"], ["Search Module","#/install-from-module-repository"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Modules","#/module-show"], ["Search Module","#/install-from-module-repository"]]});
       // *** /OpenMRS breadcrumbs ***
          
          
@@ -130,9 +130,9 @@
            var JsonErrorResponse = x2js.xml_str2json(data);
                 if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
                     // File Error Catched
-                    if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry.string) != "undefined"){
+                    if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined"){
                         // Error Message given
-                        $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry.string;
+                        $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
                     }
                     else{
                         // Unknown Error Message

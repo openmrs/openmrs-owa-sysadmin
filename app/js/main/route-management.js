@@ -26,6 +26,10 @@ managemodule.config(['$routeProvider',
                         	templateUrl: 'js/module/view-module-details.html',
                         	controller: 'ModuleListCtrl',
                         }).
+                        when('/check-for-module-updates', {
+                        	templateUrl: 'js/module/module-update-details.html',
+                        	controller: 'ModuleListCtrl',
+                        }).
                         when('/system-info', {
                           templateUrl: 'js/systeminfo/system-info.html',
                           controller: 'systeminfoCtrl',

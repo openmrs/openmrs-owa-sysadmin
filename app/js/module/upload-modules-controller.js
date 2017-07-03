@@ -20,7 +20,7 @@ uploadModule.directive('fileModel', ['$parse', function ($parse) {
 uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', function($scope,$http,OWARoutesUtil,$rootScope){
 
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Home","#"],["Modules","#/module-show"], ["Upload Module","#/upload-module"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Modules","#/module-show"], ["Upload Module","#/upload-module"]]});
       // *** /OpenMRS breadcrumbs ***
     
     $scope.PostDataResponse ='';
@@ -87,9 +87,9 @@ uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$
 
                 if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
                     // File Error Catched
-                    if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry.string) != "undefined"){
+                    if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined"){
                         // Error Message given
-                        $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry.string;
+                        $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
                     }
                     else{
                         // Unknown Error Message
