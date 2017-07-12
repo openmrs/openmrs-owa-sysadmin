@@ -19,7 +19,7 @@ managemoduleController.service('ModuleService',['$http', 'OWARoutesUtil','$q', f
                       
                     console.log("POST started...");
                       
-                    var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module1/?"; //CHANGE
+                    var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/?"; //CHANGE
                     isUploading=true;
 
                  $http.post(uploadUrl, fd, {
@@ -38,6 +38,29 @@ managemoduleController.service('ModuleService',['$http', 'OWARoutesUtil','$q', f
                 });
                  return def.promise;
                 ////////////////////////////////
+        },
+        getModuleDetails : function(moduleUuid){
+            var def = $q.defer();
+            var requestUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/"+moduleUuid;
+            $http.get(requestUrl, {params:{ v : 'full'}})
+            .success(function (data, status){ // GET REQUEST SUCCESS HANDLE
+                def.resolve(["GET",1,data,status]);
+            }).error(function (data,status){ // GET REQUEST ERROR HANDLE
+                def.resolve(["GET",0,data,status]);
+            });
+            return def.promise;
+        },
+        
+        getModuleDetailsFromOnline : function(moduleLegacyId){
+            var def = $q.defer();
+            var requestUrl = "https://modules.openmrs.org/modulus/api/search?q="+moduleLegacyId;
+            $http.get(requestUrl, {params:{ v : 'full'}})
+            .success(function (data, status){ // GET REQUEST SUCCESS HANDLE
+                def.resolve(["GET",1,data,status]);
+            }).error(function (data,status){ // GET REQUEST ERROR HANDLE
+                def.resolve(["GET",0,data,status]);
+            });
+            return def.promise;
         },
         
         getAllModuleDetails : function(){
@@ -85,9 +108,10 @@ managemoduleController.controller('ModuleListCtrl',
     
     
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Modules","#/module-show"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules",""]]});
       // *** /OpenMRS breadcrumbs ***
 
+            
             
     $scope.updateModule= function(moduleUrl){
         console.log("update Module");
@@ -122,6 +146,7 @@ managemoduleController.controller('ModuleListCtrl',
                                 {
                                     // Started Successfully
                                     $scope.startupsuccessMsg=moduleName+" has been loaded and started Successfully"
+                                    $scope.checkAllModulesForUpdate();
                                 }
                             else{
                                     //start up Error Found 
@@ -175,7 +200,7 @@ managemoduleController.controller('ModuleListCtrl',
         
     $scope.StartModule = function(moduleUuid,resource){
       	console.log("start module");
-
+        $scope.isStartModule=true;
       	if(typeof($scope.startModuleSuccess)!=undefined){
             delete $scope.startModuleSuccess;
         }
@@ -194,6 +219,7 @@ managemoduleController.controller('ModuleListCtrl',
             headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
         }) .success(function (data, status, headers, config) {
+             $scope.isStartModule=false;
             if(resource=="ALLMODULES"){
                 $scope.getAllModuleDetails();
             }
@@ -203,10 +229,10 @@ managemoduleController.controller('ModuleListCtrl',
         	$scope.startModuleSuccess="Module Started successfully.";
         })
         .error(function (data, status, headers, config) {
-        		console.log(status);
-        		console.log(config);
-        		console.log(headers);
-        		
+        		//console.log(status);
+        		//console.log(config);
+        		//console.log(headers);
+        		 $scope.isStartModule=false;
         		var x2js = new X2JS();
                 var JsonSuccessResponse = x2js.xml_str2json(data);
 
@@ -230,7 +256,7 @@ managemoduleController.controller('ModuleListCtrl',
 	
       $scope.StopModule = function(moduleUuid,resource){
       	console.log("Stop module");
-
+         $scope.isStopModule=true;
       	if(typeof($scope.stopModuleSuccess)!=undefined){
             delete $scope.stopModuleSuccess;
         }
@@ -249,6 +275,7 @@ managemoduleController.controller('ModuleListCtrl',
             headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
         }) .success(function (data, status, headers, config) {
+            $scope.isStopModule=false;
             if(resource=="ALLMODULES"){
                 $scope.getAllModuleDetails();
             }
@@ -258,7 +285,7 @@ managemoduleController.controller('ModuleListCtrl',
         	$scope.stopModuleSuccess="Module Stoped successfully.";
         })
         .error(function (data, status, headers, config) {
-
+                $scope.isStopModule=false;
         		var x2js = new X2JS();
                 var JsonSuccessResponse = x2js.xml_str2json(data);
 
@@ -279,7 +306,153 @@ managemoduleController.controller('ModuleListCtrl',
                 }
         });
       }
+//      
+//      function getModuleNameUsingPackageName(packageName){
+//            var moduleUuid=packageName.toString().replace("org.openmrs.module.","");
+//          console.log(moduleUuid);
+//            var response = ModuleService.getModuleDetails(moduleUuid);
+//            response.then(function(result){            
+//                if(result[0]=="GET"){
+//                    if(result[1]==1){
+//                        console.log(result[2]);
+//                        return result[2].display;
+//                    }
+//                }
+//                return moduleUuid;
+//            });
+//      }
     
+      $scope.unloadConfirmationShow = function(moduleUuid){
+      	if(typeof($scope.uploadConfirmModuleData)!=undefined){
+            delete $scope.uploadConfirmModuleData;
+        }
+        
+        var response = ModuleService.getModuleDetails(moduleUuid);
+        response.then(function(result){            
+            if(result[0]=="GET"){
+                if(result[1]==1){
+                    //$scope.uploadConfirmModuleData=result[2];
+                    var moduleDisplayNames=[];
+                    angular.forEach(result[2].awareOfModules, function(value, key) {
+                        var moduleName=value.toString().replace("org.openmrs.module.","");
+                        var responseModule = ModuleService.getModuleDetails(moduleName);
+                        responseModule.then(function(resultModule){            
+                            if(resultModule[0]=="GET"){
+                                if(resultModule[1]==1){
+                                    //console.log(resultModule[2]);
+                                    //return resultModule[2].display;
+                                    moduleDisplayNames.push(resultModule[2].display);
+                                }else{
+                                    moduleDisplayNames.push(moduleName);
+                                }
+                            }else{
+                                moduleDisplayNames.push(moduleName);
+                            }
+                        });
+                    });
+                    $scope.uploadConfirmModuleData={
+                        "uuid" : moduleUuid,
+                        "awareOfModules" : moduleDisplayNames
+                    }
+                   // console.log($scope.uploadConfirmModuleData);
+                }
+            }
+        });
+        angular.element('#deleteConfirmation').modal('show');
+      }
+      
+      
+      
+//      $scope.unloadConfirmationShow = function(moduleUuid){
+//      	if(typeof($scope.uploadConfirmModuleData)!=undefined){
+//            delete $scope.uploadConfirmModuleData;
+//        }
+//        var response = ModuleService.getModuleDetails(moduleUuid);
+//        response.then(function(result){            
+//            if(result[0]=="GET"){
+//                if(result[1]==1){
+//                    //$scope.uploadConfirmModuleData=result[2];
+//                    var moduleDisplayNames=[];
+//                    angular.forEach(result[2].awareOfModules, function(value, key) {
+//                        console.log(value," : ",key);
+//                        console.log(getModuleNameUsingPackageName(value));
+//                      moduleDisplayNames.push(getModuleNameUsingPackageName(value));
+//                    });
+//                    $scope.uploadConfirmModuleData={
+//                        "uuid" : moduleUuid,
+//                        "awareOfModules" : moduleDisplayNames
+//                    }
+//                    console.log($scope.uploadConfirmModuleData);
+//                }
+//            }
+//        });
+//        angular.element('#deleteConfirmation').modal('show');
+//      }
+      
+
+        $scope.stopConfirmationShow = function(moduleUuid){
+      	if(typeof($scope.stopConfirmModuleData)!=undefined){
+            delete $scope.stopConfirmModuleData;
+        }
+        
+        var response = ModuleService.getModuleDetails(moduleUuid);
+        response.then(function(result){            
+            if(result[0]=="GET"){
+                if(result[1]==1){
+                    //$scope.uploadConfirmModuleData=result[2];
+                    var moduleDisplayNames=[];
+                    angular.forEach(result[2].awareOfModules, function(value, key) {
+                        var moduleName=value.toString().replace("org.openmrs.module.","");
+                        var responseModule = ModuleService.getModuleDetails(moduleName);
+                        responseModule.then(function(resultModule){            
+                            if(resultModule[0]=="GET"){
+                                if(resultModule[1]==1){
+                                    //console.log(resultModule[2]);
+                                    //return resultModule[2].display;
+                                    moduleDisplayNames.push(resultModule[2].display);
+                                }else{
+                                    moduleDisplayNames.push(moduleName);
+                                }
+                            }else{
+                                moduleDisplayNames.push(moduleName);
+                            }
+                        });
+                    });
+                    $scope.stopConfirmModuleData={
+                        "uuid" : moduleUuid,
+                        "awareOfModules" : moduleDisplayNames
+                    }
+                    //console.log($scope.stopConfirmModuleData);
+                }
+            }
+        });
+        angular.element('#stopConfirmation').modal('show');
+      }
+            
+//      $scope.stopConfirmationShow = function(moduleUuid){
+//      	if(typeof($scope.stopConfirmModuleData)!=undefined){
+//            delete $scope.stopConfirmModuleData;
+//        }
+//        var response = ModuleService.getModuleDetails(moduleUuid);
+//        response.then(function(result){            
+//            if(result[0]=="GET"){
+//                if(result[1]==1){
+//                    //$scope.stopConfirmModuleData=[];
+//                    var moduleDisplayNames=[];
+//                    angular.forEach(result[2].awareOfModules, function(value, key) {
+//                      moduleDisplayNames.push(getModuleNameUsingPackageName(value));
+//                    });
+//                    $scope.stopConfirmModuleData={
+//                        "uuid" : moduleUuid,
+//                        "awareOfModules" : moduleDisplayNames
+//                    }
+//                    //$scope.stopConfirmModuleData=result[2];
+//                }
+//            }
+//        });
+//        angular.element('#stopConfirmation').modal('show');
+//      }
+      
       
       $scope.unloadModule = function(moduleUuid){
       	console.log("Unload module");
@@ -332,7 +505,8 @@ managemoduleController.controller('ModuleListCtrl',
       
     $scope.StartAllModules = function(){
       	console.log("start all module");
-
+        
+        $scope.isStartAllModules=true;
       	if(typeof($scope.startAllModuleSuccess)!=undefined){
             delete $scope.startAllModuleSuccess;
         }
@@ -351,13 +525,14 @@ managemoduleController.controller('ModuleListCtrl',
             headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
         }) .success(function (data, status, headers, config) {
+            $scope.isStartAllModules=false;
             $scope.getAllModuleDetails();
         	$scope.startAllModuleSuccess="Required action is compeleted. Please check the module's status";
         })
         .error(function (data, status, headers, config) {
         		var x2js = new X2JS();
                 var JsonSuccessResponse = x2js.xml_str2json(data);
-
+                $scope.isStartAllModules=false;
                 if (typeof(JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
                     // File Error Catched
                     if (typeof(JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined"){
@@ -380,7 +555,7 @@ managemoduleController.controller('ModuleListCtrl',
     $scope.getModuleViewDetails= function(){
         
        // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Modules","#/module-show"], ["Module View","#/module-show/"+$routeParams.classUUID]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Module View",""]]});
       // *** /OpenMRS breadcrumbs ***
         
         console.log("getModuleViewDetails");
@@ -388,21 +563,130 @@ managemoduleController.controller('ModuleListCtrl',
         if(typeof($scope.ModuleViewData)!=undefined){
             delete $scope.ModuleViewData;
         }
+      	if(typeof($scope.moduleViewAwareOfModules)!=undefined){
+            delete $scope.moduleViewAwareOfModules;
+        }
+      	if(typeof($scope.moduleViewRequiredModules)!=undefined){
+            delete $scope.moduleViewRequiredModules;
+        }
         var requestUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/"+$routeParams.classUUID;
         $http.get(requestUrl, {params:{ v : 'full'}})
         .success(function (data){ // GET REQUEST SUCCESS HANDLE
             $scope.requestModuleViewDetails=true;
             $scope.ModuleViewData=data;
+
+            
+            ////////
+                    var awareModuleDisplayNames=[];
+                    //console.log(data.awareOfModules);
+                    angular.forEach(data.awareOfModules, function(value, key) {
+                        //console.log(value);
+                        var awareModuleName=value.toString().replace("org.openmrs.module.","");
+                        var responseAwareModule = ModuleService.getModuleDetails(awareModuleName);
+                        responseAwareModule.then(function(resultAwareModule){            
+                            if(resultAwareModule[0]=="GET"){
+                                if(resultAwareModule[1]==1){
+                                  //  console.log(resultModule[2]);
+                                    //return resultModule[2].display;
+                                    awareModuleDisplayNames.push([resultAwareModule[2].display,resultAwareModule[2].uuid]);
+                                }else{
+                                    awareModuleDisplayNames.push([awareModuleName,awareModuleName]);
+                                }
+                            }else{
+                                awareModuleDisplayNames.push([awareModuleName,awareModuleName]);
+                            }
+                           // console.log(moduleDisplayNames);
+                            $scope.moduleViewAwareOfModules={
+                                "awareOfModules" : awareModuleDisplayNames
+                            }
+                            //console.log(awareModuleDisplayNames);
+                        });
+                    });
+            ////////
+            ////////
+                    var requiredModuleDisplayNames=[];
+                    //console.log(data.awareOfModules);
+                    angular.forEach(data.requiredModules, function(value, key) {
+                        //console.log(value);
+                        var requiredModuleName=value.toString().replace("org.openmrs.module.","");
+                        var responserequiredModule = ModuleService.getModuleDetails(requiredModuleName);
+                        responserequiredModule.then(function(resultRequireModule){            
+                            if(resultRequireModule[0]=="GET"){
+                                if(resultRequireModule[1]==1){
+                                  //  console.log(resultModule[2]);
+                                    //return resultModule[2].display;
+                                    requiredModuleDisplayNames.push([resultRequireModule[2].display,resultRequireModule[2].uuid]);
+                                }else{
+                                    requiredModuleDisplayNames.push([capitalizeTxt(requiredModuleName.toString().replace("."," ") ),requiredModuleName]);
+                                }
+                            }else{
+                                requiredModuleDisplayNames.push([capitalizeTxt(requiredModuleName.toString().replace("."," ") ),requiredModuleName]);
+                            }
+                           // console.log(moduleDisplayNames);
+                            $scope.moduleViewRequiredModules={
+                                "requiredModules" : requiredModuleDisplayNames
+                            }
+                           // console.log(requiredModuleDisplayNames);
+                        });
+                    });
+            ////////
+
+            
         }).error(function (data){ // GET REQUEST ERROR HANDLE
             console.log("error");
             $scope.requestModuleViewDetails=false;
         });
     }
-    
+
+    function capitalizeTxt(txt) {
+        return txt.charAt(0).toUpperCase() + txt.slice(1);
+    }
+            
+//    $scope.getModuleViewAwareOfModulesNames = function(AwareOfModuleNames){
+//      	if(typeof($scope.moduleViewAwareOfModules)!=undefined){
+//            delete $scope.moduleViewAwareOfModules;
+//        }
+//        
+////        var response = ModuleService.getModuleDetails(moduleUuid);
+////        response.then(function(result){            
+////            if(result[0]=="GET"){
+////                if(result[1]==1){
+//                    //$scope.uploadConfirmModuleData=result[2];
+//                    var moduleDisplayNames=[];
+//                    console.log(AwareOfModuleNames);
+//                    angular.forEach(AwareOfModuleNames, function(value, key) {
+//                        console.log(value);
+//                        var moduleName=value.toString().replace("org.openmrs.module.","");
+//                        var responseModule = ModuleService.getModuleDetails(moduleName);
+//                        responseModule.then(function(resultModule){            
+//                            if(resultModule[0]=="GET"){
+//                                if(resultModule[1]==1){
+//                                    console.log(resultModule[2]);
+//                                    //return resultModule[2].display;
+//                                    moduleDisplayNames.push(resultModule[2].display);
+//                                }else{
+//                                    moduleDisplayNames.push(moduleName);
+//                                }
+//                            }else{
+//                                moduleDisplayNames.push(moduleName);
+//                            }
+//                            console.log(moduleDisplayNames);
+//                            $scope.moduleViewAwareOfModules={
+//                                "awareOfModules" : moduleDisplayNames
+//                            }
+//                        });
+//                    });
+//                    //console.log($scope.stopConfirmModuleData);
+////                }
+////            }
+////        });
+//      }
+//      
+      
     $scope.getAllModuleDetails= function(){
         
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Modules","#/module-show"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules",""]]});
       // *** /OpenMRS breadcrumbs ***
         
         console.log("getAllModuleDetails");
@@ -441,6 +725,11 @@ managemoduleController.controller('ModuleListCtrl',
     
  
     $scope.checkAllModulesForUpdate=function(){
+        
+      // *** /OpenMRS breadcrumbs ***  
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Check for Updates",""]]});
+      // *** /OpenMRS breadcrumbs ***
+        
         console.log("checkAllModulesForUpdate");
         $scope.searchingForUpdate=true;
         var count=0;
@@ -479,12 +768,12 @@ managemoduleController.controller('ModuleListCtrl',
                                 }
                                 else{
                                 // error in retrive Module update details
-                                $scope.checkUpdateForAllModuleError="Could not Get some the module update details."
+                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
                                 }
                             }
                             else{
                                 // error in retrive Module update details
-                                $scope.checkUpdateForAllModuleError="Could not Get some the module update details."
+                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
                             }
                         });
                     });
@@ -513,12 +802,12 @@ managemoduleController.controller('ModuleListCtrl',
                 }
                 else{
                     // error in retrive Module details
-                    $scope.checkUpdateForAllModuleError="Could not Get the module details."
+                    $scope.checkUpdateForAllModuleError="Could not get the module details."
                 }
             }
             else{
                 //  Could not fetch Module Details
-                $scope.checkUpdateForAllModuleError="Could not Get the module list."
+                $scope.checkUpdateForAllModuleError="Could not get the module list."
             }
             $scope.searchingForUpdate=false;
         });

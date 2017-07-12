@@ -20,12 +20,17 @@ uploadModule.directive('fileModel', ['$parse', function ($parse) {
 uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', function($scope,$http,OWARoutesUtil,$rootScope){
 
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Modules","#/module-show"], ["Upload Module","#/upload-module"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Upload Module",""]]});
       // *** /OpenMRS breadcrumbs ***
     
     $scope.PostDataResponse ='';
     $scope.ResponseDetails ='';
 
+    $scope.removeFile = function(){
+        angular.element("input[type='file']").val(null);
+        $scope.myFile = null;
+    }
+    
     $scope.uploadFile = function(){
         var file = $scope.myFile;
 

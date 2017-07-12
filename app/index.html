@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html ng-app="managemodule">
+  <head>
+    <title>System Administration</title>
+    <!-- openmrs favicon -->
+    <link rel="shortcut icon" type="image/ico" href="../../images/openmrs-favicon.ico"/>
+    <link rel="icon" type="image/png" href="../../images/openmrs-favicon.png"/>
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- owa styles -->
+    <link rel="stylesheet" href="css/moduleManagement.css" type="text/css"/>
+    <link rel="stylesheet" href="css/main.css" type="text/css"/> 
+    <link rel="stylesheet" href="css/bs-new.css" type="text/css"/> 
+  </head>
+  <body>
+
+<!-- OpenMRS Header-->
+      <header ng-controller="mainHomeCtrl">
+    <div class="logo">
+        <a href="/openmrs/referenceapplication/home.page">
+            <img src="/openmrs/ms/uiframework/resource/uicommons/images/logo/openmrs-with-title-small.png">
+        </a>
+    </div>
+    
+    <ul class="user-options" data-ng-init="getOpenMRSSession()">
+        
+        <li class="change-location dropdown" style="background:rgba(0,0,0,0); position:relative; float:none; top:0px; padding:0px;">
+            <a href="" class="dropdown-toggle" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="icon-user small"></i>
+                <span id="selected-location" data-bind="text: text" location-uuid="{{OpenMRSSessionData.sessionLocation.uuid}}" ng-bind="OpenMRSSessionData.user.display">
+                 </span>
+<!--                <i class="link icon-caret-down"></i>-->
+                <i class="icon-caret-down link" style="font-size: 0.7em;"></i>
+            </a>
+            
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                <a href="/openmrs/adminui/myaccount/myAccount.page">
+            <button class="dropdown-item dropdown-item-OpenMRSheader" type="button" >My Account</button>
+              </a>
+                   
+          </div>  
+        </li>
+       
+ 
+            
+        <li class="change-location dropdown" style="background:rgba(0,0,0,0); position:relative; float:none; top:0px; padding:0px;">
+            <a href="" class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="icon-map-marker small"></i>
+                <span id="selected-location" data-bind="text: text" location-uuid="{{OpenMRSSessionData.sessionLocation.uuid}}" ng-bind="OpenMRSSessionData.sessionLocation.display">
+                 </span>
+<!--                <i class="link icon-caret-down"></i>-->
+                <i class="icon-caret-down link" style="font-size: 0.7em;"></i>
+            </a>
+            
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu2" data-ng-init="getOpenMRSLocation()">
+              
+            <button  ng-repeat="location in OpenMRSLocationData" class="dropdown-item dropdown-item-OpenMRSheader" type="button" ng-click="setOpenMRSLocation(location.uuid,location.display)">{{location.display}}</button>
+                   
+          </div>  
+        </li>
+         
+        <li class="logout" >
+            <a href="/openmrs/appui/header/logout.action?successUrl=openmrs">
+                Logout
+                <i class="icon-signout small"></i>
+            </a>
+        </li>
+    </ul>
+
+
+    
+</header>
+<!--// OpenMRS Header-->
+
+      
+<!--OpenMRS breadcrumbs-->
+
+<ul id="breadcrumbs" ng-controller="breadCrumbCtrl" >
+    
+    <li>
+        <a href="/openmrs">
+        <i class="icon-home small"></i>
+        </a> 
+    </li>
+    
+    <li ng-repeat="links in openMRSBreadcrumbs" ng-show="links">
+        <i class="icon-chevron-right link"></i>
+        <a href="{{links[1]}}" ng-if="links[1]!=''" ng-bind="links[0]"></a>
+        <b ng-if="links[1]==''" ng-bind="links[0]"></b>
+    </li>
+</ul>
+<!--//OpenMRS breadcrumbs-->
+
+      
+      
+      
+    <div id="body-wrapper" ng-view>
+      
+    </div>
+
+
+<!--   <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script> -->
+ 
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+
+   
+    <!-- bower:js -->
+    <!-- endbower -->
+    <!-- owa scripts -->
+    <script src="js/moduleManagerStartUp.js"></script>
+    <script src="js/OWA-route.js"></script>
+
+    <script src="js/main/route-management.js"></script>
+      <script src="js/main/main.js"></script>
+      
+    <!-- <script src="js/app.js"></script> -->
+    <script src="js/module/module-view-controllers.js"></script>
+    <script src="js/module/search-modules-controller.js"></script> 
+    <script src="js/module/upload-modules-controller.js"></script> 
+<!--    <script src="js/module/update-module-service.js"></script>-->
+      
+    <script src="js/systeminfo/system-info.js"></script>
+      
+    <script src="js/encounters/manage-encounters.js"></script>
+      
+    <script src="js/lib/xml2json.min.js"></script> 
+    <script src="js/lib/angular-base64.js"></script> 
+
+  </body>
+</html>

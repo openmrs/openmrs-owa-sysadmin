@@ -8,7 +8,9 @@
       <h2>Manage Information</h2>
     </div>
   </div>
-
+    
+    
+<!--Module Action-->
     <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startModuleSuccess}}
@@ -22,7 +24,16 @@
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startModuleError}}
     </div>
-
+    
+    <div class="row" ng-if=" isStartModule==true || isStopModule==true">
+        <div class="col-md-12 col-xs-12 text-center center-block">
+            <h3 style="text-align: center;">Please Wait until modules actions complete!</h3>
+            <img src="img/inprogress.gif" >
+        </div>
+    </div>
+<!--Module Action-->
+    
+<!--    Module update-->
     <div class="alert alert-success alert-dismissable" ng-if="moduleNewUpdateFound==1">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         Newest version of this module is avialable for upgrade! 
@@ -33,7 +44,7 @@
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         Module version is upto date. No updates found!
     </div>
-    
+<!--    // Module update-->
 
 <!--    Module Upgrade Notifications-->
     
@@ -81,15 +92,18 @@
 <!--    Module Upgrade Notifications-->
 
     
+<!--
   <div class="panel panel-primary">
     <div class="panel-heading">
       <b> Module Name : {{ModuleViewData.display}}  </b> 
     </div>
+-->
+<div class="row col-12">
     <div class="panel-body">
-
+        <h2> Module Name : {{ModuleViewData.display}}  </h2> 
       <div style="padding-bottom: 10px;">
         <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true"> <i class="icon-play"> </i> Start Module</button>
-        <button ng-click="StopModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
+        <button ng-click="stopConfirmationShow(ModuleViewData.uuid)" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
 
         <button ng-click="checkModuleUpdate(ModuleViewData.name,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
       </div>
@@ -124,24 +138,49 @@
           <td valign="top">{{ModuleViewData.requireOpenmrsVersion}}</td>
         </tr>
       </tbody>
-    </table>	
+    </table>
+        
     <h2> Aware of Modules</h2>
     <table class="layout display responsive-table">
       <tbody>
-        <tr ng-repeat="class in ModuleViewData.awareOfModules"> 
-          <td> {{class}}</td>
+        <tr ng-repeat="class in moduleViewAwareOfModules.awareOfModules"> 
+            <td> <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class[1]}} ">{{class[0]}} </a></td>
         </tr>
       </tbody>
     </table>  
+        
     <h2> Required Modules</h2>
     <table class="layout display responsive-table">
       <tbody>
-        <tr ng-repeat="class in ModuleViewData.requiredModules"> 
-          <td> {{class}}</td>
+        <tr ng-repeat="class2 in moduleViewRequiredModules.requiredModules"> 
+            <td> <i class="icon-signin"></i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a></td>
         </tr>
       </tbody>
     </table>  
   </div>
-</div>
+    </div>    
+<!--</div>-->
 </div>
 
+
+<div class="modal fade" id="stopConfirmation" aria-labelledby="stopConfirmation" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Do you want to stop this Module?</h5>
+      </div>
+    <form>
+    <div class="modal-body">
+        <p><b>It may afftect this following modules which are currently loaded.</b></p>
+        <ul class="list-group" ng-show="stopConfirmModuleData">
+          <li class="list-group-item" ng-repeat="awaremodules in stopConfirmModuleData.awareOfModules"><i class="icon-exclamation-sign"> </i> {{awaremodules}}</li>
+        </ul>
+    </div>    
+    <div class="modal-footer" >
+        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES')" data-dismiss="modal"><i class="icon-stop"> </i> Yes</button>
+        <button class=" btn-secondary" data-dismiss="modal">No</button>
+    </div>
+    </form>
+    </div>
+  </div>
+</div>

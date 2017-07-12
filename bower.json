@@ -1,9 +1,9 @@
 {
-  "name": "ModuleManagement",
+  "name": "SystemAdministration",
   "authors": [
     "suthagar23"
   ],
-  "description": "Open Web App for OpenMRS Module Management",
+  "description": "Open Web App for OpenMRS System Administration",
   "license": "MPL-2.0",
   "private": true,
   "ignore": [

@@ -2572,7 +2572,7 @@ ul.left-menu li .arrow {
   position: relative;
   float: right;
   text-align: right;
-  font-size: 0.85em;
+/* locationUuid*/
   z-index: 999;
   top: 20px;
   padding: 5px 12px;

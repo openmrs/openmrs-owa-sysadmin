@@ -10,71 +10,100 @@
     <div class="panel panel-primary">
         <div class="panel-heading">Encounter Summary</div>
         <div class="panel-body">
-            <table>
-                <tr>
-                    <td>Patient*</td>
-                    <td><input type="text" placeholder="Enter Patient name"></td>td>
-                </tr>
-                 <tr>
-                    <td>Location</td>
-                    <td><input type="text" placeholder="Enter Patient name"></td>td>
-                </tr>
-                 <tr>
-                    <td>Encounter Date*</td>
-                    <td><input type="text" placeholder="Enter Patient name"></td>td>
-                </tr>
-                 <tr>
-                    <td>Visit</td>
-                    <td><input type="text" placeholder="Enter Patient name"></td>td>
-                </tr>
-            </table>
             
+            <div class="row" style="margin-bottom:15px;">
+                <div class="col-2 col-xl-2 col-sm-2">Patient*</div>
+                <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" value="19a07a3d-0a55-4508-bb46-a980ede1e067" required> </div>
+            </div>
+ 
+            
+            
+            
+            <div class="row" style="margin-bottom:15px;">
+                <div class="col-2 col-xl-2 col-sm-2">Location</div>
+                <div class="col-9 col-xl-9 col-sm-9 form"> 
+                    <select class="form-control" id="encounterLocation" ng-model="encounterLocation" style="min-width: 100%;" data-ng-init="addOpenMRSLocations()">
+                        <option ng-repeat="location in OpenMRSLocationData" value="{{location.uuid}}">{{location.display}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom:15px;">
+                <div class="col-2 col-xl-2 col-sm-2">Encounter Date*</div>
+                <div class="col-9 col-xl-9 col-sm-9 form"> 
+                    <input type="datetime-local" placeholder="Enter Patient name" value="2016-07-11T00:00" ng-model="encounterDate" style="width:95%;" required> 
+                </div>
+                
+            </div>
+             <div class="row" style="margin-bottom:15px;">
+                <div class="col-2col-xl-2 col-sm-2">Visit</div>
+                <div class="col-9 col-xl-9 col-sm-9 form"> 
+                    <select class="form-control" id="encounterVisit" ng-model="encounterVisit" style="min-width: 100%;" data-ng-init="getVisits()">
+                        <option ng-repeat="visit in visitData" value="{{visit.uuid}}">{{visit.display}}</option>
+                    </select>
+                </div>
+            </div>
+             <div class="row" style="margin-bottom:15px;">
+                <div class="col-2col-xl-2 col-sm-2">Encounter Type</div>
+                <div class="col-9 col-xl-9 col-sm-9 form"> 
+                    <select class="form-control" id="encounterType" ng-model="encounterType" style="min-width: 100%;" data-ng-init="getEncounterTypes()">
+                        <option ng-repeat="encounterType in EncounterTypeData" value="{{encounterType.uuid}}">{{encounterType.display}}</option>
+                    </select>
+                </div>
+            </div>
+             <div class="row" style="margin-bottom:15px;">
+                <div class="col-2col-xl-2 col-sm-2">Form</div>
+                <div class="col-9 col-xl-9 col-sm-9 form"> 
+                     <select class="form-control" id="encounterForm" ng-model="encounterForm" style="min-width: 100%;" data-ng-init="getForm()">
+                        <option ng-repeat="form in fromData" value="{{form.uuid}}">{{form.display}}</option>
+                    </select>
+                 </div>
+            </div>
+ 
         </div>
     </div>
-    
     
     <div class="panel panel-primary">
         <div class="panel-heading">Providers</div>
         <div class="panel-body">
             
-				<div style="padding-bottom: 10px;">
-					<a href=""><button>Add Provider</button></a>
-				</div>
-            
-            <form style="margin-bottom: 15px;">
-            <input type="text" name="search" placeholder="Search Encounters.."  ng-model="searchText" ng-change="change()"/>
-            </form>
-
-            <table ng-if="encounterFound==true">
-                    <tr>
-                        <th> Role</th>
-                        <th> Provider Name</th>
-                        <th> Identifier </th>
-                        <th> Action </th>
-                    </tr>
-                    <tbody>
-                    <tr ng-repeat="encounter in searchedEncounterData">
-                        <td> {{encounter.patient.display}} </td>
-                        <td> {{encounter.encounterType.display}} </td>
-                        <td> {{encounter.form.display}} </td>
-                        <td> <li ne-repeat="provider in encounter.encounterProviders"> {{provider.display}}  </li></td>
-                        <td> {{encounter.location.display}} </td>
-                        <td> <a href=""><button>Remove</button></a></td>
-                    </tr>
-                    </tbody>
-            </table>   
-
-            <div class="alert alert-info text-center" ng-if="encounterFound==false">
-                No Providers found.
+            <div class="bd-callout bd-callout-info" ng-repeat="contact in contacts track by $index">
+                <h4 id="" style="margin-bottom:10px;">New Role</h4>
+                 <div class="row" style="margin-bottom:10px;">
+                    <div class="col-1 col-xl-1 col-sm-1">Encounter Role</div>
+                    <div class="col-4 col-xl-4 col-sm-4 form"> 
+                        <select class="form-control" id="sel1" style="min-width: 100%;" data-ng-init="getEncounterRole()" ng-model="contact.encounterRole">
+                        <option ng-repeat="role in encounterRoleData" value="{{role.uuid}}">{{role.display}}</option>
+                    </select>
+                    </div>
+                 
+                    <div class="col-1 col-xl-1 col-sm-1">Provider Name</div>
+                    <div class="col-4 col-xl-4 col-sm-4 form"> 
+                        <select class="form-control" id="sel1" style="min-width: 100%;" data-ng-init="getProviders()" ng-model="contact.providername">
+                        <option ng-repeat="provider in providerData" value="{{provider.uuid}}">{{provider.display}}</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-11">
+                        <a href="" style="float:right;"><button class="btn btn-danger">Remove</button></a>
+                    </div>
+                </div>
             </div>
-
+            
+            <a href=""><button ng-click="addMoreProviderBox()">Add New</button></a>
+            
+              <pre>{{ contacts | json }}</pre>
+            
         </div>
     </div>
     
-    <div style="padding-bottom: 10px;">
-        <a href=""><button>Save Encounter</button></a>
-         <a href=""><button>Cancel</button></a>
-    </div>
+      <div class="row" >
+      <div class="modal-footer" >
+        <button type="button" class="btn btn-secondary" ng-click="saveEncounter()">Save</button>
+          
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="modal-footer" >
+      </div>
     
     
 </div>

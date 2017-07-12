@@ -4,7 +4,7 @@
      SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil','$rootScope', function($scope, $http, OWARoutesUtil, $rootScope) {
          
       // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["Modules","#/module-show"], ["Search Module","#/install-from-module-repository"]]});
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Search Module",""]]});
       // *** /OpenMRS breadcrumbs ***
          
          

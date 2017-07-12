@@ -38,13 +38,21 @@ managemodule.config(['$routeProvider',
                           templateUrl: 'js/encounters/search-encounters.html',
                           controller: 'searchEncounterCtrl',
                         }).
-                        when('/manage-encounters', {
+//                        when('/manage-encounters/:encounterUUID', {
+//                          templateUrl: 'js/encounters/manage-encounters.html',
+//                          controller: 'manageEncounterCtrl',
+//                        }).
+                        when('/add-encounter', {
                           templateUrl: 'js/encounters/manage-encounters.html',
-                          controller: 'manageEncounterCtrl',
+                          controller: 'AddNewEncounterCtrl',
                         }).
-                        when('/manage-encounter-type', {
+                        when('/manage-encounter-types', {
                           templateUrl: 'js/encounters/manage-encounter-type.html',
                           controller: 'manageEncounterTypeCtrl',
+                        }).
+                        when('/manage-encounter-roles', {
+                          templateUrl: 'js/encounters/manage-encounter-role.html',
+                          controller: 'manageEncounterRoleCtrl',
                         }).
                         otherwise({
                           //redirectTo: '/module-show'

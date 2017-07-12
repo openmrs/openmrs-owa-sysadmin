@@ -1,14 +1,14 @@
 {
   "version": "1.0.0",
-  "name": "Module Management - OWA",
-  "description": "OWA under development for Module Management functionalities ",
-  "launch_path": "managemodule.html",
+  "name": "System Administration",
+  "description": "OWA Contains modules related to System Administration ",
+  "launch_path": "index.html",
   "icons": {
     "48": "/img/omrs-button.png"
   },
   "developer": {
     "name": "suthagar23",
-    "url": "https://github.com/suthagar23/openmrs-owa-admin-module"
+    "url": "https://github.com/suthagar23/openmrs-owa-sysadmin"
   },
   "default_locale": "en",
     "activities": {

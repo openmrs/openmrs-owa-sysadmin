@@ -103,22 +103,24 @@
     
 <!--    //Module update check Notifications-->   
     
+<!--
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<b>Module Details </b> 
 		</div>
+-->
+     <div class="row col-12">
 		<div class="panel-body">
 				
-
 				<table class="layout display responsive-table">
 					<tbody>
 						<tr>
-							<th> Name </th>
-							<th> Author </th>
-							<th> Description </th>
-							<th > Cu.Version </th>
-                            <th > Ava.Version </th>
-							<th> Actions </th>
+							<th style="width:18%;"> Name </th>
+							<th style="width:10%;"> Author </th>
+							<th style="width:50%;"> Description </th>
+							<th style="width:6%;"> Cu.Ver </th>
+                            <th style="width:6%;"> New.Ver </th>
+							<th style="width:10%;"> Actions </th>
 						</tr>
 
 						<tr ng-repeat="updateData in availableUpdateData"> 
@@ -130,7 +132,7 @@
 							<td valign="top">{{updateData[5]}}</td>
                             <td valign="top">{{updateData[6]}}</td>
 							<td valign="top" >
-								<button ng-click=""  style="width: 100px;"> <i class="icon-repeat"></i> Update </button>
+								<button ng-click="updateModule(updateData[7])"  style="width: 110px;"> <i class="icon-repeat"> </i> Update </button>
 							</td>
 						</tr>
 					</tbody>
@@ -138,7 +140,8 @@
 			 
 			</div>
 		</div>
-	</div>
+</div>
+<!--	</div>-->
 
 
 	<style>

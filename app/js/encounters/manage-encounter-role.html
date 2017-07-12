@@ -1,0 +1,130 @@
+
+<div class="container" data-ng-init="getEncounterRoles()"> 
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Encounter Role Management</h2>
+        </div>
+    </div>
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">Current Encounter Roles</div>
+        <div class="panel-body">
+         
+<!--    Notifications-->
+    <div class="alert alert-success alert-dismissable" ng-if="savedEncounterRole[0]==1">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{savedEncounterRole[1]}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="savedEncounterRole[0]==0">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{savedEncounterRole[1]}}
+    </div>
+<!--    // Notifications-->
+            
+            <div style="padding-bottom: 10px;">
+<!--                <button data-toggle="modal" data-target="#addEncounterModal">Add Encounter Roles</button>-->
+               <button ng-click="openEncounterRoleModal()">Add Encounter Roles</button>
+            </div>
+ 
+            
+            
+            <form style="margin-bottom: 15px;">
+            <input type="text" name="search" placeholder="Search Encounter Role.."  ng-model="searchRoleText" ng-change="searchEncounterRoles()" style="width:97%;"/>
+            </form>
+
+            <table ng-if="encounterRoleFound==true">
+                    <tr>
+                        <th> # </th>
+                        <th> name </th>
+                        <th> Description </th>
+                        <th colspan="3"> Action</th>
+                    </tr>
+                    <tbody>
+                    <tr ng-repeat="encounterRole in searchedEncounterRoleData">
+                        <td valign="top" style="max-width: 20px;">
+				            <img src="img/running-module.png" ng-if="encounterRole.retired != true" height="20" style="top: 5px;left: auto;" /> 
+				            <img src="img/stopped-module.png" ng-if="encounterRole.retired == true" height="20" style="top: 5px;left: auto;"/> 
+				        </td>
+                        <td> <b>{{encounterRole.display}} </b></td>
+                        <td> {{encounterRole.description}} </td>
+                        <td style="min-width:100px;"> <button ng-click="encounterRoleEdit(encounterRole.uuid)"><i class="icon-edit"></i>Edit</button> </td>
+                        
+                        
+                        <td style="min-width:140px;"> 
+                            <button ng-click="encounterRoleRetire(encounterRole.uuid,'true')" ng-if="encounterRole.retired==false"><i class="icon-external-link"></i>Retire</button> 
+                            <button ng-click="encounterRoleRetire(encounterRole.uuid,'false')" ng-if="encounterRole.retired==true"><i class="icon-retweet"></i>Unretire</button> 
+                            
+                        </td>
+                        <td> <button ng-click="encounterRoleDelete(encounterRole.uuid)"><i class="icon-trash"></i></button> </td>
+                    </tr>
+                    </tbody>
+            </table>   
+
+            <div class="alert alert-danger text-center" ng-if="encounterRoleFound==false">
+                No Encounter Roles found.
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addEncounterRoleModal" role="dialog" data-ng-init="getPrivilege()">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Encounter Role</h5>
+      </div>
+    <form>
+      <div class="modal-body">
+           
+              
+    <div class="panel panel-default">
+        <div class="panel-heading">Current Encounter Roles</div>
+        <div class="panel-body">
+            
+        <!--          For Edit Encounter Role      -->
+        <input hidden="" Role="text" id="encounterRoleName" ng-model="encounterRoleUuid">
+          
+          <div class="form-group">
+            <label for="name">Name</label> 
+            <input Role="text" id="encounterRoleName" ng-model="encounterRoleName">
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+              <textarea id="encounterRoleDescription" ng-model="encounterRoleDescription"> </textarea>
+          </div>
+            <div class="form-group">
+            <label for="description">Edit privilege</label>
+              <select class="form-control" id="editPrivilege">
+                <option ng-repeat="privilege in PrivilegeData" value="privilege.uuid">{{privilege.display}}</option>
+              </select>
+          </div>
+         
+            <div class="form-group">
+            <label for="description">View privilege</label>
+              <select class="form-control" id="viewPrivilege">
+                <option ng-repeat="privilege in PrivilegeData" value="privilege.uuid">{{privilege.display}}</option>
+              </select>
+          </div>
+       
+          </div>
+              </div>
+          </div>
+          
+    
+      <div class="modal-footer" >
+        <button Role="button" class="btn btn-secondary" ng-click="saveEncounterRole()" ng-if="requestEditEncounterRole==false">Save changes</button>
+        <button Role="button" class="btn btn-secondary" ng-click="updateEncounterRole(encounterRoleUuid)" ng-if="requestEditEncounterRole==true">Update changes</button>
+        <button Role="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+
+ 

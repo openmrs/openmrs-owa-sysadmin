@@ -23,7 +23,7 @@ var gutil = require('gulp-util');
 
 var plugins = gulpLoadPlugins();
 
-var THIS_APP_ID = 'ManageModule';
+var THIS_APP_ID = 'SystemAdministration';
 
 var htmlGlob = ['app/**/*.html'];
 var resourcesGlob = ['app/**/*.{png,svg,jpg,gif}', 'app/**/*.{css,less}', 
@@ -40,7 +40,7 @@ var getConfig = function () {
   } catch (err) {
     // create file with defaults if not found
     config = {
-      'LOCAL_OWA_FOLDER': 'C:\\\\Users\\\\user\\\\openmrs\\\\ManageModule\\\\owa\\\\'
+      'LOCAL_OWA_FOLDER': 'C:\\\\Users\\\\user\\\\openmrs\\\\SystemAdministration\\\\owa\\\\'
     };
 
     fs.writeFile('config.json', JSON.stringify(config), function(err) {

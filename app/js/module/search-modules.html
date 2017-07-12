@@ -66,9 +66,12 @@ input[type=text]:focus {
 
 
 
+<!--
     <div class="panel panel-primary"  ng-hide="isDownloading && isUploading">
         <div class="panel-heading">Search Modules</div>
-        <div class="panel-body">
+-->
+
+        <div class="panel-body" ng-hide="isDownloading && isUploading">
             <form style="margin-bottom: 15px;">
             <input type="text" name="search" placeholder="Search Modules.."  ng-model="searchText" ng-change="change(text)"/>
             </form>
@@ -97,8 +100,8 @@ input[type=text]:focus {
             <div class="alert alert-info text-center" ng-if="moduleFound==false">
                 No Modules found.
             </div>
-
-        </div>
-    </div>
+         </div>
+      
+<!--    </div>-->
 
  
