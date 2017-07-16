@@ -5,7 +5,7 @@
 <div class="container" data-ng-init="getModuleViewDetails()">
   <div class="row">
     <div class="col-md-12 col-xs-12">
-      <h2>Manage Information</h2>
+      <h2>Module Information</h2>
     </div>
   </div>
     
@@ -98,13 +98,22 @@
       <b> Module Name : {{ModuleViewData.display}}  </b> 
     </div>
 -->
-<div class="row col-12">
+
+    
+
+    
+<div class="row col-12" ng-show="requestModuleViewDetails">
     <div class="panel-body">
         <h2> Module Name : {{ModuleViewData.display}}  </h2> 
       <div style="padding-bottom: 10px;">
+<!--
         <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true"> <i class="icon-play"> </i> Start Module</button>
         <button ng-click="stopConfirmationShow(ModuleViewData.uuid)" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
-
+-->
+       <button ng-click="getEffectedModuleListWhenStop()" style="width: 100px;"> <img src="img/start-new-1.png" /> GET </button>
+          <button ng-click="stopConfirmationShow(ModuleViewData.uuid)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
+          <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
+          
         <button ng-click="checkModuleUpdate(ModuleViewData.name,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
       </div>
       <table class="layout display responsive-table">
@@ -146,6 +155,13 @@
         <tr ng-repeat="class in moduleViewAwareOfModules.awareOfModules"> 
             <td> <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class[1]}} ">{{class[0]}} </a></td>
         </tr>
+     
+<!--
+            <div class="alert alert-info" style="text-align:center;" ng-if="moduleViewAwareOfModules.awareOfModules.length<1">
+                There are no aware of modules for this Module.
+            </div>  
+-->
+        
       </tbody>
     </table>  
         
@@ -155,11 +171,71 @@
         <tr ng-repeat="class2 in moduleViewRequiredModules.requiredModules"> 
             <td> <i class="icon-signin"></i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a></td>
         </tr>
+         
+<!--
+            <div class="alert alert-info" style="text-align:center;" ng-if="moduleViewRequiredModules.requiredModules.length<1">
+                There are no required modules for this Module.
+            </div>  
+-->
+    
       </tbody>
     </table>  
   </div>
     </div>    
 <!--</div>-->
+    
+<!-- If Module details not found in server-->
+    
+<div class="alert alert-danger" ng-hide="requestModuleViewDetails" style="text-align:center;"> 
+    <p style="padding-bottom:15px;">
+        Could not get this module details from this Server! <br/>
+        Goto <a href="https://modules.openmrs.org/"> https://modules.openmrs.org/ </a> to get more about this module. <br/> 
+    </p>
+    <button ng-click="getNotInstalledModuleDetailsFromOnline()"> <i class="icon-search"> </i> Get details from Online!</button>
+</div>
+    <div class="row col-12" ng-if="onlineDataFound!=0">
+         <div class="panel-body" style="width:100%;" >
+             <div class=""  ng-if="onlineDataFound==1">
+                <ul class="list-group" style="width:100%;" ng-repeat="moduleDetails in nonInstalledModuleDetails ">
+                  <li class="list-group-item">
+                      <b> Module Name : {{moduleDetails.name}}</b>
+                  </li>
+                  <li class="list-group-item">
+                    <table class="layout display responsive-table">
+                        <tbody>
+                            <tr>
+                                <td> Description </td>
+                                <td> {{moduleDetails.description}} </td>
+                            </tr>
+                            <tr>
+                                <td> LegacyId </td>
+                                <td> {{moduleDetails.legacyId}} </td>
+                            </tr>  
+                            <tr>
+                                <td> Documentation URL </td>
+                                <td> <a href="{{moduleDetails.documentationURL}}" target="_blank">{{moduleDetails.documentationURL}} </a> </td>
+                            </tr>  
+                            <tr>
+                                <td> Module Owner </td>
+                                <td> {{moduleDetails.owner}} </td>
+                            </tr>  
+                            <tr>
+                                <td> Module Maintainers</td>
+                                <td> <p ng-repeat="maintainers in moduleDetails.maintainers"> {{maintainers.fullname}} </p>  </td>
+                            </tr> 
+                        </tbody>
+                    </table>
+                  </li>
+                </ul>
+             </div>
+             
+            <div class="alert alert-danger text-center" ng-if="onlineDataFound==-1">
+                Could not get details from Online server.
+            </div>
+         </div>
+    </div>
+<!-- //If Module details not found in server-->
+    
 </div>
 
 
@@ -171,16 +247,40 @@
       </div>
     <form>
     <div class="modal-body">
-        <p><b>It may afftect this following modules which are currently loaded.</b></p>
+        <p>
+            <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules which are currently loaded.</b>
+            <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on this. So stopping it will not affect any module.</b>
+        </p>
+ 
         <ul class="list-group" ng-show="stopConfirmModuleData">
-          <li class="list-group-item" ng-repeat="awaremodules in stopConfirmModuleData.awareOfModules"><i class="icon-exclamation-sign"> </i> {{awaremodules}}</li>
+          <li class="list-group-item" ng-repeat="requiredModules in stopConfirmModuleData.requiredModules"><i class="icon-exclamation-sign"> </i> {{requiredModules}}</li>
         </ul>
     </div>    
     <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES')" data-dismiss="modal"><i class="icon-stop"> </i> Yes</button>
-        <button class=" btn-secondary" data-dismiss="modal">No</button>
+        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES')" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
+        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
     </form>
     </div>
   </div>
 </div>
+
+
+
+
+
+	<style>
+		button {
+			postion: relative;
+			text-align: right;
+			vertical-align: middle;
+		}
+
+		button img {
+			position: relative;
+			padding-right: 7px;
+			vertical-align: middle;
+			display: inline-block;
+
+		}
+	</style>
