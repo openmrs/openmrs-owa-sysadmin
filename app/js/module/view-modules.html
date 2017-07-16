@@ -97,7 +97,7 @@
 							<th> Author </th>
 							<th style="max-width: 60px;"> Version </th>
 							<th> Description </th>
-							<th colspan="2" style="max-width: 90px;"> Actions </th>
+							<th  style="min-width: 180px;"> Actions </th>
 						</tr>
 
 						<tr ng-repeat="class in AllModuleViewData"> 
@@ -112,12 +112,10 @@
 							<td valign="top" style="max-width: 60px;">{{class.version}}</td>
 							<td valign="top">{{class.description}}</td>
 
-							<td valign="top" >
+							<td valign="top" align="center" valign="middle" style="vertical-align:middle;">
 								<button ng-click="stopConfirmationShow(class.uuid)" ng-if="class.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
 								<button ng-click="StartModule(class.uuid,'ALLMODULES')" ng-if="class.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
-							</td>
-                      
-							<td valign="top"> 
+							
 								<button class="btn btn-danger" ng-click="unloadConfirmationShow(class.uuid)"> <i class="icon-trash"></i></button>
 							</td>
 						</tr>
@@ -139,14 +137,17 @@
       </div>
     <form>
     <div class="modal-body">
-        <p><b>It may afftect this following modules which are currently loaded.</b></p>
+        <p>
+            <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules which are currently loaded.</b>
+            <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on this. So stopping it will not affect any module.</b>
+        </p>
         <ul class="list-group" ng-show="uploadConfirmModuleData">
-          <li class="list-group-item" ng-repeat="awaremodules in uploadConfirmModuleData.awareOfModules"><i class="icon-exclamation-sign"> </i> {{awaremodules}}</li>
+          <li class="list-group-item" ng-repeat="requiredModules in uploadConfirmModuleData.requiredModules"><i class="icon-exclamation-sign"> </i> {{requiredModules}}</li>
         </ul>
     </div>    
     <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="unloadModule(uploadConfirmModuleData.uuid)" data-dismiss="modal"> <i class="icon-trash"></i> Yes</button>
-        <button class=" btn-secondary" data-dismiss="modal">No</button>
+        <button class=" btn-danger" ng-click="unloadModule(uploadConfirmModuleData.uuid)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
     </form>
     </div>
@@ -161,14 +162,17 @@
       </div>
     <form>
     <div class="modal-body">
-        <p><b>It may afftect this following modules which are currently loaded.</b></p>
+        <p>
+            <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules which are currently loaded.</b>
+            <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on this. So stopping it will not affect any module.</b>
+        </p>
         <ul class="list-group" ng-show="stopConfirmModuleData">
-          <li class="list-group-item" ng-repeat="awaremodules in stopConfirmModuleData.awareOfModules"><i class="icon-exclamation-sign"> </i> {{awaremodules}}</li>
+          <li class="list-group-item" ng-repeat="requiredModules in stopConfirmModuleData.requiredModules"><i class="icon-exclamation-sign"> </i> {{requiredModules}}</li>
         </ul>
     </div>    
     <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES')" data-dismiss="modal"><i class="icon-stop"> </i> Yes</button>
-        <button class=" btn-secondary" data-dismiss="modal">No</button>
+        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES')" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
+        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
     </form>
     </div>
