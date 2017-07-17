@@ -82,7 +82,7 @@
                         <button><i class="icon-repeat"> </i> Check for Updates</button>
                     </a>
 
-                    <a href="#/check-for-module-updates" style="float: right;">
+                    <a href="" style="float: right;">
                         <button ng-click='StartAllModules()'><i class="icon-play"> </i> Start All</button>
                     </a>
                      
@@ -113,10 +113,10 @@
 							<td valign="top">{{class.description}}</td>
 
 							<td valign="top" align="center" valign="middle" style="vertical-align:middle;">
-								<button ng-click="stopConfirmationShow(class.uuid)" ng-if="class.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
+								<button ng-click="stopConfirmationShow(class.packageName,class.uuid)" ng-if="class.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
 								<button ng-click="StartModule(class.uuid,'ALLMODULES')" ng-if="class.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
 							
-								<button class="btn btn-danger" ng-click="unloadConfirmationShow(class.uuid)"> <i class="icon-trash"></i></button>
+								<button class="btn btn-danger" ng-click="unloadConfirmationShow(class.packageName, class.uuid)"> <i class="icon-trash"></i></button>
 							</td>
 						</tr>
 					</tbody>

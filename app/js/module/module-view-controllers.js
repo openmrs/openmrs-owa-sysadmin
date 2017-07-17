@@ -322,31 +322,24 @@ managemoduleController.controller('ModuleListCtrl',
 //            });
 //      }
     
-      $scope.unloadConfirmationShow = function(moduleUuid){
+      $scope.unloadConfirmationShow = function(packagename, moduleUuid){
       	if(typeof($scope.uploadConfirmModuleData)!=undefined){
             delete $scope.uploadConfirmModuleData;
         }
-        
-        var response = ModuleService.getModuleDetails(moduleUuid);
-        response.then(function(result){            
-            if(result[0]=="GET"){
-                if(result[1]==1){
-                    //$scope.uploadConfirmModuleData=result[2];
-                    var moduleDisplayNames=[];
-                    angular.forEach(result[2].requiredModules, function(value, key) {
-                        var moduleName=value.toString().replace("org.openmrs.module.","");
-                        var responseModule = ModuleService.getModuleDetails(moduleName);
-                        responseModule.then(function(resultModule){            
-                            if(resultModule[0]=="GET"){
-                                if(resultModule[1]==1){
-                                    //console.log(resultModule[2]);
-                                    //return resultModule[2].display;
-                                    moduleDisplayNames.push(resultModule[2].display);
-                                }else{
-                                    moduleDisplayNames.push(moduleName);
-                                }
-                            }else{
-                                moduleDisplayNames.push(moduleName);
+        var moduleDisplayNames=[];
+        var response = ModuleService.getAllModuleDetails();
+        response.then(function(result){
+            responseType=result[0]; //UPLOAD or DOWNLOAD
+            responseValue=result[1]; // 1- success | 0 - fail
+            responseData=result[2];
+            responseStatus=result[3];
+            if(responseType=="GET"){
+                if(responseValue==1){
+                    angular.forEach(responseData.results, function(value1, key1) {
+                        angular.forEach(value1.requiredModules, function(value2, key2) {
+                           // console.log("2 - check : "+value1.packageName+" - "+value2);
+                            if(packagename==value2){
+                                console.log("*** 2 - required : "+value1.name);                                    moduleDisplayNames.push(value1.name);
                             }
                         });
                     });
@@ -354,13 +347,49 @@ managemoduleController.controller('ModuleListCtrl',
                         "uuid" : moduleUuid,
                         "requiredModules" : moduleDisplayNames
                     }
-                   // console.log($scope.uploadConfirmModuleData);
+                }
+                else{
+                    console.log("error");
                 }
             }
         });
         angular.element('#deleteConfirmation').modal('show');
-      }
-      
+        }
+//         // ******** OLD CODE ********      
+//        var response = ModuleService.getModuleDetails(moduleUuid);
+//        response.then(function(result){            
+//            if(result[0]=="GET"){
+//                if(result[1]==1){
+//                    //$scope.uploadConfirmModuleData=result[2];
+//                    var moduleDisplayNames=[];
+//                    angular.forEach(result[2].requiredModules, function(value, key) {
+//                        var moduleName=value.toString().replace("org.openmrs.module.","");
+//                        var responseModule = ModuleService.getModuleDetails(moduleName);
+//                        responseModule.then(function(resultModule){            
+//                            if(resultModule[0]=="GET"){
+//                                if(resultModule[1]==1){
+//                                    //console.log(resultModule[2]);
+//                                    //return resultModule[2].display;
+//                                    moduleDisplayNames.push(resultModule[2].display);
+//                                }else{
+//                                    moduleDisplayNames.push(moduleName);
+//                                }
+//                            }else{
+//                                moduleDisplayNames.push(moduleName);
+//                            }
+//                        });
+//                    });
+//                    $scope.uploadConfirmModuleData={
+//                        "uuid" : moduleUuid,
+//                        "requiredModules" : moduleDisplayNames
+//                    }
+//                   // console.log($scope.uploadConfirmModuleData);
+//                }
+//            }
+//        });
+//        angular.element('#deleteConfirmation').modal('show');
+//      }
+//         // ******** OLD CODE ********     
       
       
 //      $scope.unloadConfirmationShow = function(moduleUuid){
@@ -390,31 +419,24 @@ managemoduleController.controller('ModuleListCtrl',
 //      }
       
 
-        $scope.stopConfirmationShow = function(moduleUuid){
+        $scope.stopConfirmationShow = function(packagename,moduleUuid){
       	if(typeof($scope.stopConfirmModuleData)!=undefined){
             delete $scope.stopConfirmModuleData;
         }
-        
-        var response = ModuleService.getModuleDetails(moduleUuid);
-        response.then(function(result){            
-            if(result[0]=="GET"){
-                if(result[1]==1){
-                    //$scope.uploadConfirmModuleData=result[2];
-                    var moduleDisplayNames=[];
-                    angular.forEach(result[2].requiredModules, function(value, key) {
-                        var moduleName=value.toString().replace("org.openmrs.module.","");
-                        var responseModule = ModuleService.getModuleDetails(moduleName);
-                        responseModule.then(function(resultModule){            
-                            if(resultModule[0]=="GET"){
-                                if(resultModule[1]==1){
-                                    //console.log(resultModule[2]);
-                                    //return resultModule[2].display;
-                                    moduleDisplayNames.push(resultModule[2].display);
-                                }else{
-                                    moduleDisplayNames.push(moduleName);
-                                }
-                            }else{
-                                moduleDisplayNames.push(moduleName);
+        var moduleDisplayNames=[];
+        var response = ModuleService.getAllModuleDetails();
+        response.then(function(result){
+            responseType=result[0]; //UPLOAD or DOWNLOAD
+            responseValue=result[1]; // 1- success | 0 - fail
+            responseData=result[2];
+            responseStatus=result[3];
+            if(responseType=="GET"){
+                if(responseValue==1){
+                    angular.forEach(responseData.results, function(value1, key1) {
+                        angular.forEach(value1.requiredModules, function(value2, key2) {
+                           // console.log("2 - check : "+value1.packageName+" - "+value2);
+                            if(packagename==value2){
+                                console.log("*** 2 - required : "+value1.name);                                    moduleDisplayNames.push(value1.name);
                             }
                         });
                     });
@@ -422,13 +444,52 @@ managemoduleController.controller('ModuleListCtrl',
                         "uuid" : moduleUuid,
                         "requiredModules" : moduleDisplayNames
                     }
-                    //console.log($scope.stopConfirmModuleData);
+                }
+                else{
+                    console.log("error");
                 }
             }
         });
         angular.element('#stopConfirmation').modal('show');
-      }
-            
+        }
+        
+//      // *****  OLD Code Part *******
+//        var response = ModuleService.getModuleDetails(moduleUuid);
+//        response.then(function(result){            
+//            if(result[0]=="GET"){
+//                if(result[1]==1){
+//                    //$scope.uploadConfirmModuleData=result[2];
+//                    var moduleDisplayNames=[];
+//                    angular.forEach(result[2].requiredModules, function(value, key) {
+//                        var moduleName=value.toString().replace("org.openmrs.module.","");
+//                        var responseModule = ModuleService.getModuleDetails(moduleName);
+//                        responseModule.then(function(resultModule){            
+//                            if(resultModule[0]=="GET"){
+//                                if(resultModule[1]==1){
+//                                    //console.log(resultModule[2]);
+//                                    //return resultModule[2].display;
+//                                    moduleDisplayNames.push(resultModule[2].display);
+//                                }else{
+//                                    moduleDisplayNames.push(moduleName);
+//                                }
+//                            }else{
+//                                moduleDisplayNames.push(moduleName);
+//                            }
+//                        });
+//                    });
+//                    $scope.stopConfirmModuleData={
+//                        "uuid" : moduleUuid,
+//                        "requiredModules" : moduleDisplayNames
+//                    }
+//                    //console.log($scope.stopConfirmModuleData);
+//                }
+//            }
+//        });
+//        angular.element('#stopConfirmation').modal('show');
+//      }
+//      // *****  // OLD Code Part *******          
+        
+        
 //      $scope.stopConfirmationShow = function(moduleUuid){
 //      	if(typeof($scope.stopConfirmModuleData)!=undefined){
 //            delete $scope.stopConfirmModuleData;
@@ -584,41 +645,6 @@ managemoduleController.controller('ModuleListCtrl',
         });
     }
     
-    $scope.getEffectedModuleListWhenStop = function() {
-        console.log("getEffectedModuleListWhenStop");
-        var list1=[];
-        var response = ModuleService.getAllModuleDetails();
-        response.then(function(result){
-            responseType=result[0]; //UPLOAD or DOWNLOAD
-            responseValue=result[1]; // 1- success | 0 - fail
-            responseData=result[2];
-            responseStatus=result[3];
-            if(responseType=="GET"){
-                if(responseValue==1){ //packageName
-                    angular.forEach(responseData.results, function(value1, key1) {
-                   //     console.log("1 - uid : "+value1.uuid);
-                        var requestUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/"+value1.uuid;
-                        $http.get(requestUrl, {params:{ v : 'full'}})
-                        .success(function (data){ // GET REQUEST SUCCESS HANDLE
-                            angular.forEach(data.requiredModules, function(value2, key2) {
-                                console.log("2 - check : "+value1.packageName+" - "+value2);
-                                if(value2==value1.packageName){
-                                    console.log("*** 2 - required : "+data.name);
-                                    list1.push(data.name);
-                                }
-                            });
-                                
-                        });
-                    });
-                }
-                else{
-                    console.log("error");
-                }
-            }
-        });
-        console.log("Completd : ");
-        console.log(list1);
-    }
     
     $scope.getModuleViewDetails= function(){
         
@@ -700,7 +726,7 @@ managemoduleController.controller('ModuleListCtrl',
                         });
                     });
             ////////
-
+ 
             
         }).error(function (data){ // GET REQUEST ERROR HANDLE
             console.log("error");

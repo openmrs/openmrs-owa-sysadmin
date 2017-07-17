@@ -110,8 +110,9 @@
         <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true"> <i class="icon-play"> </i> Start Module</button>
         <button ng-click="stopConfirmationShow(ModuleViewData.uuid)" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
 -->
-       <button ng-click="getEffectedModuleListWhenStop()" style="width: 100px;"> <img src="img/start-new-1.png" /> GET </button>
-          <button ng-click="stopConfirmationShow(ModuleViewData.uuid)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
+
+          
+          <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
           <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
           
         <button ng-click="checkModuleUpdate(ModuleViewData.name,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
@@ -155,7 +156,11 @@
         <tr ng-repeat="class in moduleViewAwareOfModules.awareOfModules"> 
             <td> <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class[1]}} ">{{class[0]}} </a></td>
         </tr>
-     
+        <tr>
+            <div class="alert alert-info" ng-hide="moduleViewRequiredModules.awareOfModules.length">
+                There are no aware of modules.
+            </div> 
+        </tr>
 <!--
             <div class="alert alert-info" style="text-align:center;" ng-if="moduleViewAwareOfModules.awareOfModules.length<1">
                 There are no aware of modules for this Module.
@@ -171,7 +176,11 @@
         <tr ng-repeat="class2 in moduleViewRequiredModules.requiredModules"> 
             <td> <i class="icon-signin"></i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a></td>
         </tr>
-         
+        <tr>
+            <div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">
+                There are no required modules.
+            </div> 
+        </tr>
 <!--
             <div class="alert alert-info" style="text-align:center;" ng-if="moduleViewRequiredModules.requiredModules.length<1">
                 There are no required modules for this Module.
@@ -180,6 +189,10 @@
     
       </tbody>
     </table>  
+        
+
+        
+        
   </div>
     </div>    
 <!--</div>-->
