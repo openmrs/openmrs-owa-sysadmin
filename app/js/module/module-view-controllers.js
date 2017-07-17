@@ -645,6 +645,37 @@ managemoduleController.controller('ModuleListCtrl',
         });
     }
     
+    $scope.getDependentModuleListonCurrentModule = function(packagename) {
+        console.log("getDependentModuleListonCurrentModule : ",packagename);
+        //var packagename="org.openmrs.module.uiframework";
+      	if(typeof($scope.DependentModuleList)!=undefined){
+            delete $scope.DependentModuleList;
+        }
+        var Modulelist=[];
+        var response = ModuleService.getAllModuleDetails();
+        response.then(function(result){
+            responseType=result[0]; //UPLOAD or DOWNLOAD
+            responseValue=result[1]; // 1- success | 0 - fail
+            responseData=result[2];
+            responseStatus=result[3];
+            if(responseType=="GET"){
+                if(responseValue==1){
+                    angular.forEach(responseData.results, function(value1, key1) {
+                        angular.forEach(value1.requiredModules, function(value2, key2) {
+                           // console.log("2 - check : "+value1.packageName+" - "+value2);
+                            if(packagename==value2){
+                                console.log("*** 2 - required : "+value1.name);                                    Modulelist.push([value1.name,value1.uuid]);
+                            }
+                        });
+                    });
+                    $scope.DependentModuleList=Modulelist;
+                }
+                else{
+                    console.log("error");
+                }
+            }
+        });
+    }
     
     $scope.getModuleViewDetails= function(){
         
@@ -726,7 +757,9 @@ managemoduleController.controller('ModuleListCtrl',
                         });
                     });
             ////////
- 
+            ////////
+            $scope.getDependentModuleListonCurrentModule(data.packageName);
+            ///////
             
         }).error(function (data){ // GET REQUEST ERROR HANDLE
             console.log("error");
