@@ -272,6 +272,11 @@
       </div>
     <form>
     <div class="modal-body">
+        <div class="row" ng-hide="stopConfirmModuleData.requiredModules">
+            <div class="col-md-12 col-xs-12 text-center center-block">
+                <img src="img/inprogress.gif" >
+            </div>
+        </div>
         <p>
             <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules which are currently loaded.</b>
             <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on this. So stopping it will not affect any module.</b>
