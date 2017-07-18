@@ -70,14 +70,14 @@
 
      <div class="row" ng-if="isDownloading==true">
         <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please Wait until download complete!</h3>
+            <h3 style="text-align: center;">Please wait while we download the module!</h3>
             <img src="img/inprogress.gif" >
         </div>
     </div>
 
     <div class="row" ng-if="isUploading==true">
         <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please Wait until upload Finished!</h3>
+            <h3 style="text-align: center;">Please wait while we upload the module!</h3>
             <img src="img/inprogress.gif" >
         </div>
     </div>
@@ -110,17 +110,17 @@
 		</div>
 -->
      <div class="row col-12">
-		<div class="panel-body">
+		<div class="panel-body" ng-if="availableUpdateData.length>0">
 				
 				<table class="layout display responsive-table">
 					<tbody>
-						<tr>
-							<th style="width:18%;"> Name </th>
-							<th style="width:10%;"> Author </th>
-							<th style="width:50%;"> Description </th>
-							<th style="width:6%;"> Cu.Ver </th>
-                            <th style="width:6%;"> New.Ver </th>
-							<th style="width:10%;"> Actions </th>
+						<tr style="width:100%;">
+							<th> Name </th>
+							<th style="max-width: 80px;"> Author </th>
+							<th> Description </th>
+							<th style="max-width: 60px;"> Cu.Ver </th>
+                            <th style="max-width: 60px;"> New.Ver </th>
+							<th style="max-width: 140px;"> Actions </th>
 						</tr>
 
 						<tr ng-repeat="updateData in availableUpdateData"> 
@@ -128,11 +128,11 @@
 								<a href="#/module-show/{{class.uuid}}">{{updateData[2]}}</a>				
 							</td>
 							<td valign="top">{{updateData[3]}}</td>
-							<td valign="top" style="max-width: 60px;">{{updateData[4]}}</td>
+							<td valign="top" >{{updateData[4]}}</td>
 							<td valign="top">{{updateData[5]}}</td>
                             <td valign="top">{{updateData[6]}}</td>
-							<td valign="top" >
-								<button ng-click="updateModule(updateData[7])"  style="width: 110px;"> <i class="icon-repeat"> </i> Update </button>
+							<td valign="top" style="width: 130px;">
+								<button ng-click="updateModule(updateData[7])"> <i class="icon-repeat"> </i> Update </button>
 							</td>
 						</tr>
 					</tbody>

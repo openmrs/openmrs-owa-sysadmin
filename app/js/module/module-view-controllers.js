@@ -322,7 +322,7 @@ managemoduleController.controller('ModuleListCtrl',
 //            });
 //      }
     
-      $scope.unloadConfirmationShow = function(packagename, moduleUuid){
+      $scope.unloadConfirmationShow = function(packagename, moduleUuid, moduleDisplayName){
       	if(typeof($scope.uploadConfirmModuleData)!=undefined){
             delete $scope.uploadConfirmModuleData;
         }
@@ -345,6 +345,7 @@ managemoduleController.controller('ModuleListCtrl',
                     });
                     $scope.uploadConfirmModuleData={
                         "uuid" : moduleUuid,
+                        "moduleDisplayName":moduleDisplayName,
                         "requiredModules" : moduleDisplayNames
                     }
                 }
@@ -419,7 +420,7 @@ managemoduleController.controller('ModuleListCtrl',
 //      }
       
 
-        $scope.stopConfirmationShow = function(packagename,moduleUuid){
+        $scope.stopConfirmationShow = function(packagename,moduleUuid,moduleDisplayName){
       	if(typeof($scope.stopConfirmModuleData)!=undefined){
             delete $scope.stopConfirmModuleData;
         }
@@ -442,6 +443,7 @@ managemoduleController.controller('ModuleListCtrl',
                     });
                     $scope.stopConfirmModuleData={
                         "uuid" : moduleUuid,
+                        "moduleDisplayName":moduleDisplayName,
                         "requiredModules" : moduleDisplayNames
                     }
                 }
@@ -517,7 +519,7 @@ managemoduleController.controller('ModuleListCtrl',
       
       $scope.unloadModule = function(moduleUuid){
       	console.log("Unload module");
-
+          $scope.isUnloadModule=true;
       	if(typeof($scope.unloadModuleSuccess)!=undefined){
             delete $scope.unloadModuleSuccess;
         }
@@ -537,10 +539,11 @@ managemoduleController.controller('ModuleListCtrl',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
         }) .success(function (data, status, headers, config) {
             $scope.getAllModuleDetails();
+            $scope.isUnloadModule=false;
         	$scope.unloadModuleSuccess="Module Unloaded successfully.";
         })
         .error(function (data, status, headers, config) {
-
+                $scope.isUnloadModule=false;
         		var x2js = new X2JS();
                 var JsonSuccessResponse = x2js.xml_str2json(data);
 
@@ -884,6 +887,10 @@ managemoduleController.controller('ModuleListCtrl',
                             count+=1;
                             console.log(count+" , "+resultModule[2].results.length);
                             if(resultUpdate[0]=="GET"){
+                                if(count>=responseModuleDetailsData.length){
+                                    $scope.searchingForUpdate=false;
+                                }
+                                
                                 if(resultUpdate[1]==1){
                                     var UpdateData=resultUpdate[2];
                                     if(UpdateData.iTotalDisplayRecords>0){
@@ -902,6 +909,9 @@ managemoduleController.controller('ModuleListCtrl',
                             }
                             else{
                                 // error in retrive Module update details
+                                if(count>=responseModuleDetailsData.length){
+                                    $scope.searchingForUpdate=false;
+                                }
                                 $scope.checkUpdateForAllModuleError="Could not get some the module update details."
                             }
                         });
@@ -931,14 +941,16 @@ managemoduleController.controller('ModuleListCtrl',
                 }
                 else{
                     // error in retrive Module details
+                    $scope.searchingForUpdate=false;
                     $scope.checkUpdateForAllModuleError="Could not get the module details."
                 }
             }
             else{
                 //  Could not fetch Module Details
+                $scope.searchingForUpdate=false;
                 $scope.checkUpdateForAllModuleError="Could not get the module list."
             }
-            $scope.searchingForUpdate=false;
+            
         });
     }
 

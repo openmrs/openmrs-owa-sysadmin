@@ -77,14 +77,14 @@
 
      <div class="row" ng-if="isDownloading==true">
         <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please Wait until download complete!</h3>
+            <h3 style="text-align: center;">Please wait while we download the module!</h3>
             <img src="img/inprogress.gif" >
         </div>
     </div>
 
     <div class="row" ng-if="isUploading==true">
         <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please Wait until upload Finished!</h3>
+            <h3 style="text-align: center;">Please wait while we upload the module!</h3>
             <img src="img/inprogress.gif" >
         </div>
     </div>
@@ -112,7 +112,7 @@
 -->
 
           
-          <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
+          <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid, ModuleViewData.display)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
           <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
           
         <button ng-click="checkModuleUpdate(ModuleViewData.name,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
@@ -157,7 +157,7 @@
             <td> <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class[1]}} ">{{class[0]}} </a></td>
         </tr>
         <tr>
-            <div class="alert alert-info" ng-hide="moduleViewRequiredModules.awareOfModules.length">
+            <div class="alert alert-info" ng-hide="moduleViewAwareOfModules.awareOfModules.length">
                 There are no aware of modules.
             </div> 
         </tr>
@@ -198,7 +198,7 @@
         </tr>
         <tr>
             <div class="alert alert-info" ng-hide="DependentModuleList.length">
-                There are no modules depend on this module.
+                There are no modules which depend on this module.
             </div> 
         </tr>
       </tbody>
@@ -268,7 +268,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Do you want to stop this Module?</h5>
+        <h5 class="modal-title">Do you want to stop {{stopConfirmModuleData.moduleDisplayName}}?</h5>
       </div>
     <form>
     <div class="modal-body">
