@@ -115,7 +115,7 @@
           <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid, ModuleViewData.display)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
           <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
           
-        <button ng-click="checkModuleUpdate(ModuleViewData.name,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
+        <button ng-click="checkModuleUpdate(ModuleViewData.uuid,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
       </div>
       <table class="layout display responsive-table">
         <tbody>
