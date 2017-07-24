@@ -85,7 +85,9 @@ managemoduleController.service('ModuleService',['$http', 'OWARoutesUtil','$q', f
            var displayLength=15;
 
            //var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
-            var urll="https://modules.openmrs.org/modulus/api/modules/"+searchValue;
+           // var urll="https://modules.openmrs.org/modulus/api/modules/"+searchValue;
+            
+           var urll="https://addons.openmrs.org/api/v1/addon/"+searchValue;
            $http({
              method: 'JSONP', 
              url: urll
@@ -99,21 +101,21 @@ managemoduleController.service('ModuleService',['$http', 'OWARoutesUtil','$q', f
            return def.promise;
         },
         
-        getModuleReleaseDetails : function(moduleId,releaseId){
-           var def = $q.defer();
-            var urll="https://modules.openmrs.org/modulus/api/modules/"+moduleId+"/"+releaseId
-           $http({
-             method: 'JSONP', 
-             url: urll
-           })
-           .success(function(data,status) {
-                def.resolve(["GET",1,data,status]);
-                  })
-           .error(function(data, status) {
-                def.resolve(["GET",0,data,status]);
-           });
-           return def.promise;
-        }
+//        getModuleReleaseDetails : function(moduleId,releaseId){
+//           var def = $q.defer();
+//            var urll="https://modules.openmrs.org/modulus/api/modules/"+moduleId+"/"+releaseId
+//           $http({
+//             method: 'JSONP', 
+//             url: urll
+//           })
+//           .success(function(data,status) {
+//                def.resolve(["GET",1,data,status]);
+//                  })
+//           .error(function(data, status) {
+//                def.resolve(["GET",0,data,status]);
+//           });
+//           return def.promise;
+//        }
     };
 }]);
 
@@ -873,153 +875,8 @@ managemoduleController.controller('ModuleListCtrl',
     
  
     
-    $scope.checkAllModulesForUpdate=function(){
-        // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Check for Updates",""]]});
-      // *** /OpenMRS breadcrumbs ***
-        
-        console.log("checkAllModulesForUpdate");
-        $scope.searchingForUpdate=true;
-        var count=0;
-       if(typeof($scope.checkUpdateForAllModuleError)!=undefined){
-            delete $scope.checkUpdateForAllModuleError;
-        }
-        if(typeof($scope.UpdatesFound)!=undefined){
-            delete $scope.UpdatesFound;
-        }
-        var availableUpdateData=[];
-        var responseModuleDetails = ModuleService.getAllModuleDetails();
-        responseModuleDetails.then(function(resultModule){
-            if(resultModule[0]=="GET"){
-                if(resultModule[1]==1){
-                    console.log("before foreach");
-                    responseModuleDetailsData=resultModule[2].results; //data.results
-                    angular.forEach(responseModuleDetailsData, function(Modulevalue, Modulekey) {
-                        var moduleName=Modulevalue.name;
-                        var moduleUuid=Modulevalue.uuid;
-                        var moduleCurrentVeriosn=Modulevalue.version;
-                        console.log(moduleName);
-                        var responseUpdate = ModuleService.checkModuleUpdate(moduleUuid);
-                        responseUpdate.then(function(resultUpdate){
-                            count+=1;
-                          //  console.log(count+" , "+resultModule[2].results.length);
-                            if(resultUpdate[0]=="GET"){
-                                if(count>=responseModuleDetailsData.length){
-                                    $scope.searchingForUpdate=false;
-                                }
-                                
-                                if(resultUpdate[1]==1){
-                                  //  var moduleId=resultUpdate[2].id;
-                                   // var latestRelease = resultUpdate[2].releases[0].id;
-                                 //   console.log("moduleId : "+moduleId);
-                                   // CheckModuleReleases(moduleId,latestRelease);
-                                    // check for release
-//                                    var releaseResponse = ModuleService.getModuleReleaseDetails(moduleId,latestRelease);
-//                                    releaseResponse.then(function(releaseUpdate){
-//                                        if(releaseUpdate[0]=="GET"){
-//                                            if(releaseUpdate[1]==1){
-//                                                
-//                                                var newModuleVersion=releaseUpdate[2].moduleVersion;
-//                                                var newModuleDownloadURL=releaseUpdate[2].downloadURL;
-//                                                var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.aaData[0][2]);
-//                                                if(compateValue==1){
-//                                                  availableUpdateData.push({0:Modulevalue.uuid,1:Modulevalue.name,2:Modulevalue.display,3:Modulevalue.author,4:Modulevalue.description, 5:Modulevalue.version,6:newModuleVersion,7:newModuleDownloadURL});
-//                                                }
-//                                            }
-//                                            else{
-//                                                // Relese GET Error
-//                                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
-//                                                console.log("Error 1");
-//                                            }
-//                                        }
-//                                        else{
-//                                            // Relese GET Error
-//                                            $scope.checkUpdateForAllModuleError="Could not get some the module update details."
-//                                            console.log("Error 2");
-//                                        }
-//                                    });
-                                    
-                                }
-                                else{
-                                // more than one module retrived
-                                    moduleName=replaceAll(moduleName," ","-");
-                                    console.log("moduleName : "+moduleName);
-//                                    var responseUpdate = ModuleService.checkModuleUpdate(moduleName);
-//                                    responseUpdate.then(function(resultUpdate){
-//                                        if(resultUpdate[1]==1){
-//                                            var moduleId=resultUpdate[2].Id;
-//                                            var latestRelease = resultUpdate[2].releases[0].id;
-//                                            CheckModuleReleases(moduleId,latestRelease);
-//                                        }
-//                                        else{
-//                                            $scope.checkUpdateForAllModuleError="Could not get some the module update details."
-//                                        }
-//                                    });
-                                //
-                                }
-                            }
-                            else{
-                                // error in retrive Module update details
-                                if(count>=responseModuleDetailsData.length){
-                                    $scope.searchingForUpdate=false;
-                                }
-                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
-                                console.log("Error 3");
-                            }
-                        });
-                    });
-                    $scope.UpdatesFound=true;
-                    $scope.availableUpdateData=availableUpdateData;
-                    
-                }
-                else{
-                    // error in retrive Module details
-                    $scope.searchingForUpdate=false;
-                    $scope.checkUpdateForAllModuleError="Could not get the module details."
-                    console.log("Error 4");
-                }
-            }
-            else{
-                //  Could not fetch Module Details
-                $scope.searchingForUpdate=false;
-                $scope.checkUpdateForAllModuleError="Could not get the module list."
-                console.log("Error 5");
-            }
-            
-        });                     
-    }
-    
-    
-    function CheckModuleReleases(moduleId,latestRelease){
-                                     
-                                    // check for release
-                                    var releaseResponse = ModuleService.getModuleReleaseDetails(moduleId,latestRelease);
-                                    releaseResponse.then(function(releaseUpdate){
-                                        if(releaseUpdate[0]=="GET"){
-                                            if(releaseUpdate[1]==1){
-                                                
-                                                var newModuleVersion=releaseUpdate[2].moduleVersion;
-                                                var newModuleDownloadURL=releaseUpdate[2].downloadURL;
-                                                var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.aaData[0][2]);
-                                                if(compateValue==1){
-                                                  availableUpdateData.push({0:Modulevalue.uuid,1:Modulevalue.name,2:Modulevalue.display,3:Modulevalue.author,4:Modulevalue.description, 5:Modulevalue.version,6:newModuleVersion,7:newModuleDownloadURL});
-                                                }
-                                            }
-                                            else{
-                                                // Relese GET Error
-                                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
-                                            }
-                                        }
-                                        else{
-                                            // Relese GET Error
-                                            $scope.checkUpdateForAllModuleError="Could not get some the module update details."
-                                        }
-                                    });
-    }
-    
 //    $scope.checkAllModulesForUpdate=function(){
-//        
-//      // *** /OpenMRS breadcrumbs ***  
+//        // *** /OpenMRS breadcrumbs ***  
 //      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Check for Updates",""]]});
 //      // *** /OpenMRS breadcrumbs ***
 //        
@@ -1040,32 +897,67 @@ managemoduleController.controller('ModuleListCtrl',
 //                    console.log("before foreach");
 //                    responseModuleDetailsData=resultModule[2].results; //data.results
 //                    angular.forEach(responseModuleDetailsData, function(Modulevalue, Modulekey) {
-//                        var moduleName=Modulevalue.uuid;
+//                        var moduleName=Modulevalue.name;
+//                        var moduleUuid=Modulevalue.uuid;
 //                        var moduleCurrentVeriosn=Modulevalue.version;
-//                        //console.log(moduleName);
-//                        var responseUpdate = ModuleService.checkModuleUpdate(moduleName);
+//                        console.log(moduleName);
+//                        var responseUpdate = ModuleService.checkModuleUpdate(moduleUuid);
 //                        responseUpdate.then(function(resultUpdate){
 //                            count+=1;
-//                            console.log(count+" , "+resultModule[2].results.length);
+//                          //  console.log(count+" , "+resultModule[2].results.length);
 //                            if(resultUpdate[0]=="GET"){
 //                                if(count>=responseModuleDetailsData.length){
 //                                    $scope.searchingForUpdate=false;
 //                                }
 //                                
 //                                if(resultUpdate[1]==1){
-//                                    var UpdateData=resultUpdate[2];
-//                                    if(UpdateData.iTotalDisplayRecords>0){
-//                                        var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.aaData[0][2]);
-//                                        if(compateValue==1){
-////                                            availableUpdateData.push([Modulevalue.uuid,Modulevalue.name,Modulevalue.display,Modulevalue.author,Modulevalue.description, Modulevalue.version,UpdateData.aaData[0][2],UpdateData.aaData[0][0]]);
-//                                            availableUpdateData.push({0:Modulevalue.uuid,1:Modulevalue.name,2:Modulevalue.display,3:Modulevalue.author,4:Modulevalue.description, 5:Modulevalue.version,6:UpdateData.aaData[0][2],7:UpdateData.aaData[0][0]});
-//                                            // UUID, ModuleName, Display,Author,Description,CurrentVersion,AvailableVersion,URL
-//                                        }
-//                                    }
+//                                  //  var moduleId=resultUpdate[2].id;
+//                                   // var latestRelease = resultUpdate[2].releases[0].id;
+//                                 //   console.log("moduleId : "+moduleId);
+//                                   // CheckModuleReleases(moduleId,latestRelease);
+//                                    // check for release
+////                                    var releaseResponse = ModuleService.getModuleReleaseDetails(moduleId,latestRelease);
+////                                    releaseResponse.then(function(releaseUpdate){
+////                                        if(releaseUpdate[0]=="GET"){
+////                                            if(releaseUpdate[1]==1){
+////                                                
+////                                                var newModuleVersion=releaseUpdate[2].moduleVersion;
+////                                                var newModuleDownloadURL=releaseUpdate[2].downloadURL;
+////                                                var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.aaData[0][2]);
+////                                                if(compateValue==1){
+////                                                  availableUpdateData.push({0:Modulevalue.uuid,1:Modulevalue.name,2:Modulevalue.display,3:Modulevalue.author,4:Modulevalue.description, 5:Modulevalue.version,6:newModuleVersion,7:newModuleDownloadURL});
+////                                                }
+////                                            }
+////                                            else{
+////                                                // Relese GET Error
+////                                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+////                                                console.log("Error 1");
+////                                            }
+////                                        }
+////                                        else{
+////                                            // Relese GET Error
+////                                            $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+////                                            console.log("Error 2");
+////                                        }
+////                                    });
+//                                    
 //                                }
 //                                else{
-//                                // error in retrive Module update details
-//                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+//                                // more than one module retrived
+//                                    moduleName=replaceAll(moduleName," ","-");
+//                                    console.log("moduleName : "+moduleName);
+////                                    var responseUpdate = ModuleService.checkModuleUpdate(moduleName);
+////                                    responseUpdate.then(function(resultUpdate){
+////                                        if(resultUpdate[1]==1){
+////                                            var moduleId=resultUpdate[2].Id;
+////                                            var latestRelease = resultUpdate[2].releases[0].id;
+////                                            CheckModuleReleases(moduleId,latestRelease);
+////                                        }
+////                                        else{
+////                                            $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+////                                        }
+////                                    });
+//                                //
 //                                }
 //                            }
 //                            else{
@@ -1074,46 +966,164 @@ managemoduleController.controller('ModuleListCtrl',
 //                                    $scope.searchingForUpdate=false;
 //                                }
 //                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+//                                console.log("Error 3");
 //                            }
 //                        });
 //                    });
-//                            $scope.UpdatesFound=true;
-//                            $scope.availableUpdateData=availableUpdateData;
+//                    $scope.UpdatesFound=true;
+//                    $scope.availableUpdateData=availableUpdateData;
 //                    
-////                    }).promise.then(function(){
-////                        console.log(availableUpdateData);
-////                        console.log(availableUpdateData.length);
-////                        $scope.searchingForUpdate=false;
-////                        if(availableUpdateData.length>0){
-////                            // Updates Found
-////                            $scope.UpdatesFound=true;
-////                            $scope.availableUpdateData=availableUpdateData;
-////                        }
-////                        else{
-////                            // No Updates Found
-////                            $scope.UpdatesFound=false;
-////                        }
-////                        if(count>=resultModule[2].results.length){
-////                            console.log("breaking promise");
-////                            return;
-////                        }
-////                    });
-//                    //console.log(availableUpdateData);
 //                }
 //                else{
 //                    // error in retrive Module details
 //                    $scope.searchingForUpdate=false;
 //                    $scope.checkUpdateForAllModuleError="Could not get the module details."
+//                    console.log("Error 4");
 //                }
 //            }
 //            else{
 //                //  Could not fetch Module Details
 //                $scope.searchingForUpdate=false;
 //                $scope.checkUpdateForAllModuleError="Could not get the module list."
+//                console.log("Error 5");
 //            }
 //            
-//        });
+//        });                     
 //    }
+    
+    
+//    function CheckModuleReleases(moduleId,latestRelease){
+//                                     
+//                                    // check for release
+//                                    var releaseResponse = ModuleService.getModuleReleaseDetails(moduleId,latestRelease);
+//                                    releaseResponse.then(function(releaseUpdate){
+//                                        if(releaseUpdate[0]=="GET"){
+//                                            if(releaseUpdate[1]==1){
+//                                                
+//                                                var newModuleVersion=releaseUpdate[2].moduleVersion;
+//                                                var newModuleDownloadURL=releaseUpdate[2].downloadURL;
+//                                                var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.aaData[0][2]);
+//                                                if(compateValue==1){
+//                                                  availableUpdateData.push({0:Modulevalue.uuid,1:Modulevalue.name,2:Modulevalue.display,3:Modulevalue.author,4:Modulevalue.description, 5:Modulevalue.version,6:newModuleVersion,7:newModuleDownloadURL});
+//                                                }
+//                                            }
+//                                            else{
+//                                                // Relese GET Error
+//                                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+//                                            }
+//                                        }
+//                                        else{
+//                                            // Relese GET Error
+//                                            $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+//                                        }
+//                                    });
+//    }
+    
+    
+    
+    
+    $scope.checkAllModulesForUpdate=function(){
+        
+      // *** /OpenMRS breadcrumbs ***  
+      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Check for Updates",""]]});
+      // *** /OpenMRS breadcrumbs ***
+        
+        console.log("checkAllModulesForUpdate");
+        $scope.searchingForUpdate=true;
+        var count=0;
+       if(typeof($scope.checkUpdateForAllModuleError)!=undefined){
+            delete $scope.checkUpdateForAllModuleError;
+        }
+        if(typeof($scope.UpdatesFound)!=undefined){
+            delete $scope.UpdatesFound;
+        }
+        var availableUpdateData=[];
+        var responseModuleDetails = ModuleService.getAllModuleDetails();
+        responseModuleDetails.then(function(resultModule){
+            if(resultModule[0]=="GET"){
+                if(resultModule[1]==1){
+                    console.log("before foreach");
+                    responseModuleDetailsData=resultModule[2].results; //data.results
+                    angular.forEach(responseModuleDetailsData, function(Modulevalue, Modulekey) {
+                        
+                       // var moduleName=Modulevalue.name;
+                       // moduleName=replaceAll(moduleName," ","-");
+                        var moduleName=getIndexNameforAddons(Modulevalue.name,Modulevalue.uuid);
+                        
+                        console.log("FINAL SEARCH NAME : "+moduleName);
+                        var moduleCurrentVeriosn=Modulevalue.version;
+                        //console.log(moduleName);
+                        var responseUpdate = ModuleService.checkModuleUpdate(moduleName);
+                        responseUpdate.then(function(resultUpdate){
+                            count+=1;
+                            console.log(count+" , "+resultModule[2].results.length);
+                            if(resultUpdate[0]=="GET"){
+                                if(count>=responseModuleDetailsData.length){
+                                    $scope.searchingForUpdate=false;
+                                }
+                                
+                                if(resultUpdate[1]==1){
+                                    var UpdateData=resultUpdate[2];
+                                    if(UpdateData.iTotalDisplayRecords>0){
+                                        var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.aaData[0][2]);
+                                        if(compateValue==1){
+//                                            availableUpdateData.push([Modulevalue.uuid,Modulevalue.name,Modulevalue.display,Modulevalue.author,Modulevalue.description, Modulevalue.version,UpdateData.aaData[0][2],UpdateData.aaData[0][0]]);
+                                            availableUpdateData.push({0:Modulevalue.uuid,1:Modulevalue.name,2:Modulevalue.display,3:Modulevalue.author,4:Modulevalue.description, 5:Modulevalue.version,6:UpdateData.versions[0].downloadUri,7:UpdateData.versions[0].version});
+                                            // UUID, ModuleName, Display,Author,Description,CurrentVersion,AvailableVersion,URL
+                                        }
+                                    }
+                                }
+                                else{
+                                // error in retrive Module update details
+                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+                                }
+                            }
+                            else{
+                                // error in retrive Module update details
+                                if(count>=responseModuleDetailsData.length){
+                                    $scope.searchingForUpdate=false;
+                                }
+                                $scope.checkUpdateForAllModuleError="Could not get some the module update details."
+                            }
+                        });
+                    });
+                            $scope.UpdatesFound=true;
+                            $scope.availableUpdateData=availableUpdateData;
+                    
+//                    }).promise.then(function(){
+//                        console.log(availableUpdateData);
+//                        console.log(availableUpdateData.length);
+//                        $scope.searchingForUpdate=false;
+//                        if(availableUpdateData.length>0){
+//                            // Updates Found
+//                            $scope.UpdatesFound=true;
+//                            $scope.availableUpdateData=availableUpdateData;
+//                        }
+//                        else{
+//                            // No Updates Found
+//                            $scope.UpdatesFound=false;
+//                        }
+//                        if(count>=resultModule[2].results.length){
+//                            console.log("breaking promise");
+//                            return;
+//                        }
+//                    });
+                    //console.log(availableUpdateData);
+                }
+                else{
+                    // error in retrive Module details
+                    $scope.searchingForUpdate=false;
+                    $scope.checkUpdateForAllModuleError="Could not get the module details."
+                }
+            }
+            else{
+                //  Could not fetch Module Details
+                $scope.searchingForUpdate=false;
+                $scope.checkUpdateForAllModuleError="Could not get the module list."
+            }
+            
+        });
+    }
 
     
    $scope.checkModuleUpdate = function (moduleUuid, currentVersion){
@@ -1223,7 +1233,23 @@ Examples:
 - 0.7beta
 */
    
-      
+ function getIndexNameforAddons(moduleName,moduleuuid){
+     var returnValue='';
+     console.log("INDEX OF : "+moduleName.indexOf(" "));
+     if(moduleName.indexOf(" ")==-1){
+         // no space in module name
+         returnValue="org.openmrs.module."+moduleuuid;
+         return returnValue;
+     }
+     else{
+         // space in module name
+         returnValue=replaceAll(moduleName," ","-");
+         returnValue=returnValue.toLocaleLowerCase();
+         returnValue="org.openmrs.module."+returnValue;
+         return returnValue;
+     }
+ }     
+   
 function replaceAll(str, find, replace) {
     console.log("REPELACE : ",str);
     while(str.indexOf(find)>-1){
@@ -1231,6 +1257,8 @@ function replaceAll(str, find, replace) {
     }
     return str;
 }
+            
+            
             
 function version_bits(version) {
     //console.log(version);

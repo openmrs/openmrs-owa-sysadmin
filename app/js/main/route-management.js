@@ -1,7 +1,7 @@
  
 
 var managemodule =angular.module('managemodule',
-		['ngRoute', 'managemoduleController', 'uploadModuleController', 'seacrchModuleController', 'systemInfoController', 'encountersController', 'mainController']);
+		['ngRoute', 'managemoduleController', 'uploadModuleController', 'seacrchModuleController', 'systemInfoController', 'mainController']);
 
 managemodule.config(['$routeProvider',
                     function ($routeProvider) {
@@ -12,6 +12,10 @@ managemodule.config(['$routeProvider',
                         }).
                         when('/install-from-module-repository', {
                           templateUrl: 'js/module/search-modules.html',
+                            controller: 'searchModuleCtrl'
+                        }).
+                      when('/search-modules-view-detaisl', {
+                          templateUrl: 'js/module/search-modules-view-details',
                             controller: 'searchModuleCtrl'
                         }).
                         when('/upload-module', {
@@ -34,26 +38,7 @@ managemodule.config(['$routeProvider',
                           templateUrl: 'js/systeminfo/system-info.html',
                           controller: 'systeminfoCtrl',
                         }).
-                        when('/search-encounters', {
-                          templateUrl: 'js/encounters/search-encounters.html',
-                          controller: 'searchEncounterCtrl',
-                        }).
-//                        when('/manage-encounters/:encounterUUID', {
-//                          templateUrl: 'js/encounters/manage-encounters.html',
-//                          controller: 'manageEncounterCtrl',
-//                        }).
-                        when('/add-encounter', {
-                          templateUrl: 'js/encounters/manage-encounters.html',
-                          controller: 'AddNewEncounterCtrl',
-                        }).
-                        when('/manage-encounter-types', {
-                          templateUrl: 'js/encounters/manage-encounter-type.html',
-                          controller: 'manageEncounterTypeCtrl',
-                        }).
-                        when('/manage-encounter-roles', {
-                          templateUrl: 'js/encounters/manage-encounter-role.html',
-                          controller: 'manageEncounterRoleCtrl',
-                        }).
+                         
                         otherwise({
                           //redirectTo: '/module-show'
                           templateUrl: 'js/home/home.html',
