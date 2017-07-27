@@ -10,7 +10,11 @@
 
 
  
-
+    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{uploadederrorMsg}}
+    </div> 
+    
 <!--
     <div class="panel panel-primary"  ng-hide="startupsuccessMsg">
         <div class="panel-heading">Select Module to Upload</div>
@@ -81,10 +85,7 @@
         </div>
     </div>
 
-    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
-        <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        {{uploadederrorMsg}}
-    </div> 
+
             
        <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg" style="margin-bottom: 10px;">
           {{responseJsonData["org.openmrs.module.Module"].startupErrorMessage}} 

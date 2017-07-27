@@ -11,32 +11,38 @@
 			<h1>System Information</h1>
 		</div>
 	</div>
-
+    
+    <!--Data Loading -->
 	<div class="row" ng-if="dataLoading==true">
 		<div class="col-md-12 col-xs-12 text-center center-block">
 			<img src="img/inprogress.gif" >
 		</div>
 	</div>
-
-
-<!--
-	<div class="panel panel-primary" ng-show="openmrsInformation">
-		<div class="panel-heading">
-			<b>OpenMRS Information </b> 
-		</div>
--->
-    <div class="row col-12">
-		<div class="panel-body">
+    <!--// Data Loading -->
+    
+    <!--Error Message-->
+    <div class="alert alert-danger" ng-show="sysInfoErrorMessage">
+        {{sysInfoErrorMessage}}
+    </div>
+    <!--//Error Message-->
+    
+    <!--OpenMRS Installation Information-->
+    <div class="row col-12" ng-show="openmrsInformation">
+		<div class="panel-body"  style="padding-top:0px !important; padding-bottom:0px !important;">
             <h2>OpenMRS Information</h2>
 				<table class="layout display responsive-table">
 					<thead>
 						<tr>
-							<td style="width: 40%; min-width: 200px;"> <b>Name</b> </td>
+                            <td style="width: 25%;">#</td>
+							<td style="width: 30%; max-width: 200px;"> <b>Name</b> </td>
 							<td> <b>Value</b> </td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
+                            <td rowspan="4" align="center">
+                                <img src="img/systeminfo/openmrs.png" width="120" style="margin:0px auto;" />
+                            </td>
 							<td> System Date </td>
 							<td> {{openmrsInformation["SystemInfo.OpenMRSInstallation.systemDate"]}} </td>
 						</tr>
@@ -56,26 +62,25 @@
 				</table>
 		</div>
     </div>
-<!--
-	</div>
-
-	<div class="panel panel-primary" ng-show="javaRuntimeEnvironmentInformation">
-		<div class="panel-heading">
-			<b>Java Runtime Environment Information </b> 
-		</div>
--->
-    <div class="row col-12">
-		<div class="panel-body">
-            <h2>Java Runtime Environment Information</h2>
+    <!--// Openmrs Installation Information-->
+    
+    <!--Java Enviroment Information-->
+    <div class="row col-12" ng-show="javaRuntimeEnvironmentInformation" >
+		<div class="panel-body"  style="padding-top:0px !important; padding-bottom:0px !important;">
+            <h2>Operating System Information</h2>
 				<table class="layout display responsive-table">
 					<thead>
 						<tr>
-							<td style="width: 40%; min-width: 200px;"> <b>Name</b> </td>
+                            <td style="width: 25%;">#</td>
+							<td style="width: 30%; max-width: 200px;"> <b>Name</b> </td>
 							<td> <b>Value</b> </td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
+                            <td rowspan="3" align="center">
+                                <img src="img/systeminfo/os.png" width="120" style="margin:0px auto;" />
+                            </td>
 							<td> Operating System </td>
 							<td> {{javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.operatingSystem"]}} </td>
 						</tr>
@@ -87,7 +92,28 @@
 							<td> Operating System Version </td>
 							<td> {{javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.operatingSystemVersion"]}} </td>
 						</tr>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!--Java Enviroment Information-->
+    <div class="row col-12" ng-show="javaRuntimeEnvironmentInformation" >
+		<div class="panel-body"  style="padding-top:0px !important; padding-bottom:0px !important;">
+            <h2>Java Runtime Information</h2>
+				<table class="layout display responsive-table">
+					<thead>
 						<tr>
+                            <td style="width: 25%;">#</td>
+							<td style="width: 30%; max-width: 200px;"> <b>Name</b> </td>
+							<td> <b>Value</b> </td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+                            <td rowspan="6" align="center">
+                                 <img src="img/systeminfo/java.png" width="120" style="margin:0px auto;" />
+                            </td>
 							<td> Java Version </td>
 							<td> {{javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.javaVersion"]}} </td>
 						</tr>
@@ -111,7 +137,28 @@
 							<td> Java Runtime Version </td>
 							<td> {{javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.javaRuntimeVersion"]}} </td>
 						</tr>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+                        
+     <!--Java Enviroment Information-->
+    <div class="row col-12" ng-show="javaRuntimeEnvironmentInformation" >
+		<div class="panel-body"  style="padding-top:0px !important; padding-bottom:0px !important;">
+            <h2>User System Information</h2>
+				<table class="layout display responsive-table">
+					<thead>
 						<tr>
+                            <td style="width: 25%;">#</td>
+							<td style="width: 30%; max-width: 200px;"> <b>Name</b> </td>
+							<td> <b>Value</b> </td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+                            <td rowspan="6" align="center">
+                                 <img src="img/systeminfo/pc.png" width="120" style="margin:0px auto;" />
+                            </td>
 							<td> User Name </td>
 							<td> {{javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.userName"]}} </td>
 						</tr>
@@ -141,26 +188,25 @@
 		
 		</div>
     </div>
-<!--
-	</div>
-
-	<div class="panel panel-primary" ng-show="memoryInformation">
-		<div class="panel-heading">
-			<b>Memory Information </b> 
-		</div>
--->
-    <div class="row col-12">
-		<div class="panel-body">
+    <!-- //Java enviroment Information-->
+    
+    <!--Memory Information-->
+    <div class="row col-12" ng-show="memoryInformation" >
+		<div class="panel-body"  style="padding-top:0px !important; padding-bottom:0px !important;">
             <h2>Memory Information</h2>
 				<table class="layout display responsive-table">
 					<thead>
 						<tr>
-							<td style="width: 40%; min-width: 200px;"> <b>Name</b> </td>
+                            <td style="width: 25%;">#</td>
+							<td style="width: 30%; max-width: 200px;"> <b>Name</b> </td>
 							<td> <b>Value</b> </td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
+                            <td rowspan="6" align="center">
+                                 <img src="img/systeminfo/hdd.png" width="120" style="margin:0px auto;" />
+                            </td>
 							<td> Total Memory</td>
 							<td> {{memoryInformation["SystemInfo.Memory.totalMemory"]}} </td>
 						</tr>
@@ -176,26 +222,25 @@
 				</table>
 		</div>
     </div>
-<!--	</div>-->
+    <!-- //Memory Information-->
 
-<!--
-	<div class="panel panel-primary" ng-show="dataBaseInformation">
-		<div class="panel-heading">
-			<b>Database Information </b> 
-		</div>
--->
-    <div class="row col-12">
-		<div class="panel-body">
+    <!--Database Information-->
+    <div class="row col-12" ng-show="dataBaseInformation" >
+		<div class="panel-body"  style="padding-top:0px !important; padding-bottom:0px !important;">
             <h2>Database Information</h2>
 				<table class="layout display responsive-table">
 					<thead>
 						<tr>
-							<td style="width: 40%; min-width: 200px;"> <b>Name</b> </td>
+                            <td style="width: 25%;">#</td>
+							<td style="width: 30%; max-width: 200px;"> <b>Name</b> </td>
 							<td> <b>Value</b> </td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
+                            <td rowspan="5" align="center">
+                                 <img src="img/systeminfo/db.png" width="120" style="margin:0px auto;" />
+                            </td>
 							<td> Database Name </td>
 							<td> {{dataBaseInformation["SystemInfo.Database.name"]}} </td>
 						</tr>
@@ -219,21 +264,16 @@
 				</table>
 			</div>	
     </div>
-<!--
-	</div>
-
-	<div class="panel panel-primary" ng-show="moduleInformation">
-		<div class="panel-heading">
-			<b>Module Information </b> 
-		</div>
--->
-    <div class="row col-12">
-		<div class="panel-body">
+    <!-- //Database Information-->
+    
+    <!--Module Information-->
+    <div class="row col-12" ng-show="moduleInformation" >
+		<div class="panel-body"  style="padding-top:-10px;">
             <h2>Module Information</h2>
 				<table class="layout display responsive-table">
 					<thead>
 						<tr>
-							<td style="width: 40%; min-width: 200px;"> <b>Name</b> </td>
+							<td style="width: 40%; max-width: 200px;"> <b>Name</b> </td>
 							<td> <b>Value</b> </td>
 						</tr>
 					</thead>
@@ -250,6 +290,5 @@
 				</table>
 		</div>
     </div>
-<!--	</div>-->
-
+    <!-- //Module Information-->
 </div>

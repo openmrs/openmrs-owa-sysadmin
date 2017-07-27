@@ -1,47 +1,47 @@
  
 
 var managemodule =angular.module('managemodule',
-		['ngRoute', 'managemoduleController', 'uploadModuleController', 'seacrchModuleController', 'systemInfoController', 'mainController']);
+		['ngRoute', 'manageModuleController','manageModuleService', 'uploadModuleController', 'seacrchModuleController', 'systemInfoController', 'systemInfoService', 'mainController','mainService']);
 
 managemodule.config(['$routeProvider',
                     function ($routeProvider) {
                       $routeProvider.
                         when('/module-show', {
-                          templateUrl: 'js/module/view-modules.html',
+                          templateUrl: 'js/moduleView/viewModules.html',
                           controller: 'ModuleListCtrl',
                         }).
                         when('/install-from-module-repository', {
-                          templateUrl: 'js/module/search-modules.html',
+                          templateUrl: 'js/moduleSearch/searchModules.html',
                             controller: 'searchModuleCtrl'
                         }).
                       when('/search-modules-view-detaisl', {
-                          templateUrl: 'js/module/search-modules-view-details',
+                          templateUrl: 'js/moduleSearch/searchModulesViewDetails',
                             controller: 'searchModuleCtrl'
                         }).
                         when('/upload-module', {
-                        	templateUrl: 'js/module/upload-module.html',
+                        	templateUrl: 'js/moduleUpload/uploadModule.html',
                             controller: 'uploadModuleCtrl'
                         }).
                          when('/upload-module-normal', {
-                          templateUrl: 'js/module/upload-module-normal.html',
+                          templateUrl: 'js/moduleUpload/uploadModuleNormal.html',
                             controller: 'ModuleUploadCtrl'
                         }).
                         when('/module-show/:classUUID', {
-                        	templateUrl: 'js/module/view-module-details.html',
+                        	templateUrl: 'js/moduleView/viewModuleDetails.html',
                         	controller: 'ModuleListCtrl',
                         }).
                         when('/check-for-module-updates', {
-                        	templateUrl: 'js/module/module-update-details.html',
+                        	templateUrl: 'js/moduleUpdate/moduleUpdateDetails.html',
                         	controller: 'ModuleListCtrl',
                         }).
                         when('/system-info', {
-                          templateUrl: 'js/systeminfo/system-info.html',
+                          templateUrl: 'js/systeminfo/systemInfo.html',
                           controller: 'systeminfoCtrl',
                         }).
                          
                         otherwise({
                           //redirectTo: '/module-show'
-                          templateUrl: 'js/home/home.html',
+                          templateUrl: 'js/main/home.html',
                           controller: 'mainHomeCtrl',
                         
                         });

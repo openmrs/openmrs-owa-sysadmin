@@ -29,6 +29,19 @@ uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$
     $scope.removeFile = function(){
         angular.element("input[type='file']").val(null);
         $scope.myFile = null;
+        //delete previous uploading messages
+        if(typeof($scope.startuperrorMsg)!=undefined){
+            delete $scope.startuperrorMsg;
+        }
+        if(typeof($scope.startupsuccessMsg)!=undefined){
+            delete $scope.startupsuccessMsg;
+        }
+        if(typeof($scope.uplodedsuccessMsg)!=undefined){
+            delete $scope.uplodedsuccessMsg;
+        }
+        if(typeof($scope.uploadederrorMsg)!=undefined){
+            delete $scope.uploadederrorMsg;
+        }
     }
     
     $scope.uploadFile = function(){
