@@ -1,5 +1,5 @@
 
-<div class="container"> 
+<div class="container" id="moduleUploadContainer">
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <h2>Add or Upgrade Module</h2>
@@ -23,40 +23,58 @@
         <div class="text-center center-block">
              <b>Select Module to Upload </b>
         </div>
-        <div class="panel-body">
-            <form name="myForm" enctype="multipart/form-data">
-                <table class="display" style="border: 0px; widtd: 80%;">
-         
-                    <tr style="border: 0px;">
-                        <th style="border: 0px;"> 
-                             <input type="file" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"    
-                             accept=".omod" ngf-max-size="10MB" required
-                             ngf-model-invalid="errorFile" style="border: 0px;">
-                        </th>
-                        <th ng-show="myFile" style="border: 0px;">
-                            <button ng-click="myFile = null; removeFile();" ng-show="myFile">Remove</button>
-                        </th>
-                    </tr>
-                </table>
-            </form>
+        <div class="panel-body center-block">
+
+            <!--Drag and Drop -->
+
+                    <div class="demo-droppable center-block">
+                        <h1 class="output" id="dragAndDropOutput">Drag files here or click to upload</h1>
+                    </div>
+
+            <!-- // Drag and Drop -->
+
+            <!--<form name="myForm" enctype="multipart/form-data">-->
+                <!--<table class="display" style="border: 0px; widtd: 80%;">-->
+         <!---->
+                    <!--<tr style="border: 0px;">-->
+                        <!--<th style="border: 0px;"> -->
+                             <!--&lt;!&ndash;<input type="file" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"    &ndash;&gt;-->
+                             <!--&lt;!&ndash;accept=".omod" ngf-max-size="10MB" required&ndash;&gt;-->
+                             <!--&lt;!&ndash;ngf-model-invalid="errorFile" style="border: 0px;">&ndash;&gt;-->
+                        <!--</th>-->
+                        <!--<th ng-show="myFile" style="border: 0px;">-->
+                            <!--<button ng-click="myFile = null; removeFile();" ng-show="myFile">Remove</button>-->
+                        <!--</th>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            <!--</form>-->
         </div>
         <div class="text-center center-block">
-             <button ng-disabled="!myForm.$valid" ng-click="uploadFile()" class="center-block"> <i class="icon-upload-alt"> </i> Upload Module</button>
+             <!--<button ng-disabled="!myForm.$valid" ng-click="uploadFile()" class="center-block"> <i class="icon-upload-alt"> </i> Upload Module</button>-->
+            <!---->
+
+            <!--<button ng-disabled="myFile==null" ng-click="uploadFile()"> <i class="icon-upload-alt"> </i> Upload Module</button>-->
+            <!--<button ng-click="myFile = null; removeFile();" ng-show="myFile!=null"><i class="icon-remove"> </i> Remove</button>-->
+
+            <button id="uploadButton" ng-click="uploadFile()"> <i class="icon-upload-alt"> </i> Upload Module</button>
+            <button id="removeButton" ng-click="myFile = null; removeFile();"><i class="icon-remove"> </i> Remove</button>
+
+
         </div>
        </div>
 <!--    </div>-->
      
 
  
-    <div class="row" ng-if="isUploading==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we upload the module!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
-    
+    <!--<div class="row" ng-if="isUploading==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Please wait while we upload the module!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
+    <!---->
 
-
+    <ng-include src="'js/common/loadingPopUp.html'"></ng-include>
 
     
 <!--
@@ -81,15 +99,18 @@
         </div>
         <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">
             <a class="close" data-dismiss="alert" aria-label="close">×</a>
-            {{startuperrorMsg}}
+            <b>{{startuperrorMsg}}</b>
+
+            <div class="alert" ng-show="startuperrorMsg" style="margin-bottom: 10px;">
+                {{responseJsonData["org.openmrs.module.Module"].startupErrorMessage}}
+            </div>
+
         </div>
     </div>
 
 
             
-       <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg" style="margin-bottom: 10px;">
-          {{responseJsonData["org.openmrs.module.Module"].startupErrorMessage}} 
-      </div>
+
 
         <table class="">
             <tbody>
@@ -140,9 +161,14 @@
         </div>
     </div>    
 <!--    </div>-->
- 
+
+
+
+
+
 
 </div>
+
 
 <!--  
 <div class="div-row" ng-show="errorMsg">
@@ -227,3 +253,105 @@
 
 
 </div> -->
+
+
+<style type="text/css">
+    .demo-droppable {
+        background-color: #EEEEEE;
+        padding: 100px 0;
+        text-align: center;
+        outline: 3px dashed #BBBBBB;
+        outline-offset: -10px;
+        font-weight: bold;
+        color: #000000;
+        cursor: pointer;
+    }
+    .demo-droppable.dragover {
+        background: #00CC71;
+        outline: 3px dashed #FFF;
+    }
+</style>
+
+
+<script type="text/javascript">
+    (function(window) {
+        function triggerCallback(e, callback) {
+            if(!callback || typeof callback !== 'function') {
+                return;
+            }
+            var files;
+            if(e.dataTransfer) {
+                files = e.dataTransfer.files;
+            } else if(e.target) {
+                files = e.target.files;
+            }
+            callback.call(null, files);
+        }
+
+//        <input type="file" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"
+//        accept=".omod" ngf-max-size="10MB" required
+//        ngf-model-invalid="errorFile" style="border: 0px;">
+
+        function makeDroppable(ele, callback) {
+            var input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('multiple', false);
+            input.setAttribute('ng-model', 'myFile');
+            input.setAttribute('file-model', 'myFile');
+            input.setAttribute('name', 'file');
+            input.setAttribute('file', 'file');
+            input.setAttribute('accept', '.omod');
+            input.setAttribute('ng-max-size', '10MB');
+            input.setAttribute('ngf-model-invalid', 'errorFile');
+
+            input.style.display = 'none';
+            input.addEventListener('change', function(e) {
+                triggerCallback(e, callback);
+            });
+            ele.appendChild(input);
+
+            ele.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                ele.classList.add('dragover');
+            });
+
+            ele.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                ele.classList.remove('dragover');
+            });
+
+            ele.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                ele.classList.remove('dragover');
+                triggerCallback(e, callback);
+            });
+
+            ele.addEventListener('click', function() {
+                input.value = null;
+                input.click();
+            });
+        }
+        window.makeDroppable = makeDroppable;
+    })(this);
+    (function(window) {
+        makeDroppable(window.document.querySelector('.demo-droppable'), function(files) {
+            console.log(files);
+            var output = document.querySelector('.output');
+            output.innerHTML = '';
+            for(var i=0; i<files.length; i++) {
+//                if(files[i].type.indexOf('image/') === 0) {
+//                    output.innerHTML += '<img width="200" src="' + URL.createObjectURL(files[i]) + '" />';
+//                }
+                output.innerHTML += '<p>'+files[i].name+'</p>';
+                $('#uploadButton').prop('disabled', false);
+                $('#removeButton').show();
+            }
+        });
+    })(this);
+
+    $('#uploadButton').prop('disabled', true);
+    $('#removeButton').hide();
+</script>

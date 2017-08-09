@@ -13,6 +13,8 @@
 		</div>
 	</div>
 
+    <!--<button type="button" class="btn btn-info btn-lg" ng-click="showLoadingPopUp()">Open Modal</button>-->
+
     <!--Module Action-->
     
     <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
@@ -42,13 +44,15 @@
 <!--//Module Action-->
     
 <!--Module Action    -->
-    <div class="row" ng-if="isStartAllModules==true || isStartModule==true || isStopModule==true || isUnloadModule==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we complete the actions!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
-    
+
+    <!--<div class="row" ng-if="isStartAllModules==true || isStartModule==true || isStopModule==true || isUnloadModule==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Please wait while we complete the actions!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
+    <!---->
+
     <div class="alert alert-success alert-dismissable" ng-show="startAllModuleSuccess">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startAllModuleSuccess}}
@@ -108,7 +112,7 @@
 
 							<td valign="top" align="center" valign="middle" style="vertical-align:middle;">
 								<button ng-click="stopConfirmationShow(class.packageName,class.uuid, class.display)" ng-if="class.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
-								<button ng-click="StartModule(class.uuid,'ALLMODULES')" ng-if="class.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
+								<button ng-click="StartModule(class.uuid,'ALLMODULES', class.display)" ng-if="class.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
 							
 								<button class="btn btn-danger" ng-click="unloadConfirmationShow(class.packageName, class.uuid, class.display)"> <i class="icon-trash"></i></button>
 							</td>
@@ -144,7 +148,7 @@
         </ul>
     </div>    
     <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="unloadModule(uploadConfirmModuleData.uuid)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+        <button class=" btn-danger" ng-click="unloadModule(uploadConfirmModuleData.uuid, uploadConfirmModuleData.moduleDisplayName)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
         <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
     </form>
@@ -174,7 +178,7 @@
         </ul>
     </div>    
     <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES')" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
+        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES', stopConfirmModuleData.moduleDisplayName)" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
         <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
     </form>
@@ -182,7 +186,30 @@
   </div>
 </div>
 
+  <ng-include src="'js/common/loadingPopUp.html'"></ng-include>
 
+  <!--&lt;!&ndash;Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
+  <!--<div class="modal fade loading-popup" id="loadingModal" aria-labelledby="loading" role="dialog">-->
+      <!--<div class="modal-dialog">-->
+          <!--<div class="modal-content">-->
+              <!--<form>-->
+                  <!--<div class="modal-body">-->
+                      <!--<div class="row">-->
+                          <!--<div class="col-md-3 col-xs-3 text-center" >-->
+                              <!--<img src="img/inprogress.gif" >-->
+                          <!--</div>-->
+                          <!--<div class="col-md-7 col-xs-7 text-center center-block loading-pop-up-msg" >-->
+                              <!--<h1>Please wait while we complete the actions!</h1>-->
+                          <!--</div>-->
+                      <!--</div>-->
+
+                  <!--</div>-->
+                  <!--&lt;!&ndash;<button type="button" class="btn btn-info btn-lg" ng-click="hideLoadingPopUp()">Hide Modal</button>&ndash;&gt;-->
+              <!--</form>-->
+          <!--</div>-->
+      <!--</div>-->
+  <!--</div>-->
+  <!--&lt;!&ndash;//Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
 
 	<style>
 		button {

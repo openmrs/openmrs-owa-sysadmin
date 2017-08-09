@@ -43,45 +43,45 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     $scope.dataLoading=false;
                     var failedSections='';
 
-                    if (typeof(data.SystemInfo["SystemInfo.title.openmrsInformation"]) != "undefined")
+                    if (typeof(data.systemInfo["SystemInfo.title.openmrsInformation"]) != "undefined")
                     {
-                        $scope.openmrsInformation = data.SystemInfo["SystemInfo.title.openmrsInformation"];
+                        $scope.openmrsInformation = data.systemInfo["SystemInfo.title.openmrsInformation"];
                     }
-                    else { 
-                        console.log("Couldn't fetch the openmrsInformation data"); 
+                    else {
+                        console.log("Couldn't fetch the openmrsInformation data");
                         failedSections+="openmrsInformation, ";
                     }
 
-                    if (typeof(data.SystemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"]) != "undefined")
+                    if (typeof(data.systemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"]) != "undefined")
                     {
-                        $scope.javaRuntimeEnvironmentInformation = data.SystemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"];
+                        $scope.javaRuntimeEnvironmentInformation = data.systemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"];
                     }
                     else { 
                         console.log("Couldn't fetch the javaRuntimeEnvironmentInformation data"); 
                         failedSections+="javaRuntimeEnvironmentInformation, ";
                     }
 
-                    if (typeof(data.SystemInfo["SystemInfo.title.memoryInformation"]) != "undefined")
+                    if (typeof(data.systemInfo["SystemInfo.title.memoryInformation"]) != "undefined")
                     {
-                        $scope.memoryInformation = data.SystemInfo["SystemInfo.title.memoryInformation"];
+                        $scope.memoryInformation = data.systemInfo["SystemInfo.title.memoryInformation"];
                     }
                     else { 
                         console.log("Couldn't fetch the memoryInformation data"); 
                         failedSections+="memoryInformation, ";
                     }
 
-                    if (typeof(data.SystemInfo["SystemInfo.title.dataBaseInformation"]) != "undefined")
+                    if (typeof(data.systemInfo["SystemInfo.title.dataBaseInformation"]) != "undefined")
                     {
-                        $scope.dataBaseInformation = data.SystemInfo["SystemInfo.title.dataBaseInformation"];
+                        $scope.dataBaseInformation = data.systemInfo["SystemInfo.title.dataBaseInformation"];
                     }
                     else { 
                         console.log("Couldn't fetch the dataBaseInformation data"); 
                         failedSections+="dataBaseInformation, ";
                     }
 
-                    if (typeof(data.SystemInfo["SystemInfo.title.moduleInformation"]) != "undefined")
+                    if (typeof(data.systemInfo["SystemInfo.title.moduleInformation"]) != "undefined")
                     {
-                        $scope.moduleInformation = data.SystemInfo["SystemInfo.title.moduleInformation"];
+                        $scope.moduleInformation = data.systemInfo["SystemInfo.title.moduleInformation"];
                     }
                     else { 
                         console.log("Couldn't fetch the moduleInformation data"); 

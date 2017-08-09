@@ -6,47 +6,80 @@
       // *** /OpenMRS breadcrumbs ***  
       $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Search Module",""]]});
       // *** /OpenMRS breadcrumbs ***
-         
-         
+
+         function showLoadingPopUp(){
+             $('#loadingModal').show();
+             $('#loadingModal').modal({
+                 backdrop: 'static',
+                 keyboard: false
+             });
+         }
+         function hideLoadingPopUp(){
+             angular.element('#loadingModal').modal('hide');
+         }
+
+         function alertsClear() {
+             if(typeof($scope.downloadErrorMsg)!=undefined){
+                 delete $scope.downloadErrorMsg;
+             }
+             if(typeof($scope.downloadSuccessMsg)!=undefined){
+                 delete $scope.downloadSuccessMsg;
+             }
+
+             if(typeof($scope.startuperrorMsg)!=undefined){
+                 delete $scope.startuperrorMsg;
+             }
+             if(typeof($scope.startupsuccessMsg)!=undefined){
+                 delete $scope.startupsuccessMsg;
+             }
+             if(typeof($scope.uplodedsuccessMsg)!=undefined){
+                 delete $scope.uplodedsuccessMsg;
+             }
+             if(typeof($scope.uploadederrorMsg)!=undefined){
+                 delete $scope.uploadederrorMsg;
+             }
+         }
        $scope.modules=[];
        $scope.searchText = null;
+
        $scope.change = function(text) {
-       $scope.moduleFound=false;
-       $scope.modules=[];
+           alertsClear(); // clear all alerts $scope variables
+           $scope.moduleFound=false;
+           $scope.modules=[];
 
-       var searchValue = $scope.searchText;
-       var column_count=5;
-       var columns="Action%2CName%2CVersion%2CAuthor%2CDescription";
-       var displayStart=0;
-       var displayLength=15;
+           var searchValue = $scope.searchText;
+           var column_count=5;
+           var columns="Action%2CName%2CVersion%2CAuthor%2CDescription";
+           var displayStart=0;
+           var displayLength=15;
 
-       var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
+           var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
 
-       $http({
-         method: 'JSONP', 
-         url: urll
-       })
-       .success(function(data) {
+           $http({
+             method: 'JSONP',
+             url: urll
+           })
+           .success(function(data) {
 
-         console.log(data.iTotalDisplayRecords);
-         if(data.iTotalDisplayRecords>0){
-            	  	// Modules Found
-            	  	$scope.moduleFound=true;
-            	  	$scope.modules = data.aaData;
-            	  }
-            	  else {
-            	  	// No Modules Found
-            	  	$scope.moduleFound=false;
-            	  }
+             console.log(data.iTotalDisplayRecords);
+             if(data.iTotalDisplayRecords>0){
+                        // Modules Found
+                        $scope.moduleFound=true;
+                        $scope.modules = data.aaData;
+                      }
+                      else {
+                        // No Modules Found
+                        $scope.moduleFound=false;
+                      }
 
-                console.log('Data Retrived');
-              })
-       .error(function(data, status) {
-         console.error('Repos error', status, data);
-       })
-       .finally(function() {
-         console.log("finally finished search");
-       });
+                    console.log('Data Retrived');
+                  })
+           .error(function(data, status) {
+             console.error('Repos error', status, data);
+           })
+           .finally(function() {
+             console.log("finally finished search");
+           });
 
      };
 
@@ -54,13 +87,9 @@
 
     $scope.trysearch = function(moduleUrl) {
       $scope.isDownloading=true;
-      //delete previous uploading messages
-      if(typeof($scope.downloadErrorMsg)!=undefined){
-            delete $scope.downloadErrorMsg;
-        }
-      if(typeof($scope.downloadSuccessMsg)!=undefined){
-            delete $scope.downloadSuccessMsg;
-        }
+
+        alertsClear(); // clear all alerts $scope variables
+        showLoadingPopUp(); // Show loadingPop to prevent other Actions
       var fd = new FormData();
       $http.get(moduleUrl, {responseType: "arraybuffer"})
       .success(function (data){ // GET REQUEST ERROR HANDLE
@@ -82,19 +111,6 @@
         var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/?";
 
         $scope.isUploading=true;
-        //delete previous uploading messages
-        if(typeof($scope.startuperrorMsg)!=undefined){
-            delete $scope.startuperrorMsg;
-        }
-        if(typeof($scope.startupsuccessMsg)!=undefined){
-            delete $scope.startupsuccessMsg;
-        }
-        if(typeof($scope.uplodedsuccessMsg)!=undefined){
-            delete $scope.uplodedsuccessMsg;
-        }
-        if(typeof($scope.uploadederrorMsg)!=undefined){
-            delete $scope.uploadederrorMsg;
-        }
 
      $http.post(uploadUrl, fd, {
        transformRequest: angular.identity,
@@ -122,6 +138,7 @@
                         //start up Error Found 
                         $scope.startuperrorMsg="Could not start "+moduleName+" Module."
                 }
+                hideLoadingPopUp();
      })
           .error(function (data, status, header, config) { // POST REQUEST ERROR HANDLE
            console.log("UPLOAD - Error.");
@@ -143,11 +160,13 @@
                     //unknown Error
                     $scope.uploadederrorMsg="Error loading module!"
                 }
+                hideLoadingPopUp();
 
      });
     }).error(function (data){ // GET REQUEST ERROR HANDLE
           $scope.isDownloading=false;
           $scope.downloadErrorMsg="Could not download the Module";
+          hideLoadingPopUp();
     });
 
     };

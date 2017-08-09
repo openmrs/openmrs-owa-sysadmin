@@ -50,19 +50,19 @@ input[type=text]:focus {
     </div>
     
 
-     <div class="row" ng-if="isDownloading==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we download the module!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
+     <!--<div class="row" ng-if="isDownloading==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Please wait while we download the module!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
 
-    <div class="row" ng-if="isUploading==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we upload the module!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
+    <!--<div class="row" ng-if="isUploading==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Please wait while we upload the module!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
 
 
 
@@ -104,4 +104,4 @@ input[type=text]:focus {
       
 <!--    </div>-->
 
- 
+    <ng-include src="'js/common/loadingPopUp.html'"></ng-include>

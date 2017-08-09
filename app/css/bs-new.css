@@ -3080,3 +3080,15 @@ button.list-group-item-danger.active:focus {
 .bd-callout-danger h4{
     color:#d9534f;
 }
+
+
+
+/*Custom*/
+
+.loading-popup .loading-pop-up-msg h1,h3{
+  text-align: center;
+  position: absolute;
+  top:30%;
+  transform: translateY(-30%);
+}
+

@@ -25,12 +25,13 @@
         {{startModuleError}}
     </div>
     
-    <div class="row" ng-if=" isStartModule==true || isStopModule==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please Wait until modules actions complete!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
+    <!--<div class="row" ng-if=" isStartModule==true || isStopModule==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Please Wait until modules actions complete!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
+
 <!--Module Action-->
     
 <!--    Module update-->
@@ -284,7 +285,30 @@
   </div>
 </div>
 
+<ng-include src="'js/common/loadingPopUp.html'"></ng-include>
 
+<!--&lt;!&ndash;Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
+<!--<div class="modal fade loading-popup" id="loadingModal" aria-labelledby="loading" role="dialog">-->
+    <!--<div class="modal-dialog">-->
+        <!--<div class="modal-content">-->
+            <!--<form>-->
+                <!--<div class="modal-body">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-md-3 col-xs-3 text-center" >-->
+                            <!--<img src="img/inprogress.gif" >-->
+                        <!--</div>-->
+                        <!--<div class="col-md-7 col-xs-7 text-center center-block loading-pop-up-msg" >-->
+                            <!--<h1>Please wait while we complete the actions!</h1>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+                <!--&lt;!&ndash;<button type="button" class="btn btn-info btn-lg" ng-click="hideLoadingPopUp()">Hide Modal</button>&ndash;&gt;-->
+            <!--</form>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash;//Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
 
 
 

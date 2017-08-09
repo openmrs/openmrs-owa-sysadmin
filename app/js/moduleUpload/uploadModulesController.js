@@ -26,10 +26,18 @@ uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$
     $scope.PostDataResponse ='';
     $scope.ResponseDetails ='';
 
-    $scope.removeFile = function(){
-        angular.element("input[type='file']").val(null);
-        $scope.myFile = null;
-        //delete previous uploading messages
+    function showLoadingPopUp(){
+        $('#loadingModal').show();
+        $('#loadingModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+    function hideLoadingPopUp(){
+        angular.element('#loadingModal').modal('hide');
+    }
+
+    function alertsClear() {
         if(typeof($scope.startuperrorMsg)!=undefined){
             delete $scope.startuperrorMsg;
         }
@@ -43,31 +51,28 @@ uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$
             delete $scope.uploadederrorMsg;
         }
     }
+    $scope.removeFile = function(){
+        angular.element("input[type='file']").val(null);
+        $scope.myFile = null;
+        var output = document.getElementById("dragAndDropOutput");
+        output.innerHTML = 'Drag files here or click to upload';
+        $('#uploadButton').prop('disabled', true);
+        $('#removeButton').hide();
+        alertsClear();
+    }
     
     $scope.uploadFile = function(){
+
+        alertsClear(); // clear all alerts $scope variables
+        showLoadingPopUp(); // Show loadingPop to prevent other Actions
+
         var file = $scope.myFile;
 
         var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/?";
 
         var fd = new FormData();
         fd.append('file', file);
-
-
         $scope.isUploading=true;
-
-        //delete previous uploading messages
-        if(typeof($scope.startuperrorMsg)!=undefined){
-            delete $scope.startuperrorMsg;
-        }
-        if(typeof($scope.startupsuccessMsg)!=undefined){
-            delete $scope.startupsuccessMsg;
-        }
-        if(typeof($scope.uplodedsuccessMsg)!=undefined){
-            delete $scope.uplodedsuccessMsg;
-        }
-        if(typeof($scope.uploadederrorMsg)!=undefined){
-            delete $scope.uploadederrorMsg;
-        }
 
         $http.post(uploadUrl, fd, {
             transformRequest: angular.identity,
@@ -96,6 +101,7 @@ uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$
                         //start up Error Found 
                         $scope.startuperrorMsg="Could not start "+moduleName+" Module."
                 }
+                hideLoadingPopUp();
             })
             .error(function (data, status, header, config) {
                 //console.log("err");
@@ -118,6 +124,7 @@ uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$
                     //unknown Error
                     $scope.uploadederrorMsg="Error loading module!"
                 }
+                hideLoadingPopUp();
                 
             });
 

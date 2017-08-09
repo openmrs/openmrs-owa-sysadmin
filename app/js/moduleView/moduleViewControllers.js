@@ -12,7 +12,44 @@ manageModuleController.controller('ModuleListCtrl',
       // *** /OpenMRS breadcrumbs ***
 
             
-            
+    function showLoadingPopUp(){
+        $('#loadingModal').show();
+        $('#loadingModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+    function hideLoadingPopUp(){
+        angular.element('#loadingModal').modal('hide');
+    }
+
+    function alertsClear() {
+        if(typeof($scope.startModuleSuccess)!=undefined){
+            delete $scope.startModuleSuccess;
+        }
+        if(typeof($scope.startModuleError)!=undefined){
+            delete $scope.startModuleError;
+        }
+        if(typeof($scope.stopModuleSuccess)!=undefined){
+            delete $scope.stopModuleSuccess;
+        }
+        if(typeof($scope.stopModuleError)!=undefined){
+            delete $scope.stopModuleError;
+        }
+        if(typeof($scope.unloadModuleSuccess)!=undefined){
+            delete $scope.unloadModuleSuccess;
+        }
+        if(typeof($scope.unloadModuleError)!=undefined){
+            delete $scope.unloadModuleError;
+        }
+        if(typeof($scope.startAllModuleSuccess)!=undefined){
+            delete $scope.startAllModuleSuccess;
+        }
+        if(typeof($scope.startAllModuleError)!=undefined){
+            delete $scope.startAllModuleError;
+        }
+    }
+
     $scope.updateModule= function(moduleUrl){
         console.log("update Module");
         // Remove the notification about Update
@@ -20,7 +57,8 @@ manageModuleController.controller('ModuleListCtrl',
             delete $scope.moduleUpdateURL;
         }
        $scope.moduleNewUpdateFound="0"; // working or disabled
-        
+        alertsClear(); // clear all alerts $scope variables
+        showLoadingPopUp(); // Show loadingPop to prevent other Actions
         $scope.isDownloading=true;
         var response = ModuleService.uploadModules(moduleUrl);
         response.then(function(result){
@@ -52,6 +90,7 @@ manageModuleController.controller('ModuleListCtrl',
                                     //start up Error Found 
                                     $scope.startuperrorMsg="Could not start "+moduleName+" Module."
                             }
+                            hideLoadingPopUp();
                 }
                 else{
                     console.log("Upload Success");
@@ -75,6 +114,7 @@ manageModuleController.controller('ModuleListCtrl',
                                 //unknown Error
                                 $scope.uploadederrorMsg="Error loading module!"
                             }
+                            hideLoadingPopUp();
                 }
             }
             else{
@@ -98,15 +138,17 @@ manageModuleController.controller('ModuleListCtrl',
 	$scope.selected = {};
 
         
-    $scope.StartModule = function(moduleUuid,resource){
+    $scope.StartModule = function(moduleUuid,resource, moduleDisplayName){
       	console.log("start module");
         $scope.isStartModule=true;
-      	if(typeof($scope.startModuleSuccess)!=undefined){
-            delete $scope.startModuleSuccess;
-        }
-      	 if(typeof($scope.startModuleError)!=undefined){
-            delete $scope.startModuleError;
-        }
+        alertsClear(); // clear all alerts $scope variables
+        showLoadingPopUp(); // Show loadingPop to prevent other Actions
+      	// if(typeof($scope.startModuleSuccess)!=undefined){
+        //     delete $scope.startModuleSuccess;
+        // }
+      	//  if(typeof($scope.startModuleError)!=undefined){
+        //     delete $scope.startModuleError;
+        // }
 
       	var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/moduleaction";
       	var moduleData = 
@@ -126,7 +168,8 @@ manageModuleController.controller('ModuleListCtrl',
             else {
                 $scope.getModuleViewDetails();
             }
-        	$scope.startModuleSuccess="Module Started successfully.";
+        	$scope.startModuleSuccess="Module " + moduleDisplayName + " has been started successfully.";
+            hideLoadingPopUp();
         })
         .error(function (data, status, headers, config) {
         		//console.log(status);
@@ -144,25 +187,28 @@ manageModuleController.controller('ModuleListCtrl',
                     }
                     else{
                         // Unknown Error Message
-                        $scope.startModuleError="Could not Start this Module!"
+                        $scope.startModuleError="Action failed, Could not start the " + moduleDisplayName + " module!"
                     }
                 }
                 else{
                     //unknown Error
-                    $scope.startModuleError="Could not Start this Module!"
+                    $scope.startModuleError="Action failed, Could not start the " + moduleDisplayName + " module!"
                 }
+                hideLoadingPopUp();
         });
       }
 	
-      $scope.StopModule = function(moduleUuid,resource){
+      $scope.StopModule = function(moduleUuid,resource,moduleDisplayName){
       	console.log("Stop module");
          $scope.isStopModule=true;
-      	if(typeof($scope.stopModuleSuccess)!=undefined){
-            delete $scope.stopModuleSuccess;
-        }
-        if(typeof($scope.stopModuleError)!=undefined){
-            delete $scope.stopModuleError;
-        }
+          alertsClear(); // clear all alerts $scope variables
+          showLoadingPopUp(); // Show loadingPop to prevent other Actions
+      	// if(typeof($scope.stopModuleSuccess)!=undefined){
+        //     delete $scope.stopModuleSuccess;
+        // }
+        // if(typeof($scope.stopModuleError)!=undefined){
+        //     delete $scope.stopModuleError;
+        // }
 
       	var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/moduleaction";
       	var moduleData = 
@@ -182,7 +228,8 @@ manageModuleController.controller('ModuleListCtrl',
             else {
                 $scope.getModuleViewDetails();
             }
-        	$scope.stopModuleSuccess="Module Stoped successfully.";
+        	$scope.stopModuleSuccess="Module " + moduleDisplayName + " has been Stopped successfully.";
+            hideLoadingPopUp();
         })
         .error(function (data, status, headers, config) {
                 $scope.isStopModule=false;
@@ -197,13 +244,14 @@ manageModuleController.controller('ModuleListCtrl',
                     }
                     else{
                         // Unknown Error Message
-                        $scope.stopModuleError="Could not Stop this Module!"
+                        $scope.stopModuleError="Action failed, Could not stop the " + moduleDisplayName + " mdule!"
                     }
                 }
                 else{
                     //unknown Error
-                    $scope.stopModuleError="Could not Stop this Module!"
+                    $scope.stopModuleError="Action failed, Could not stop the " + moduleDisplayName + " module!"
                 }
+                hideLoadingPopUp();
         });
       }
 //      
@@ -417,15 +465,17 @@ manageModuleController.controller('ModuleListCtrl',
 //      }
       
       
-      $scope.unloadModule = function(moduleUuid){
+      $scope.unloadModule = function(moduleUuid, moduleDisplayName){
       	console.log("Unload module");
           $scope.isUnloadModule=true;
-      	if(typeof($scope.unloadModuleSuccess)!=undefined){
-            delete $scope.unloadModuleSuccess;
-        }
-        if(typeof($scope.unloadModuleError)!=undefined){
-            delete $scope.unloadModuleError;
-        }
+          alertsClear(); // clear all alerts $scope variables
+          showLoadingPopUp(); // Show loadingPop to prevent other Actions
+      	// if(typeof($scope.unloadModuleSuccess)!=undefined){
+        //     delete $scope.unloadModuleSuccess;
+        // }
+        // if(typeof($scope.unloadModuleError)!=undefined){
+        //     delete $scope.unloadModuleError;
+        // }
 
       	var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/moduleaction";
       	var moduleData = 
@@ -440,7 +490,8 @@ manageModuleController.controller('ModuleListCtrl',
         }) .success(function (data, status, headers, config) {
             $scope.getAllModuleDetails();
             $scope.isUnloadModule=false;
-        	$scope.unloadModuleSuccess="Module Unloaded successfully.";
+        	$scope.unloadModuleSuccess="Module " + moduleDisplayName + " has been unloaded successfully.";
+        	hideLoadingPopUp();
         })
         .error(function (data, status, headers, config) {
                 $scope.isUnloadModule=false;
@@ -455,13 +506,14 @@ manageModuleController.controller('ModuleListCtrl',
                     }
                     else{
                         // Unknown Error Message
-                        $scope.unloadModuleError="Could not unload this Module!"
+                        $scope.unloadModuleError="Action failed, Could not unload the " + moduleDisplayName + " module!"
                     }
                 }
                 else{
                     //unknown Error
-                    $scope.unloadModuleError="Could not unload this Module!"
+                    $scope.unloadModuleError="Action failed, Could not unload the " + moduleDisplayName + " module!"
                 }
+                hideLoadingPopUp();
         });
       }
       
@@ -471,12 +523,14 @@ manageModuleController.controller('ModuleListCtrl',
       	console.log("start all module");
         
         $scope.isStartAllModules=true;
-      	if(typeof($scope.startAllModuleSuccess)!=undefined){
-            delete $scope.startAllModuleSuccess;
-        }
-      	 if(typeof($scope.startAllModuleError)!=undefined){
-            delete $scope.startAllModuleError;
-        }
+        alertsClear(); // clear all alerts $scope variables
+        showLoadingPopUp(); // Show loadingPop to prevent other Actions
+      	// if(typeof($scope.startAllModuleSuccess)!=undefined){
+        //     delete $scope.startAllModuleSuccess;
+        // }
+      	//  if(typeof($scope.startAllModuleError)!=undefined){
+        //     delete $scope.startAllModuleError;
+        // }
 
       	var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/moduleaction";
       	var moduleData = 
@@ -491,7 +545,8 @@ manageModuleController.controller('ModuleListCtrl',
         }) .success(function (data, status, headers, config) {
             $scope.isStartAllModules=false;
             $scope.getAllModuleDetails();
-        	$scope.startAllModuleSuccess="Required action is compeleted. Please check the module's status";
+        	$scope.startAllModuleSuccess="Action completed successfully. Please check the module's status";
+        	hideLoadingPopUp();
         })
         .error(function (data, status, headers, config) {
         		var x2js = new X2JS();
@@ -505,13 +560,14 @@ manageModuleController.controller('ModuleListCtrl',
                     }
                     else{
                         // Unknown Error Message
-                        $scope.startModuleError="Could not complete this action!"
+                        $scope.startModuleError="Action Failed, Could not start all the modules!"
                     }
                 }
                 else{
                     //unknown Error
-                    $scope.startModuleError="Could not complete this action!"
+                    $scope.startModuleError="Action Failed, Could not start all the modules!"
                 }
+                hideLoadingPopUp();
         });
       }
 
@@ -1009,6 +1065,9 @@ manageModuleController.controller('ModuleListCtrl',
 
     
    $scope.checkModuleUpdate = function (moduleUuid, currentVersion){
+
+       alertsClear(); // clear all alerts $scope variables
+       showLoadingPopUp(); // Show loadingPop to prevent other Actions
         var response = ModuleService.checkModuleUpdate(moduleUuid);
         response.then(function(result){
             responseType=result[0]; //UPLOAD or DOWNLOAD
@@ -1043,10 +1102,12 @@ manageModuleController.controller('ModuleListCtrl',
                                 console.log("Error");
                                 $scope.moduleNewUpdateFound=false;
                               }
+                              hideLoadingPopUp();
                 }
                 else{
                     console.error('Repos error', responseStatus, responseData);
                     $scope.moduleNewUpdateFound=false;
+                    hideLoadingPopUp();
                 }
             }
         });
