@@ -1,4 +1,6 @@
 
+
+
 <div class="container" id="moduleUploadContainer">
     <div class="row">
         <div class="col-md-12 col-xs-12">
@@ -13,8 +15,12 @@
     <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{uploadederrorMsg}}
-    </div> 
-    
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" id="invalidFileTypeError">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Invalid Module found. Please upload the .omod file.
+    </div>
 <!--
     <div class="panel panel-primary"  ng-hide="startupsuccessMsg">
         <div class="panel-heading">Select Module to Upload</div>
@@ -27,9 +33,26 @@
 
             <!--Drag and Drop -->
 
-                    <div class="demo-droppable center-block">
-                        <h1 class="output" id="dragAndDropOutput">Drag files here or click to upload</h1>
-                    </div>
+
+                    <!--<div class="demo-droppable center-block" id="sample123a">-->
+                        <!--<h1 class="output" id="dragAndDropOutput">Drag files here or click to upload</h1>-->
+                    <!--</div>-->
+
+            <div class="demo-droppable center-block" for="test">
+                <input type="file" fileread="uploadme.src" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"
+                       accept=".omod" ngf-max-size="10MB" required accept=".omod" onChange="validate(this.value)"
+                       ngf-model-invalid="errorFile" id="module_upload" style="border: 0px;">
+                <h1 class="output center-block" id="dragAndDropOutput" style="margin-top: -150px;">Drag files here or click to upload</h1>
+            </div>
+
+            <!--<p id="filename"></p>-->
+
+            <!--<form action>-->
+                <!--<input type="file" fileread="uploadme.src" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"-->
+                       <!--accept=".omod" ngf-max-size="10MB" required-->
+                       <!--ngf-model-invalid="errorFile" style="border: 0px;">-->
+                <!--<img ng-src="{{ uploadme.src }}">-->
+            <!--</form>-->
 
             <!-- // Drag and Drop -->
 
@@ -38,9 +61,9 @@
          <!---->
                     <!--<tr style="border: 0px;">-->
                         <!--<th style="border: 0px;"> -->
-                             <!--&lt;!&ndash;<input type="file" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"    &ndash;&gt;-->
-                             <!--&lt;!&ndash;accept=".omod" ngf-max-size="10MB" required&ndash;&gt;-->
-                             <!--&lt;!&ndash;ngf-model-invalid="errorFile" style="border: 0px;">&ndash;&gt;-->
+                             <!--<input type="file" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"    -->
+                             <!--accept=".omod" ngf-max-size="10MB" required-->
+                             <!--ngf-model-invalid="errorFile" style="border: 0px;">-->
                         <!--</th>-->
                         <!--<th ng-show="myFile" style="border: 0px;">-->
                             <!--<button ng-click="myFile = null; removeFile();" ng-show="myFile">Remove</button>-->
@@ -256,9 +279,18 @@
 
 
 <style type="text/css">
+    input[type="file"] {
+        opacity: 0;
+        width: 95%;
+        height: 95%;
+        max-width: 95%;
+    }
+
     .demo-droppable {
         background-color: #EEEEEE;
-        padding: 100px 0;
+        /*padding: 100px 0;*/
+        width: 100%;
+        height: 300px;
         text-align: center;
         outline: 3px dashed #BBBBBB;
         outline-offset: -10px;
@@ -270,88 +302,156 @@
         background: #00CC71;
         outline: 3px dashed #FFF;
     }
+
+
 </style>
 
 
 <script type="text/javascript">
-    (function(window) {
-        function triggerCallback(e, callback) {
-            if(!callback || typeof callback !== 'function') {
-                return;
-            }
-            var files;
-            if(e.dataTransfer) {
-                files = e.dataTransfer.files;
-            } else if(e.target) {
-                files = e.target.files;
-            }
-            callback.call(null, files);
+    $('#invalidFileTypeError').hide();
+    $('#uploadButton').prop('disabled', true);
+    $('#removeButton').hide();
+
+    function validate(file) {
+        $('#invalidFileTypeError').hide();
+        $('#uploadButton').prop('disabled', true);
+        $('#removeButton').hide();
+
+        var ext = file.split(".");
+        ext = ext[ext.length-1].toLowerCase();
+        var arrayExtensions = ["omod"];
+
+        if (arrayExtensions.lastIndexOf(ext) == -1) {
+            $('#invalidFileTypeError').show();
+            $("#module_upload").val("");
         }
+    }
+
+    $('input[type=file]').on('change', function() {
+        if($("#module_upload").val()!=""){
+            $("#dragAndDropOutput").text($(this)[0].files[0].name);
+            $('#uploadButton').prop('disabled', false);
+            $('#removeButton').show();
+        }
+    });
+
+    $('input[type=file]').on('dragenter', function() {
+        $('div').addClass('dragover');
+    });
+
+    $('input[type=file]').on('dragover', function() {
+        $('div').addClass('dragover');
+    });
+
+    $('input[type=file]').on('dragleave', function() {
+        $('div').removeClass('dragover');
+    });
+
+    $('input[type=file]').on('drop', function() {
+        $('div').removeClass('dragover');
+    });
+
+
+//        (function(window) {
+//        function triggerCallback(e, callback) {
+//            if(!callback || typeof callback !== 'function') {
+//                return;
+//            }
+//            var files;
+//            if(e.dataTransfer) {
+//                files = e.dataTransfer.files;
+//            } else if(e.target) {
+//                files = e.target.files;
+//            }
+//            callback.call(null, files);
+//        }
 
 //        <input type="file" ngf-select ng-model="myFile" file-model="myFile" name="file" file="file"
 //        accept=".omod" ngf-max-size="10MB" required
 //        ngf-model-invalid="errorFile" style="border: 0px;">
 
-        function makeDroppable(ele, callback) {
-            var input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('multiple', false);
-            input.setAttribute('ng-model', 'myFile');
-            input.setAttribute('file-model', 'myFile');
-            input.setAttribute('name', 'file');
-            input.setAttribute('file', 'file');
-            input.setAttribute('accept', '.omod');
-            input.setAttribute('ng-max-size', '10MB');
-            input.setAttribute('ngf-model-invalid', 'errorFile');
-
-            input.style.display = 'none';
-            input.addEventListener('change', function(e) {
-                triggerCallback(e, callback);
-            });
-            ele.appendChild(input);
-
-            ele.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                ele.classList.add('dragover');
-            });
-
-            ele.addEventListener('dragleave', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                ele.classList.remove('dragover');
-            });
-
-            ele.addEventListener('drop', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                ele.classList.remove('dragover');
-                triggerCallback(e, callback);
-            });
-
-            ele.addEventListener('click', function() {
-                input.value = null;
-                input.click();
-            });
-        }
-        window.makeDroppable = makeDroppable;
-    })(this);
-    (function(window) {
-        makeDroppable(window.document.querySelector('.demo-droppable'), function(files) {
-            console.log(files);
-            var output = document.querySelector('.output');
-            output.innerHTML = '';
-            for(var i=0; i<files.length; i++) {
-//                if(files[i].type.indexOf('image/') === 0) {
-//                    output.innerHTML += '<img width="200" src="' + URL.createObjectURL(files[i]) + '" />';
-//                }
-                output.innerHTML += '<p>'+files[i].name+'</p>';
-                $('#uploadButton').prop('disabled', false);
-                $('#removeButton').show();
-            }
-        });
-    })(this);
-
-    $('#uploadButton').prop('disabled', true);
-    $('#removeButton').hide();
+//        function makeDroppable(ele, callback) {
+//            var input = document.createElement('input');
+//            input.setAttribute('type', 'file');
+//            input.setAttribute('multiple', false);
+//            input.setAttribute('ng-model', 'myFile');
+//            input.setAttribute('file-model', 'myFile');
+//            input.setAttribute('name', 'file');
+//            input.setAttribute('id', 'file');
+//            input.setAttribute('file', 'file');
+//            input.setAttribute('accept', '.omod');
+//            input.setAttribute('ng-max-size', '10MB');
+//            input.setAttribute('ng-class', 'divClass');
+//
+//            input.style.display = 'none';
+//            input.addEventListener('change', function(e) {
+//                $.each(ele.data('events'), function() {
+//                    // iterate registered handler of original
+//                    $.each(this, function() {
+//                        $('#file').bind(this.type, this.handler);
+//                    });
+//                });
+//                triggerCallback(e, callback);
+//            });
+//            ele.appendChild(input);
+//
+//            ele.addEventListener('dragover', function(e) {
+//                e.preventDefault();
+//                e.stopPropagation();
+//                ele.classList.add('dragover');
+//            });
+//
+//            ele.addEventListener('dragleave', function(e) {
+//                e.preventDefault();
+//                e.stopPropagation();
+//                ele.classList.remove('dragover');
+//            });
+//
+//            ele.addEventListener('drop', function(e) {
+//                e.preventDefault();
+//                e.stopPropagation();
+//                $.each($('#sample123a').data('events'), function() {
+//                    // iterate registered handler of original
+//                    $.each(this, function() {
+//                        $('#file').bind(this.type, this.handler);
+//                    });
+//                });
+//                ele.classList.remove('dragover');
+//                triggerCallback(e, callback);
+//
+//                //input.drop();
+//                // iterate event types of original
+//
+//            });
+//
+//            ele.addEventListener('click', function() {
+//                input.value = null;
+//                input.click();
+//            });
+//        }
+//        window.makeDroppable = makeDroppable;
+//    })(this);
+//    (function(window) {
+//        makeDroppable(window.document.querySelector('.demo-droppable'), function(files) {
+//            console.log(files);
+//            var output = document.querySelector('.output');
+//            output.innerHTML = '';
+//            for(var i=0; i<files.length; i++) {
+////                if(files[i].type.indexOf('image/') === 0) {
+////                    output.innerHTML += '<img width="200" src="' + URL.createObjectURL(files[i]) + '" />';
+////                }
+//                output.innerHTML += '<p>'+files[i].name+'</p>';
+//                $('#uploadButton').prop('disabled', false);
+//                $('#removeButton').show();
+//            }
+//          //  $("#file").change();
+//            console.log($('#file').value);
+//
+//        });
+//    })(this);
+//
+//    $('#uploadButton').prop('disabled', true);
+//    $('#removeButton').hide();
 </script>
+
+

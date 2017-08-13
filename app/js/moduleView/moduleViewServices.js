@@ -50,18 +50,61 @@ manageModuleService.service('ModuleService',['$http', 'OWARoutesUtil','$q', func
             });
             return def.promise;
         },
-        
-        getModuleDetailsFromOnline : function(moduleLegacyId){
+
+        getModuleDetailsFromOnline : function(modulePackageName){
             var def = $q.defer();
-            var requestUrl = "https://modules.openmrs.org/modulus/api/search?q="+moduleLegacyId;
-            $http.get(requestUrl, {params:{ v : 'full'}})
-            .success(function (data, status){ // GET REQUEST SUCCESS HANDLE
-                def.resolve(["GET",1,data,status]);
-            }).error(function (data,status){ // GET REQUEST ERROR HANDLE
-                def.resolve(["GET",0,data,status]);
-            });
+            //var requestUrl = "https://modules.openmrs.org/modulus/api/search?q="+moduleLegacyId;
+            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+            //$http.jsonp(requestUrl)
+            try{
+                console.log("1");
+                $http({
+                    method: 'JSONP',
+                    url: requestUrl,
+                    params: {
+                        format: 'jsonp',
+                        json_callback: 'JSON_CALLBACK'
+                    }
+                }).then(function (data){ // GET REQUEST SUCCESS HANDLE
+                    console.log("2");
+                    // console.log("jsonp : " + status);
+                    // if(status==200){
+                    //     console.log("success")
+                    //     def.resolve(["GET",1,data,status]);
+                    // }
+                    // else{
+                    //     console.log("error")
+                    //     def.resolve(["GET",0,data,status]);
+                    // }
+                    console.log("3");
+                });
+            }
+            catch(err){
+                console.log("4");
+                console.log(err);
+            }
+            console.log("5");
             return def.promise;
         },
+
+        // getModuleDetailsFromOnline : function(modulePackageName){
+        //     var def = $q.defer();
+        //     //var requestUrl = "https://modules.openmrs.org/modulus/api/search?q="+moduleLegacyId;
+        //     var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+        //     //$http.jsonp(requestUrl)
+        //     $http({
+        //         url: requestUrl,
+        //         method: 'JSONP',
+        //     })
+        //     .success(function (data, status){ // GET REQUEST SUCCESS HANDLE
+        //         console.log("success")
+        //         def.resolve(["GET",1,data,status]);
+        //     }).error(function (data,status){ // GET REQUEST ERROR HANDLE
+        //         console.log("eerrr : " + data);
+        //         def.resolve(["GET",0,data,status]);
+        //     });
+        //     return def.promise;
+        // },
         
         getAllModuleDetails : function(){
             var def = $q.defer();
@@ -105,7 +148,7 @@ manageModuleService.service('ModuleService',['$http', 'OWARoutesUtil','$q', func
 //           var def = $q.defer();
 //            var urll="https://modules.openmrs.org/modulus/api/modules/"+moduleId+"/"+releaseId
 //           $http({
-//             method: 'JSONP', 
+//             method: 'JSONP',
 //             url: urll
 //           })
 //           .success(function(data,status) {

@@ -577,19 +577,21 @@ manageModuleController.controller('ModuleListCtrl',
             delete $scope.nonInstalledModuleDetails;
         }
         $scope.onlineDataFound=0;
-        var legacyId=$routeParams.classUUID;
-        var legacyId=legacyId.toString().replace("org.openmrs.","");
-        var legacyId=legacyId.toString().replace("module.","");
-        console.log(legacyId);
-        
-        var responseModuleDetails = ModuleService.getModuleDetailsFromOnline(legacyId);
+        var modulePackageName=$routeParams.classUUID;
+        // var legacyId=legacyId.toString().replace("org.openmrs.","");
+        // var legacyId=legacyId.toString().replace("module.","");
+        console.log(modulePackageName);
+        // REMOVE **************************************
+        modulePackageName="org.openmrs.module.addresshierarchy";
+        // REMOVE **************************************
+        var responseModuleDetails = ModuleService.getModuleDetailsFromOnline(modulePackageName);
         responseModuleDetails.then(function(resultModule){            
         if(resultModule[0]=="GET"){
             if(resultModule[1]==1){
                 if(resultModule[2].totalCount>0){
                     $scope.onlineDataFound=1;
                     console.log("1");
-                    $scope.nonInstalledModuleDetails=resultModule[2].items;
+                    $scope.nonInstalledModuleDetails=resultModule[2];
                 }
                 else{console.log("2");
                     $scope.onlineDataFound=-1;

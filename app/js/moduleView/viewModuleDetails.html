@@ -98,7 +98,7 @@
 
     
 <div class="row col-12" ng-show="requestModuleViewDetails">
-    <div class="panel-body">
+    <div class="panel-body" style="width: 100%;">
         <h2> Module Name : {{ModuleViewData.display}}  </h2> 
       <div style="padding-bottom: 10px;">
 <!--
@@ -146,54 +146,84 @@
     </table>
         
     <h2> Aware of Modules</h2>
-    <table class="layout display responsive-table">
-      <tbody>
-        <tr ng-repeat="class in moduleViewAwareOfModules.awareOfModules"> 
-            <td> <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class[1]}} ">{{class[0]}} </a></td>
-        </tr>
-        <tr>
-            <div class="alert alert-info" ng-hide="moduleViewAwareOfModules.awareOfModules.length">
-                There are no aware of modules.
-            </div> 
-        </tr>
-<!--
-            <div class="alert alert-info" style="text-align:center;" ng-if="moduleViewAwareOfModules.awareOfModules.length<1">
-                There are no aware of modules for this Module.
-            </div>  
--->
-        
-      </tbody>
-    </table>  
+        <div class="modal-body">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="class1 in moduleViewRequiredModules.awareOfModules">
+                    <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class1[1]}} ">{{class1[0]}}</a>
+                </li>
+                <div class="alert alert-info" ng-hide="moduleViewRequiredModules.awareOfModules.length">
+                    There are no aware of modules.
+                </div>
+            </ul>
+        </div>
+    <!--<table class="layout display responsive-table">-->
+      <!--<tbody>-->
+        <!--<tr ng-repeat="class in moduleViewAwareOfModules.awareOfModules"> -->
+            <!--<td> <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class[1]}} ">{{class[0]}} </a></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<div class="alert alert-info" ng-hide="moduleViewAwareOfModules.awareOfModules.length">-->
+                <!--There are no aware of modules.-->
+            <!--</div> -->
+        <!--</tr>-->
+<!--&lt;!&ndash;-->
+            <!--<div class="alert alert-info" style="text-align:center;" ng-if="moduleViewAwareOfModules.awareOfModules.length<1">-->
+                <!--There are no aware of modules for this Module.-->
+            <!--</div>  -->
+<!--&ndash;&gt;-->
+        <!---->
+      <!--</tbody>-->
+    <!--</table>  -->
         
     <h2> Required Modules</h2>
-    <table class="layout display responsive-table">
-      <tbody>
-        <tr ng-repeat="class2 in moduleViewRequiredModules.requiredModules"> 
-            <td> <i class="icon-signin"></i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a></td>
-        </tr>
-        <tr>
-            <div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">
-                There are no required modules.
-            </div> 
-        </tr>
- 
-    
-      </tbody>
-    </table>  
+    <!--<table class="layout display responsive-table">-->
+        <div class="modal-body">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="class2 in moduleViewRequiredModules.requiredModules">
+                    <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a>
+                </li>
+                <div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">
+                    There are no required modules.
+                </div>
+            </ul>
+        </div>
+      <!--<tbody>-->
+        <!--<tr ng-repeat="class2 in moduleViewRequiredModules.requiredModules"> -->
+            <!--<td> <i class="icon-signin"></i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">-->
+                <!--There are no required modules.-->
+            <!--</div> -->
+        <!--</tr>-->
+ <!---->
+    <!---->
+      <!--</tbody>-->
+    <!--</table>  -->
         
     <h2> Dependent Modules on {{ModuleViewData.name}}</h2>
-    <table class="layout display responsive-table">
-      <tbody>
-        <tr ng-repeat="class3 in DependentModuleList"> 
-            <td> <i class="icon-lock"></i> <a href="#/module-show/{{class3[1]}} ">{{class3[0]}}</a></td>
-        </tr>
-        <tr>
-            <div class="alert alert-info" ng-hide="DependentModuleList.length">
-                There are no modules which depend on this module.
-            </div> 
-        </tr>
-      </tbody>
-    </table>
+        <div class="modal-body">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="class3 in DependentModuleList">
+                    <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class3[1]}} ">{{class3[0]}}</a>
+                </li>
+                <div class="alert alert-info" ng-hide="DependentModuleList.length">
+                    There are no modules which depend on this module.
+                </div>
+            </ul>
+        </div>
+    <!--<table class="layout display responsive-table">-->
+      <!--<tbody>-->
+        <!--<tr ng-repeat="class3 in DependentModuleList"> -->
+            <!--<td> <i class="icon-lock"></i> <a href="#/module-show/{{class3[1]}} ">{{class3[0]}}</a></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<div class="alert alert-info" ng-hide="DependentModuleList.length">-->
+                <!--There are no modules which depend on this module.-->
+            <!--</div> -->
+        <!--</tr>-->
+      <!--</tbody>-->
+    <!--</table>-->
         
         
   </div>
@@ -211,33 +241,33 @@
     <div class="row col-12" ng-if="onlineDataFound!=0">
          <div class="panel-body" style="width:100%;" >
              <div class=""  ng-if="onlineDataFound==1">
-                <ul class="list-group" style="width:100%;" ng-repeat="moduleDetails in nonInstalledModuleDetails ">
+                <ul class="list-group" style="width:100%;" ng-show="nonInstalledModuleDetails">
                   <li class="list-group-item">
-                      <b> Module Name : {{moduleDetails.name}}</b>
+                      <b> Module Name : {{nonInstalledModuleDetails.name}}</b>
                   </li>
                   <li class="list-group-item">
                     <table class="layout display responsive-table">
                         <tbody>
                             <tr>
                                 <td> Description </td>
-                                <td> {{moduleDetails.description}} </td>
+                                <td> {{nonInstalledModuleDetails.description}} </td>
                             </tr>
                             <tr>
-                                <td> LegacyId </td>
-                                <td> {{moduleDetails.legacyId}} </td>
-                            </tr>  
+                                <td> Latest Version </td>
+                                <td> {{nonInstalledModuleDetails.latestVersion}} </td>
+                            </tr>
                             <tr>
-                                <td> Documentation URL </td>
-                                <td> <a href="{{moduleDetails.documentationURL}}" target="_blank">{{moduleDetails.documentationURL}} </a> </td>
-                            </tr>  
+                                <td> Module Hosted URL </td>
+                                <td> <a href="{{nonInstalledModuleDetails.hostedUrl}}" target="_blank">{{nonInstalledModuleDetails.hostedUrl}} </a> </td>
+                            </tr>
                             <tr>
-                                <td> Module Owner </td>
-                                <td> {{moduleDetails.owner}} </td>
-                            </tr>  
-                            <tr>
-                                <td> Module Maintainers</td>
-                                <td> <p ng-repeat="maintainers in moduleDetails.maintainers"> {{maintainers.fullname}} </p>  </td>
-                            </tr> 
+                                <td> Module Maintainers </td>
+                                <td>
+                                    <li class="list-group-item" ng-repeat="owners in nonInstalledModuleDetails.maintainers">
+                                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class3[1]}} ">{{owners.name}}</a>
+                                    </li>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                   </li>
@@ -277,7 +307,7 @@
         </ul>
     </div>    
     <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES')" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
+        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'MODULEDETAILS')" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
         <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
     </form>
