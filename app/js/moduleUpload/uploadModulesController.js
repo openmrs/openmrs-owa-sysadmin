@@ -7,38 +7,12 @@ uploadModule.directive('fileModel', ['$parse', function ($parse) {
             var model = $parse(attrs.fileModel);
             var modelSetter = model.assign;
             element.bind('change', function(){
-                scope.$apply(function(){
-                    modelSetter(scope, element[0].files[0]);
-                });
+                if(element[0].files[0]){
+                    scope.$apply(function(){
+                        modelSetter(scope, element[0].files[0]);
+                    });
+                }
             });
-            // element.bind('dragover', function (e) {
-            //     e.stopPropagation();
-            //     e.preventDefault();
-            //     //debugger;
-            //     e.dataTransfer.dropEffect = 'copy';
-            // });
-            // element.bind('dragenter', function(e) {
-            //     e.stopPropagation();
-            //     e.preventDefault();
-            //     $scope.$apply(function() {
-            //         $scope.divClass = 'on-drag-enter';
-            //     });
-            // });
-            // element.bind('dragleave', function(e) {
-            //     e.stopPropagation();
-            //     e.preventDefault();
-            //     $scope.$apply(function() {
-            //         $scope.divClass = '';
-            //     });
-            // });
-            //
-            // element.bind('drop', function(){
-            //     console.log("changed 2");
-            // });
-            //
-
-
-
         }
     };
 }]);
@@ -181,8 +155,8 @@ uploadModule.controller('uploadModuleCtrl', ['$scope','$http','OWARoutesUtil','$
         }
     }
     $scope.removeFile = function(){
-        angular.element("input[type='file']").val(null);
-        $scope.myFile = null;
+       // angular.element("input[type='file']").val('');
+     //   $scope.myFile = null;
         var output = document.getElementById("dragAndDropOutput");
         output.innerHTML = 'Drag files here or click to upload';
         $('#uploadButton').prop('disabled', true);

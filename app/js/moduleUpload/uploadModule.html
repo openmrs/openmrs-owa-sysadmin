@@ -328,7 +328,7 @@
     }
 
     $('input[type=file]').on('change', function() {
-        if($("#module_upload").val()!=""){
+        if($(this)[0].files[0].name!=""){
             $("#dragAndDropOutput").text($(this)[0].files[0].name);
             $('#uploadButton').prop('disabled', false);
             $('#removeButton').show();
