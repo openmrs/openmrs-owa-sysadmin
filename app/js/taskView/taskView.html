@@ -1,10 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+
+<div class="container" data-ng-init="getAllTaskDetails()">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Manage Scheduler</h2>
+        </div>
+    </div>
+
+
+    <div class="row col-12">
+        <div class="panel-body" style="width: 100%">
+
+            <div style="padding-bottom: 10px;">
+                <a href="#/add-new-task">
+                    <button><i class="icon-plus"> </i> Add Tasks</button>
+                </a>
+                <a href="#">
+                    <button><i class="icon-repeat"> </i> Refresh Tasks</button>
+                </a>
+
+            </div>
+
+
+            <table class="layout display responsive-table">
+                <tbody>
+                <tr>
+                    <th style="max-width: 40px;">Status</th>
+                    <th> Task </th>
+                    <th style="min-width: 350px;"> Schedule </th>
+                    <th> On Startup </th>
+                    <th  style="min-width: 130px;"> Actions </th>
+                </tr>
+
+                <tr ng-repeat="task in allTasksData">
+                    <td valign="top" style="max-width: 30px; vertical-align: middle;">
+                        <img src="img/running-module.png" ng-if="task.started == true" height="20" style="top: 5px;left: auto;" />
+                        <img src="img/stopped-module.png" ng-if="task.started != true" height="20" style="top: 5px;left: auto;"/>
+                    </td>
+                    <td valign="top" style="vertical-align: middle;">
+                        <a href="#">{{task.name}}</a>
+                    </td>
+                    <td valign="top">
+                        <ul class="list-group" style="margin-top: 10px;">
+                            <li class="list-group-item"> Runs every : <b>{{task.repeatInterval}}</b></li>
+                            <li class="list-group-item"> Last Execution : <b>{{task.lastExecutionTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
+                            <li class="list-group-item"> Started : <b>{{task.startTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
+                        </ul>
+                    </td>
+
+                    <td valign="top" ng-if="task.startOnStartup==true" style="vertical-align: middle;"><b>Yes</b>(automatic)</td>
+                    <td valign="top" ng-if="task.startOnStartup==false" style="vertical-align: middle;"><b>No</b>(manual)</td>
+
+                    <td valign="top" align="center" valign="middle" style="vertical-align:middle;">
+                        <button ng-click="stopConfirmationShow(class.packageName,class.uuid, class.display)" ng-if="task.started == true"> <img src="img/stop-new-1.png" /> </button>
+                        <button ng-click="StartModule(class.uuid,'ALLMODULES', class.display)" ng-if="task.started != true"> <img src="img/start-new-1.png" /> </button>
+
+                        <button class="btn btn-danger" ng-click="unloadConfirmationShow(class.packageName, class.uuid, class.display)"> <i class="icon-trash"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>

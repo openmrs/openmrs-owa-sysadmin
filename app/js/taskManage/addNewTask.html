@@ -1,10 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+
+<div class="container" data-ng-init="()">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h1>Add Tasks</h1>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <h2> Task Configuration </h2>
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Name *</div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required> </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Schedulable Class *</div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required> </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Description</div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> <textarea ng-model="patientName" style="width:95%;" required> </textarea> </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <h2> Schedule </h2>
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-11 col-xl-11 col-sm-11">PLEASE NOTE: Changes to the schedule below are NOT passed onto task instances that are already running. After saving your changes, you MUST stop/start the desired task on the Task List page in order to pass these schedule changes onto that task. </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Started </div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> False </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Start on Startup</div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required> </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Start time</div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>  </div>
+        </div>
+
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-2 col-xl-2 col-sm-2">Repeat interval</div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>  </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+
+        <div class="bd-callout bd-callout-info" ng-repeat="contact in contacts track by $index">
+            <h4 id="" style="margin-bottom:10px;">New Property</h4>
+            <div class="row" style="margin-bottom:10px;">
+                <div class="col-1 col-xl-1 col-sm-1">Name</div>
+                <div class="col-4 col-xl-4 col-sm-4 form">
+                    <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>
+                </div>
+
+                <div class="col-1 col-xl-1 col-sm-1">Value</div>
+                <div class="col-4 col-xl-4 col-sm-4 form">
+                    <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-11">
+                    <a href="" style="float:right;"><button class="btn btn-danger">Remove</button></a>
+                </div>
+            </div>
+        </div>
+
+        <a href=""><button ng-click="addMoreProviderBox()">Add New</button></a>
+
+        <pre>{{ contacts | json }}</pre>
+
+    </div>
+
+
+</div>

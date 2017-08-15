@@ -1,7 +1,9 @@
  
 
 var managemodule =angular.module('managemodule',
-		['ngRoute', 'manageModuleController','manageModuleService', 'uploadModuleController', 'seacrchModuleController', 'systemInfoController', 'systemInfoService', 'mainController','mainService']);
+		['ngRoute', 'manageModuleController','manageModuleService', 'uploadModuleController',
+            'seacrchModuleController', 'systemInfoController', 'systemInfoService',
+            'mainController', 'mainService', 'taskViewController', 'addNewTaskController']);
 
 managemodule.config(['$routeProvider',
                     function ($routeProvider) {
@@ -38,7 +40,14 @@ managemodule.config(['$routeProvider',
                           templateUrl: 'js/systeminfo/systemInfo.html',
                           controller: 'systeminfoCtrl',
                         }).
-                         
+                      when('/task-view', {
+                          templateUrl: 'js/taskView/taskView.html',
+                          controller: 'taskViewCtrl',
+                      }).
+                      when('/add-new-task', {
+                          templateUrl: 'js/taskManage/addNewTask.html',
+                          controller: 'addNewTaskCtrl',
+                      }).
                         otherwise({
                           //redirectTo: '/module-show'
                           templateUrl: 'js/main/home.html',
