@@ -48,6 +48,10 @@ managemodule.config(['$routeProvider',
                           templateUrl: 'js/taskManage/addNewTask.html',
                           controller: 'addNewTaskCtrl',
                       }).
+                      when('/add-ons-test', {
+                          templateUrl: 'js/moduleView/testDelete.html',
+                          controller: 'ModuleListCtrl',
+                      }).
                         otherwise({
                           //redirectTo: '/module-show'
                           templateUrl: 'js/main/home.html',

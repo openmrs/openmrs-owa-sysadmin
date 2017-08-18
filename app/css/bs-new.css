@@ -3092,3 +3092,10 @@ button.list-group-item-danger.active:focus {
   transform: translateY(-30%);
 }
 
+
+.has-danger {
+  color: #d9534f;
+  border-color: #d9534f;
+  background-color: #fdf7f7;
+}
+

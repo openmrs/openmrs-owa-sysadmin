@@ -1115,7 +1115,46 @@ manageModuleController.controller('ModuleListCtrl',
         });
                       
    }
-        
+   
+   $scope.get1fun = function (modulePackageName) {
+       var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+       $http.get(requestUrl, {})
+       .success(function (data){ // GET REQUEST SUCCESS HANDLE
+           console.log("GET 1 : Success");
+           console.log("GET 1 Data : " + data);
+       }).error(function (data){ // GET REQUEST ERROR HANDLE
+           console.log("GET 1 : Error");
+       });
+   }
+
+            $scope.get2fun = function (modulePackageName) {
+                var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+                $http.jsonp(requestUrl, {})
+                    .success(function (data){ // GET REQUEST SUCCESS HANDLE
+                        console.log("GET 2 : Success");
+                        console.log("GET 2 Data : " + data);
+                    }).error(function (data){ // GET REQUEST ERROR HANDLE
+                    console.log("GET 2 : Error");
+                });
+            }
+
+            $scope.get3fun = function (modulePackageName) {
+                var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+                $http({
+                    method: 'JSONP',
+                    url: requestUrl,
+                    params: {
+                        format: 'jsonp',
+                        json_callback: 'JSON_CALLBACK'
+                    }
+                })
+                    .success(function (data){ // GET REQUEST SUCCESS HANDLE
+                        console.log("GET 3 : Success");
+                        console.log("GET 3 Data : " + data);
+                    }).error(function (data){ // GET REQUEST ERROR HANDLE
+                    console.log("GET 3 : Error");
+                });
+            }
 //   $scope.checkModuleUpdate = function (moduleUuid, currentVersion){
 //       var searchValue = moduleUuid;
 //       var column_count=1;

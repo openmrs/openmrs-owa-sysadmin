@@ -1,26 +1,50 @@
 
-<div class="container" data-ng-init="()">
+<div class="container">
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <h1>Add Tasks</h1>
         </div>
     </div>
 
+    <div class="alert alert-danger alert-dismissable" ng-show="!isSavedTaskDefinitions">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{validationErrorMessage}}
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="isSavedTaskDefinitions">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Task definition saved successfully.
+    </div>
+
     <div class="panel-body">
         <h2> Task Configuration </h2>
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Name *</div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required> </div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <input type="text" placeholder="Enter task name" ng-model="taskName" style="width:95%;" required>
+            </div>
         </div>
 
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Schedulable Class *</div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required> </div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <!--<input type="text" placeholder="Enter Schedulable Class" ng-model="schedulableClass" style="width:95%;" required>-->
+                <select class="form-control" ng-model="schedulableClass" style="min-width: 95%;">
+                    <option value="org.openmrs.scheduler.tasks.AutoCloseVisitsTask">org.openmrs.scheduler.tasks.AutoCloseVisitsTask</option>
+                    <option value="org.openmrs.scheduler.tasks.ProcessHL7InQueueTask">org.openmrs.scheduler.tasks.ProcessHL7InQueueTask</option>
+                    <option value="org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask">org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask</option>
+                    <option value="org.openmrs.scheduler.tasks.AlertReminderTask ">org.openmrs.scheduler.tasks.AlertReminderTask</option>
+                    <option value="org.openmrs.scheduler.tasks.CheckInternetConnectivityTask  ">org.openmrs.scheduler.tasks.CheckInternetConnectivityTask</option>
+                    <option value="org.openmrs.scheduler.tasks.SendEmailTask ">org.openmrs.scheduler.tasks.SendEmailTask</option>
+                </select>
+            </div>
         </div>
 
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Description</div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> <textarea ng-model="patientName" style="width:95%;" required> </textarea> </div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <textarea ng-model="description" style="width:95%;" required> </textarea>
+            </div>
         </div>
     </div>
 
@@ -37,47 +61,109 @@
 
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Start on Startup</div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required> </div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <input type="checkbox" id="startOnStartup" ng-model="startOnStartup" value="true">
+            </div>
         </div>
 
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Start time</div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>  </div>
+            <div class="col-7 col-xl-7 col-sm-7 form">
+
+                <div class="input-append date" id="component-date-time-picker" data-original-title="" title="">
+                    <input class="input-large" ng-model="startTimeVal" size="16" type="text" style="display : inline-block;">
+                    <span class="add-on" style="display : inline-block; margin-top: 4px;"><i class="icon-th"></i></span>
+                </div>
+
+            </div>
         </div>
 
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Repeat interval</div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>  </div>
+            <div class="col-3 col-xl-3 col-sm-3 form">
+                <input type="number" placeholder="Enter repeat interval" ng-model="repeatInterval"  style="width:95%;" required>
+            </div>
+            <div class="col-3 col-xl-3 col-sm-3 form">
+                <select class="form-control" id="repeatInterval" style="min-width: 100%;">
+                    <option value="seconds">Seconds</option>
+                    <option value="minutes">Minutes</option>
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
+                </select>
+            </div>
         </div>
     </div>
 
     <div class="panel-body">
-
-        <div class="bd-callout bd-callout-info" ng-repeat="contact in contacts track by $index">
+        <h2> Properties </h2>
+        <div class="bd-callout bd-callout-info" ng-repeat="choice in properties">
             <h4 id="" style="margin-bottom:10px;">New Property</h4>
             <div class="row" style="margin-bottom:10px;">
-                <div class="col-1 col-xl-1 col-sm-1">Name</div>
+                <div style="padding-left: 5px; padding-right: 5px; padding-top: 10px;">Name</div>
                 <div class="col-4 col-xl-4 col-sm-4 form">
-                    <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>
+                    <input type="text" placeholder="Enter property name" ng-model="properties.name" style="width:95%;" required>
                 </div>
 
-                <div class="col-1 col-xl-1 col-sm-1">Value</div>
+                <div style="padding-left: 5px; padding-right: 5px; padding-top: 10px;">Value</div>
                 <div class="col-4 col-xl-4 col-sm-4 form">
-                    <input type="text" placeholder="Enter Patient name" ng-model="patientName" style="width:95%;" required>
+                    <input type="text" placeholder="Enter property value" ng-model="properties.value" style="width:95%;" required>
                 </div>
+                <button class="btn btn-danger" ng-click="removeProperties()"><i class="icon-remove"> </i></button>
             </div>
-            <div class="row" style="margin-top: 10px;">
-                <div class="col-11">
-                    <a href="" style="float:right;"><button class="btn btn-danger">Remove</button></a>
-                </div>
-            </div>
+
         </div>
 
-        <a href=""><button ng-click="addMoreProviderBox()">Add New</button></a>
-
-        <pre>{{ contacts | json }}</pre>
+        <button ng-click="addNewProperties()"><i class="icon-plus"> </i> Add New</button>
 
     </div>
 
+    <div class="row" >
+        <div class="modal-footer" style="width: 100%;">
+            <button type="button" class="btn btn-secondary" ng-click="saveNewTaskDefinitions()"><i class="icon-save"> </i> Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
+        </div>
+    </div>
 
 </div>
+
+
+<script type="text/javascript">
+    // MM/dd/yyyy HH:mm:ss
+    $(function () {
+        $('#component-date-time-picker').datetimepicker({
+            format: 'yyyy-mm-ddTHH:mm:ss.sss'
+        });
+    });
+
+    var renderedTime = 0;
+    function renderDatetimePickers()
+    {
+        if(renderedTime > 0)
+        {
+            $("#component-date-time-picker").datetimepicker("remove");
+        }
+        var enableMouseWheelViewNavigation = $('#mouse-wheel-enable').is(":checked"),
+            mouseWheelViewNavigationDelay = $("#mouse-wheel-speed-control").val() || 100,
+            inverseDirection = $('#mouse-wheel-inverse-direction').is(":checked"),
+            options = {
+                viewSelect: 4,
+                wheelViewModeNavigation: enableMouseWheelViewNavigation,
+                wheelViewModeNavigationDelay: mouseWheelViewNavigationDelay,
+                wheelViewModeNavigationInverseDirection: inverseDirection
+
+            };
+        $("#component-date-time-picker").datetimepicker(options);
+        if(enableMouseWheelViewNavigation)
+        {
+            $("#component-date-time-picker").tooltip({
+                html:true,
+                title:"Please scroll your mouse wheel on the date time picker to see the changes."
+            });
+        }else
+        {
+            $("#component-date-time-picker").tooltip("destroy");
+        }
+        renderedTime++;
+    }
+    //renderDatetimePickers();
+</script>
