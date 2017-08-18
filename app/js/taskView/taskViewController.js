@@ -13,6 +13,18 @@ taskViewControllerModule.service('taskViewService',['$http', 'OWARoutesUtil','$q
                 def.resolve(["GET", 0, data, status]);
             });
             return def.promise;
+        },
+
+        getTaskDetails: function (taskName) {
+            var def = $q.defer();
+            var requestUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/taskdefinition/" + taskName;
+            $http.get(requestUrl, {params:{ v : 'full', q : 'all'}})
+                .success(function (data, status) { // GET REQUEST SUCCESS HANDLE
+                    def.resolve(["GET", 1, data, status]);
+                }).error(function (data, status) { // GET REQUEST ERROR HANDLE
+                def.resolve(["GET", 0, data, status]);
+            });
+            return def.promise;
         }
 
     };
@@ -51,5 +63,32 @@ taskViewControllerModule.controller('taskViewCtrl', ['$scope','$http','OWARoutes
         });
     }
 
+    $scope.unloadConfirmationShow = function(taskName, taskUuid){
+        if(typeof($scope.uploadConfirmModuleData)!=undefined){
+            delete $scope.uploadConfirmModuleData;
+        }
+        $scope.uploadConfirmModuleData={
+            "uuid" : taskUuid,
+            "name":taskName
+        }
+        angular.element('#deleteConfirmation').modal('show');
+    }
+
+    $scope.unloadModule = function(taskUuid, taskName){
+        console.log("Unload taskdefinition");
+        if(typeof($scope.isDeletedTaskDefinition)!=undefined){
+            delete $scope.isDeletedTaskDefinition;
+        }
+        var requestUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/taskdefinition/"+taskName;
+        $http.delete(requestUrl, {params : {purge : 'true'}})
+            .success(function (data){ // GET REQUEST ERROR HANDLE
+                $scope.isDeletedTaskDefinition=[true, taskName];
+                $scope.getAllTaskDetails();
+                console.log("deleted");
+            }).error(function (data){ // GET REQUEST ERROR HANDLE
+                console.log("error");
+                $scope.isDeletedTaskDefinition=[false, taskName];
+        });
+    }
 
 }]);

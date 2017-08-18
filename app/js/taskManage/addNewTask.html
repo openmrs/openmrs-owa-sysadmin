@@ -1,8 +1,8 @@
 
-<div class="container">
+<div class="container" data-ng-init="initializeAddNewTask()">
     <div class="row">
         <div class="col-md-12 col-xs-12">
-            <h1>Add Tasks</h1>
+            <h1>{{formProperties[1]}}</h1>
         </div>
     </div>
 
@@ -56,7 +56,7 @@
 
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Started </div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> False </div>
+            <div class="col-9 col-xl-9 col-sm-9 form"> {{started}} </div>
         </div>
 
         <div class="row" style="margin-bottom:15px;">
@@ -119,7 +119,7 @@
 
     <div class="row" >
         <div class="modal-footer" style="width: 100%;">
-            <button type="button" class="btn btn-secondary" ng-click="saveNewTaskDefinitions()"><i class="icon-save"> </i> Save</button>
+            <button type="button" class="btn btn-secondary" ng-click="saveNewTaskDefinitions()"><i class="icon-save"> </i> {{formProperties[0]}}</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
         </div>
     </div>

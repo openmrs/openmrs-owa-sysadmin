@@ -1,10 +1,10 @@
 
 var addNewTaskModule = angular.module('addNewTaskController', ['OWARoutes']);
 
-addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil','$location', '$filter', function($scope,$http,OWARoutesUtil,$location, $filter){
+addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil','$location', '$filter', '$routeParams', 'taskViewService', function($scope,$http,OWARoutesUtil,$location, $filter, $routeParams, taskViewService){
 
     $scope.startOnStartup = false;
-
+    $scope.started  = false;
     $scope.properties = [];
     $scope.addNewProperties = function() {
         $scope.properties.push({});
@@ -15,6 +15,21 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
         $scope.properties.splice(lastItem);
     };
 
+    $scope.initializeAddNewTask = function () {
+        console.log($routeParams.classUUID);
+        if($routeParams.classUUID!=undefined){
+            // Edit
+            console.log("edit");
+            $scope.formProperties = ["Update", "Edit Task"];
+            $scope.getTaskDetails($routeParams.classUUID);
+        }
+        else {
+            // Add New
+            console.log("add");
+            $scope.formProperties = ["Save", "Add New Task"];
+        }
+    }
+
     function createPropertyJson(properties){
         var newJson = {};
         for ( var i = 0; i < properties.length; i++){
@@ -22,6 +37,40 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
         }
         return newJson;
     }
+
+    $scope.getTaskDetails = function(taskName){
+        console.log("getTaskDetails : " + taskName);
+        if(typeof($scope.requestTaskDetails)!=undefined){
+            delete $scope.requestTaskDetails;
+        }
+        var response = taskViewService.getTaskDetails(taskName);
+        response.then(function(result){
+            responseType=result[0]; //UPLOAD or DOWNLOAD
+            responseValue=result[1]; // 1- success | 0 - fail
+            responseData=result[2];
+            responseStatus=result[3];
+            if(responseType=="GET"){
+                if(responseValue==1){
+                    $scope.requestTaskDetails=true;
+                    console.log(responseData);
+                    console.log(responseData.properties);
+                    $scope.taskName = responseData.name;
+                    $scope.schedulableClass = responseData.taskClass;
+                    $scope.description = responseData.description;
+                    $scope.startOnStartup = responseData.startOnStartup;
+                    $scope.startTimeVal = responseData.startTime;
+                    $scope.repeatInterval = responseData.repeatInterval;
+                    $scope.started = responseData.started;
+                   // $scope.properties
+                }
+                else{
+                    console.log("error");
+                    $scope.requestTaskDetails=false;
+                }
+            }
+        });
+    }
+
     $scope.saveNewTaskDefinitions = function () {
         if(validateAddNewTaskDefinitions()){
             if(typeof($scope.isSavedTaskDefinitions)!=undefined){
@@ -33,16 +82,13 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
             var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/taskdefinition";
 
             var startTime = $filter('date')(new Date($scope.startTimeVal), "yyyy-MM-ddTHH:mm:ss.sssZ", "UTC");
-            var startOnStartup = false;
-            if(typeof($scope.startOnStartup)!==undefined){
-                startOnStartup = $scope.startOnStartup;
-            }
+
             var moduleData =
                 {
                     "name": $scope.taskName,
                     "taskClass": $scope.schedulableClass,
                     "description" : $scope.description,
-                    "startOnStartup": startOnStartup,
+                    "startOnStartup": $scope.startOnStartup,
                     "startTime": startTime,
                     "repeatInterval" : ''+$scope.repeatInterval,
                     "properties" : createPropertyJson($scope.properties)
@@ -58,21 +104,57 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
 
                 var x2js = new X2JS();
                 var JsonErrorResponse = x2js.xml_str2json(data);
-                if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
-                    // File Error Catched
-                    if ((JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map.string) == "taskClass"){
-                        // Error Message given
-                        $scope.validationErrorMessage= "Incorrect task class found. Please check";
+
+                if(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.hasOwnProperty("org.openmrs.module.webservices.rest.SimpleObject")){
+                    if(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map.hasOwnProperty("org.openmrs.module.webservices.rest.SimpleObject")){
+                        // If three level exist
+                        if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
+                            // File Error Catched
+                            if ((JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map["org.openmrs.module.webservices.rest.SimpleObject"].map.string) == "taskClass"){
+                                // Error Message given
+                                $scope.validationErrorMessage= "Incorrect task class found. Please check";
+                            }
+                            else{
+                                // Unknown Error Message
+                                $scope.validationErrosrMessage = "Could not save the task definition."
+                            }
+                        }
+                        else{
+                            //unknown Error
+                            $scope.validationErrorMessage = "Could not save the task definition."
+                        }
+                    } else {
+                        //unknown Error
+                        $scope.validationErrorMessage = "Could not save the task definition."
+                    }
+                } else{
+                    if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
+                        // File Error Catched
+                        if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined"){
+                            var errorResponse= $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
+                            if(errorResponse=="[query did not return a unique result: 2]"){
+                                // Task name duplicate
+                                $scope.validationErrorMessage = "Task name is already exist in the system. Could not save the task definition."
+                            } else if(errorResponse=="[Some required properties are missing: taskClass]"){
+                                $scope.validationErrorMessage = "Please check the task class. Could not save the task definition."
+                            }
+                            else{
+                                // Unknown Error Message
+                                $scope.validationErrorMessage = "Could not save the task definition."
+                            }
+                        }
+                        else{
+                            // Unknown Error Message
+                            $scope.validationErrorMessage = "Could not save the task definition."
+                        }
                     }
                     else{
-                        // Unknown Error Message
-                        $scope.validationErrosrMessage = "Could not save the task definition."
+                        //unknown Error
+                        $scope.validationErrorMessage = "Could not save the task definition."
                     }
                 }
-                else{
-                    //unknown Error
-                    $scope.validationErrorMessage = "Could not save the task definition."
-                }
+
+
                 $scope.isSavedTaskDefinitions = false;
             });
         }

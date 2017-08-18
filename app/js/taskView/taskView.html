@@ -6,6 +6,15 @@
         </div>
     </div>
 
+    <div class="alert alert-success alert-dismissable" ng-if="isDeletedTaskDefinition[0]==true">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Successfully deleted task definition[{{isDeletedTaskDefinition[1]}}]
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="isDeletedTaskDefinition[0]==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Task Definition[{{isDeletedTaskDefinition[1]}}] delete failed.
+    </div>
 
     <div class="row col-12">
         <div class="panel-body" style="width: 100%">
@@ -37,7 +46,7 @@
                         <img src="img/stopped-module.png" ng-if="task.started != true" height="20" style="top: 5px;left: auto;"/>
                     </td>
                     <td valign="top" style="vertical-align: middle;">
-                        <a href="#">{{task.name}}</a>
+                        <a href="#/task-view/{{task.name}}">{{task.name}}</a>
                     </td>
                     <td valign="top">
                         <ul class="list-group" style="margin-top: 10px;">
@@ -54,7 +63,7 @@
                         <button ng-click="stopConfirmationShow(class.packageName,class.uuid, class.display)" ng-if="task.started == true"> <img src="img/stop-new-1.png" /> </button>
                         <button ng-click="StartModule(class.uuid,'ALLMODULES', class.display)" ng-if="task.started != true"> <img src="img/start-new-1.png" /> </button>
 
-                        <button class="btn btn-danger" ng-click="unloadConfirmationShow(class.packageName, class.uuid, class.display)"> <i class="icon-trash"></i></button>
+                        <button class="btn btn-danger" ng-click="unloadConfirmationShow(task.name, task.uuid)"> <i class="icon-trash"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -64,4 +73,21 @@
     </div>
 
 
+</div>
+
+
+<div class="modal fade" id="deleteConfirmation" aria-labelledby="deleteConfirmation" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to delete {{uploadConfirmModuleData.name}}?</h5>
+            </div>
+            <form>
+                <div class="modal-footer" >
+                    <button class=" btn-danger" ng-click="unloadModule(uploadConfirmModuleData.uuid, uploadConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

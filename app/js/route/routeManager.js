@@ -44,10 +44,15 @@ managemodule.config(['$routeProvider',
                           templateUrl: 'js/taskView/taskView.html',
                           controller: 'taskViewCtrl',
                       }).
+                      when('/task-view/:classUUID', {
+                          templateUrl: 'js/taskManage/addNewTask.html',
+                          controller: 'addNewTaskCtrl',
+                      }).
                       when('/add-new-task', {
                           templateUrl: 'js/taskManage/addNewTask.html',
                           controller: 'addNewTaskCtrl',
                       }).
+
                       when('/add-ons-test', {
                           templateUrl: 'js/moduleView/testDelete.html',
                           controller: 'ModuleListCtrl',
