@@ -53,37 +53,14 @@ manageModuleService.service('ModuleService',['$http', 'OWARoutesUtil','$q', func
 
         getModuleDetailsFromOnline : function(modulePackageName){
             var def = $q.defer();
-            //var requestUrl = "https://modules.openmrs.org/modulus/api/search?q="+moduleLegacyId;
-            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
-            //$http.jsonp(requestUrl)
-            try{
-                console.log("1");
-                $http({
-                    method: 'JSONP',
-                    url: requestUrl,
-                    params: {
-                        format: 'jsonp',
-                        json_callback: 'JSON_CALLBACK'
-                    }
-                }).then(function (data){ // GET REQUEST SUCCESS HANDLE
-                    console.log("2");
-                    // console.log("jsonp : " + status);
-                    // if(status==200){
-                    //     console.log("success")
-                    //     def.resolve(["GET",1,data,status]);
-                    // }
-                    // else{
-                    //     console.log("error")
-                    //     def.resolve(["GET",0,data,status]);
-                    // }
-                    console.log("3");
-                });
-            }
-            catch(err){
-                console.log("4");
-                console.log(err);
-            }
-            console.log("5");
+           // var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon/"+modulePackageName;
+            $http.get(requestUrl, {})
+                .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
+                    def.resolve(["GET",1,data,status]);
+                }).error(function (data,status){ // GET REQUEST ERROR HANDLE
+                    def.resolve(["GET",0,data,status]);
+            });
             return def.promise;
         },
 
@@ -113,35 +90,23 @@ manageModuleService.service('ModuleService',['$http', 'OWARoutesUtil','$q', func
             .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
                  def.resolve(["GET",1,data,status]);
             }).error(function (data,status){ // GET REQUEST ERROR HANDLE
-                 def.resolve(["DOWNLOAD",0,data,status]);
+                // changed DOWNLOAD to GET ********************
+                 def.resolve(["GET",0,data,status]);
             });
             return def.promise;
         },
         
-        checkModuleUpdate : function(moduleUuid){
-           var def = $q.defer();
-         //  var searchValue = moduleUuid.replace(new RegExp(escapeRegExp(" "), 'g'), "-"); //replaceAll(" ","-");
-            var searchValue =moduleUuid;
-           var column_count=1;
-           var columns="CVersion";
-           var displayStart=0;
-           var displayLength=15;
-
-           //var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
-           // var urll="https://modules.openmrs.org/modulus/api/modules/"+searchValue;
-            
-           var urll="https://addons.openmrs.org/api/v1/addon/"+searchValue;
-           $http({
-             method: 'JSONP', 
-             url: urll
-           })
-           .success(function(data,status) {
-                def.resolve(["GET",1,data,status]);
-                  })
-           .error(function(data, status) {
+        checkModuleUpdate : function(modulePackageName){
+            var def = $q.defer();
+           // var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon/"+modulePackageName;
+            $http.get(requestUrl, {})
+                .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
+                    def.resolve(["GET",1,data,status]);
+                }).error(function (data,status){ // GET REQUEST ERROR HANDLE
                 def.resolve(["GET",0,data,status]);
-           });
-           return def.promise;
+            });
+            return def.promise;
         },
         
 //        getModuleReleaseDetails : function(moduleId,releaseId){

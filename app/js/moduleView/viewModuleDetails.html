@@ -110,7 +110,7 @@
           <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid, ModuleViewData.display)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
           <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
           
-        <button ng-click="checkModuleUpdate(ModuleViewData.uuid,ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
+        <button ng-click="checkModuleUpdate(ModuleViewData.uuid,ModuleViewData.packageName, ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
       </div>
       <table class="layout display responsive-table">
         <tbody>
@@ -231,25 +231,23 @@
     
 <!-- If Module details not found in server-->
     
-<div class="alert alert-danger" ng-hide="requestModuleViewDetails" style="text-align:center;"> 
+<div class="alert alert-danger" ng-hide="requestModuleViewDetails || onlineDataFound" style="text-align:center;">
     <p style="padding-bottom:15px;">
         Could not get this module details from this Server! <br/>
-        Goto <a href="https://modules.openmrs.org/"> https://modules.openmrs.org/ </a> to get more about this module. <br/> 
+        Goto <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a> to get more about this module. <br/>
     </p>
     <button ng-click="getNotInstalledModuleDetailsFromOnline()"> <i class="icon-search"> </i> Get details from Online!</button>
 </div>
-    <div class="row col-12" ng-if="onlineDataFound!=0">
+
+    <div class="row col-12" ng-if="onlineDataFound!=false">
          <div class="panel-body" style="width:100%;" >
-             <div class=""  ng-if="onlineDataFound==1">
-                <ul class="list-group" style="width:100%;" ng-show="nonInstalledModuleDetails">
-                  <li class="list-group-item">
-                      <b> Module Name : {{nonInstalledModuleDetails.name}}</b>
-                  </li>
-                  <li class="list-group-item">
+             <div class=""  ng-if="onlineDataFound==true">
+                <div style="width:100%;" ng-show="nonInstalledModuleDetails">
+                    <h4> Module Name : {{nonInstalledModuleDetails.name}}</h4>
                     <table class="layout display responsive-table">
                         <tbody>
                             <tr>
-                                <td> Description </td>
+                                <td style="width: 20%;"> Description </td>
                                 <td> {{nonInstalledModuleDetails.description}} </td>
                             </tr>
                             <tr>
@@ -261,22 +259,37 @@
                                 <td> <a href="{{nonInstalledModuleDetails.hostedUrl}}" target="_blank">{{nonInstalledModuleDetails.hostedUrl}} </a> </td>
                             </tr>
                             <tr>
-                                <td> Module Maintainers </td>
-                                <td>
-                                    <li class="list-group-item" ng-repeat="owners in nonInstalledModuleDetails.maintainers">
-                                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class3[1]}} ">{{owners.name}}</a>
-                                    </li>
-                                </td>
+                                <td> Required OpenMRS Version</td>
+                                <td> {{nonInstalledModuleDetails.versions[0].requireOpenmrsVersion}} </td>
                             </tr>
                         </tbody>
                     </table>
-                  </li>
-                </ul>
+
+                    <h4> Module Maintainers </h4>
+                    <li class="list-group-item" ng-repeat="owners in nonInstalledModuleDetails.maintainers">
+                        <i class="icon-user "> </i> {{owners.name}}
+                    </li>
+
+                    <h4> Required Modules </h4>
+                    <li class="list-group-item" ng-repeat="requireModules in nonInstalledModuleDetails.versions[0].requireModules">
+                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{requireModules.module}} ">{{requireModules.module}}</a>
+                    </li>
+                    <div class="alert alert-info" ng-hide="nonInstalledModuleDetails.versions[0].requireModules.length">
+                        There are no required modules.
+                    </div>
+                </div>
+                 <div class="center-block" style="text-align: center; padding-top: 15px;">
+                     Module Information from <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a>
+                 </div>
              </div>
              
-            <div class="alert alert-danger text-center" ng-if="onlineDataFound==-1">
+            <div class="alert alert-danger text-center" ng-if="onlineDataFound==false">
                 Could not get details from Online server.
             </div>
+
+
+
+
          </div>
     </div>
 <!-- //If Module details not found in server-->
