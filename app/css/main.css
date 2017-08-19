@@ -3236,6 +3236,8 @@ table.display tr.heading2 td {
 
 table.display td {
   padding: 3px 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 table.display td.center {
