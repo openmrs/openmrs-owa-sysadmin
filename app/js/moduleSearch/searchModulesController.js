@@ -1,7 +1,26 @@
      var SearchRepoModule = angular.module('seacrchModuleController',['OWARoutes']);
 
+     SearchRepoModule.service('SearchModuleService',['$http', 'OWARoutesUtil','$q', function ($http, OWARoutesUtil,$q) {
+
+         return {
+             getSeatchModuleDetails: function (moduleUuid) {
+                 var def = $q.defer();
+                 var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon/"+moduleUuid;
+                 $http.get(requestUrl, {params: {v: 'full'}})
+                     .success(function (data, status) { // GET REQUEST SUCCESS HANDLE
+                         def.resolve(["GET", 1, data, status]);
+                     }).error(function (data, status) { // GET REQUEST ERROR HANDLE
+                     def.resolve(["GET", 0, data, status]);
+                 });
+                 return def.promise;
+             }
+         };
+     }]);
+
+
      
-     SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil','$rootScope', function($scope, $http, OWARoutesUtil, $rootScope) {
+     SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil','$rootScope', 'SearchModuleService', '$routeParams',
+         function($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams) {
          
       // *** /OpenMRS breadcrumbs ***  
       $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Search Module",""]]});
@@ -13,9 +32,12 @@
                  backdrop: 'static',
                  keyboard: false
              });
+             console.log("showLoadingPopUp ");
+             console.log(angular.element('#loadingModal').status);
          }
          function hideLoadingPopUp(){
              angular.element('#loadingModal').modal('hide');
+             console.log("hideLoadingPopUp ");
          }
 
          function alertsClear() {
@@ -38,51 +60,116 @@
              if(typeof($scope.uploadederrorMsg)!=undefined){
                  delete $scope.uploadederrorMsg;
              }
+             if(typeof($scope.isSearching)!=undefined){
+                 delete $scope.isSearching;
+             }
          }
        $scope.modules=[];
        $scope.searchText = null;
 
-       $scope.change = function(text) {
-           alertsClear(); // clear all alerts $scope variables
-           $scope.moduleFound=false;
-           $scope.modules=[];
+         $scope.change = function() {
+             alertsClear(); // clear all alerts $scope variables
+             $scope.moduleFound=false;
+             $scope.isSearching=true;
+             $scope.modules=[];
+             var searchValue = $scope.searchText;
+             var requestUrl = "https://addons-stg.openmrs.org/api/v1//addon?&q="+searchValue;
+             if(searchValue){
+                 $http.get(requestUrl, {})
+                     .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
+                         console.log(data.length);
+                         if(data.length>0){
+                             // Modules Found
+                             $scope.moduleFound=true;
+                             $scope.modules = data;
+                         }
+                         else {
+                             // No Modules Found
+                             $scope.moduleFound=false;
+                         }
+                         $scope.isSearching=false;
+                     }).error(function (data,status){ // GET REQUEST ERROR HANDLE
+                     console.error('Search  error : ', status, data);
+                 });
+             }
+             else{
+                 // Search text empty
+                 $scope.isSearching=false;
+                 $scope.moduleFound=false;
+             }
 
-           var searchValue = $scope.searchText;
-           var column_count=5;
-           var columns="Action%2CName%2CVersion%2CAuthor%2CDescription";
-           var displayStart=0;
-           var displayLength=15;
+         }
 
-           var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
+     //   $scope.change = function(text) {
+     //       alertsClear(); // clear all alerts $scope variables
+     //       $scope.moduleFound=false;
+     //       $scope.modules=[];
+     //
+     //       var searchValue = $scope.searchText;
+     //       var column_count=5;
+     //       var columns="Action%2CName%2CVersion%2CAuthor%2CDescription";
+     //       var displayStart=0;
+     //       var displayLength=15;
+     //
+     //       var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
+     //
+     //       $http({
+     //         method: 'JSONP',
+     //         url: urll
+     //       })
+     //       .success(function(data) {
+     //
+     //         console.log(data.iTotalDisplayRecords);
+     //         if(data.iTotalDisplayRecords>0){
+     //                    // Modules Found
+     //                    $scope.moduleFound=true;
+     //                    $scope.modules = data.aaData;
+     //                  }
+     //                  else {
+     //                    // No Modules Found
+     //                    $scope.moduleFound=false;
+     //                  }
+     //
+     //                console.log('Data Retrived');
+     //              })
+     //       .error(function(data, status) {
+     //         console.error('Repos error', status, data);
+     //       })
+     //       .finally(function() {
+     //         console.log("finally finished search");
+     //       });
+     //
+     // };
 
-           $http({
-             method: 'JSONP',
-             url: urll
-           })
-           .success(function(data) {
 
-             console.log(data.iTotalDisplayRecords);
-             if(data.iTotalDisplayRecords>0){
-                        // Modules Found
-                        $scope.moduleFound=true;
-                        $scope.modules = data.aaData;
-                      }
-                      else {
-                        // No Modules Found
-                        $scope.moduleFound=false;
-                      }
-
-                    console.log('Data Retrived');
-                  })
-           .error(function(data, status) {
-             console.error('Repos error', status, data);
-           })
-           .finally(function() {
-             console.log("finally finished search");
-           });
-
-     };
-
+         $scope.getSearchModuleDetails = function() {
+             // *** /OpenMRS breadcrumbs ***
+             $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Search Module","#/view-search"], ["Module Information",""]]});
+             // *** /OpenMRS breadcrumbs ***
+             console.log("getNotInstalledModuleDetailsFromOnline");
+             if(typeof($scope.nonInstalledModuleDetails)!=undefined){
+                 delete $scope.nonInstalledModuleDetails;
+             }
+             if(typeof($scope.onlineDataFound)!=undefined){
+                 delete $scope.onlineDataFound;
+             }
+             showLoadingPopUp(); // Show loadingPop to prevent other Actions
+             var moduleUuid=$routeParams.UUID;
+             console.log(moduleUuid);
+             var responseModuleDetails = SearchModuleService.getSeatchModuleDetails(moduleUuid);
+             responseModuleDetails.then(function(resultModule){
+                 if(resultModule[0]=="GET"){
+                     if(resultModule[1]==1){
+                         $scope.onlineDataFound=true;
+                         console.log("1");
+                         $scope.nonInstalledModuleDetails=resultModule[2];
+                     }else{console.log("3");
+                         $scope.onlineDataFound=false;
+                     }
+                     hideLoadingPopUp() // hide the loading Popup
+                 }
+             });
+         }
 
 
     $scope.trysearch = function(moduleUrl) {

@@ -1,4 +1,136 @@
-<!--
-    <div class="panel panel-primary"  ng-hide="isDownloading && isUploading">
-        <div class="panel-heading">Search Modules</div>
--->
+<div class="container" data-ng-init="getSearchModuleDetails()">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Module Information</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{startupsuccessMsg}}
+    </div>
+
+    <div ng-show="startuperrorMsg">
+        <div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{uplodedsuccessMsg}}
+        </div>
+        <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">
+            <a class="close" data-dismiss="alert" aria-label="close">×</a>
+            {{startuperrorMsg}}
+        </div>
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{uploadederrorMsg}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{downloadErrorMsg}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="onlineDataFound==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Could not get details from Online server.
+    </div>
+
+    <div class="row col-12" ng-if="onlineDataFound!=false">
+        <div class="panel-body" style="width:100%;" >
+            <div class=""  ng-if="onlineDataFound==true">
+                <div style="width:100%;" ng-show="nonInstalledModuleDetails">
+                    <h4> Module Name : {{nonInstalledModuleDetails.name}}</h4>
+                    <table class="layout display responsive-table">
+                        <tbody>
+                        <tr>
+                            <td style="width: 20%;"> Description </td>
+                            <td> {{nonInstalledModuleDetails.description}} </td>
+                        </tr>
+                        <tr>
+                            <td> Latest Version </td>
+                            <td> {{nonInstalledModuleDetails.latestVersion}} </td>
+                        </tr>
+                        <tr>
+                            <td> Module Hosted URL </td>
+                            <td> <a href="{{nonInstalledModuleDetails.hostedUrl}}" target="_blank">{{nonInstalledModuleDetails.hostedUrl}} </a> </td>
+                        </tr>
+                        <tr>
+                            <td> Required OpenMRS Version</td>
+                            <td> {{nonInstalledModuleDetails.versions[0].requireOpenmrsVersion}} </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h4> Module Maintainers </h4>
+                    <li class="list-group-item" ng-repeat="owners in nonInstalledModuleDetails.maintainers">
+                        <i class="icon-user "> </i> {{owners.name}}
+                    </li>
+
+                    <h4> Module Versions</h4>
+
+                    <table>
+                        <tr>
+                            <th> Version </th>
+                            <th style="min-width: 120px;"> Release Date </th>
+                            <th style="width: 50px;"> Require Openmrs Version </th>
+                            <th> Require Modules </th>
+                            <th style="min-width: 120px;"> Action </th>
+                        </tr>
+                        <tbody>
+                        <tr ng-repeat="ModuleVersion in nonInstalledModuleDetails.versions">
+                            <td style="text-align: center;"> {{ModuleVersion.version}} </td>
+                            <td style="text-align: center;"> {{ModuleVersion.releaseDatetime | date:"yyyy-MM-dd"}} </td>
+                            <td style="text-align: center;"> {{ModuleVersion.requireOpenmrsVersion}} </td>
+                            <td>
+                                <li class="list-group-item" ng-repeat="requireModule in ModuleVersion.requireModules">
+                                    <i class="icon-exclamation-sign"> </i> {{requireModule.module}} ({{requireModule.version}})
+                                </li>
+                                <li class="list-group-item" ng-if="ModuleVersion.requireModules==null">
+                                    No required modules
+                                </li>
+                            </td>
+                            <td style="text-align: center;">
+                                <button ng-click="trysearch(ModuleVersion.downloadUri)"> <i class="icon-upload-alt"> </i> Install </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="center-block" style="text-align: center; padding-top: 15px;">
+                    Module Information from <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- //If Module details not found in server-->
+</div>
+
+
+<!--Loading Pop Up to prevent other actions while working on a action-->
+<div class="modal fade loading-popup" id="loadingModal" aria-labelledby="loading" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3 col-xs-3 text-center" >
+                            <img src="img/inprogress.gif" >
+                        </div>
+                        <div class="col-md-7 col-xs-7 text-center center-block loading-pop-up-msg" >
+                            <h1>Please wait while we complete the actions!</h1>
+                        </div>
+                    </div>
+
+                </div>
+                <!--<button type="button" class="btn btn-info btn-lg" ng-click="hideLoadingPopUp()">Hide Modal</button>-->
+            </form>
+        </div>
+    </div>
+</div>
+<!--//Loading Pop Up to prevent other actions while working on a action-->
+
+<!--<div ng-include="'js/common/loadingPopUp.html'"></div>-->

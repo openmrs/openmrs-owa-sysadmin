@@ -5,6 +5,7 @@
     -webkit-transition: width 0.4s ease-in-out;
     transition: width 0.4s ease-in-out;
     padding: 10px;
+    width: 95%;
 }
 
 
@@ -18,36 +19,36 @@ input[type=text]:focus {
 
     <div class="row">
         <div class="col-md-12 col-xs-12">
-            <h2>Install from Module Repository (https://modules.openmrs.org/modules) </h2> 
+            <h2>Search Modules from Online </h2>
         </div>
     </div>
 
 
-    <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
-        <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        {{startupsuccessMsg}}
-    </div>
+    <!--<div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">-->
+        <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
+        <!--{{startupsuccessMsg}}-->
+    <!--</div>-->
 
-    <div ng-show="startuperrorMsg">
-        <div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">
-            <a class="close" data-dismiss="alert" aria-label="close">×</a>
-            {{uplodedsuccessMsg}}
-        </div>
-        <div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">
-            <a class="close" data-dismiss="alert" aria-label="close">×</a>
-            {{startuperrorMsg}}
-        </div>
-    </div>
+    <!--<div ng-show="startuperrorMsg">-->
+        <!--<div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">-->
+            <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
+            <!--{{uplodedsuccessMsg}}-->
+        <!--</div>-->
+        <!--<div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">-->
+            <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
+            <!--{{startuperrorMsg}}-->
+        <!--</div>-->
+    <!--</div>-->
 
-    <div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">
-        <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        {{uploadederrorMsg}}
-    </div>
+    <!--<div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">-->
+        <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
+        <!--{{uploadederrorMsg}}-->
+    <!--</div>-->
 
-    <div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">
-        <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        {{downloadErrorMsg}}
-    </div>
+    <!--<div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">-->
+        <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
+        <!--{{downloadErrorMsg}}-->
+    <!--</div>-->
     
 
      <!--<div class="row" ng-if="isDownloading==true">-->
@@ -80,28 +81,41 @@ input[type=text]:focus {
                     <tr>
                         <th> Name </th>
                         <th> Version </th>
-                        <th> Author </th>
                         <th> Discription </th>
                         <th style="min-width: 120px;"> Action </th>
                     </tr>
                     <tbody>
                     <tr ng-repeat="module in modules">
-                        <td> {{module[1]}} </td>
-                        <td> {{module[2]}} </td>
-                        <td> {{module[3]}} </td>
-                        <td> {{module[4]}} </td>
                         <td>
-                            <button ng-click='trysearch(module[0])'> <i class="icon-upload-alt"> </i> Install </button> 
+                            <a href="#/view-search-module-details/{{module.uid}}">
+                            {{module.name}}
+                            </a>
+                        </td>
+                        <td> {{module.latestVersion}} </td>
+                        <td> {{module.description}} </td>
+                        <td>
+                           <a href="#/view-search-module-details/{{module.uid}}"> <button> <i class="icon-list-alt"> </i> View </button></a>
                         </td>
                     </tr>
                     </tbody>
             </table>   
 
-            <div class="alert alert-info text-center" ng-if="moduleFound==false">
+            <div class="alert alert-info text-center" ng-if="moduleFound==false && !isSearching">
                 No Modules found.
             </div>
+
+            <div class="col-md-3 col-xs-3 text-center center-block" ng-show="isSearching">
+                <img src="img/inprogress.gif" >
+            </div>
+
+            <div class="center-block" style="text-align: center; padding-top: 15px;">
+                Module Information from <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a>
+            </div>
+
          </div>
       
 <!--    </div>-->
 
     <ng-include src="'js/common/loadingPopUp.html'"></ng-include>
+
+</div>
