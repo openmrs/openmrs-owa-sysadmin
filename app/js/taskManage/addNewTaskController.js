@@ -1,10 +1,11 @@
 
 var addNewTaskModule = angular.module('addNewTaskController', ['OWARoutes']);
 
-addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil','$location', '$filter', '$routeParams', 'taskViewService', function($scope,$http,OWARoutesUtil,$location, $filter, $routeParams, taskViewService){
+addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil','$location', '$filter', '$routeParams', 'taskViewService', '$rootScope', function($scope,$http,OWARoutesUtil,$location, $filter, $routeParams, taskViewService, $rootScope){
 
     $scope.startOnStartup = false;
     $scope.started  = false;
+    $scope.isAddNewTask=true;
     $scope.properties = [];
     $scope.addNewProperties = function() {
         $scope.properties.push({});
@@ -20,13 +21,21 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
         if($routeParams.classUUID!=undefined){
             // Edit
             console.log("edit");
+            $scope.isAddNewTask=false;
             $scope.formProperties = ["Update", "Edit Task"];
             $scope.getTaskDetails($routeParams.classUUID);
+            // *** /OpenMRS breadcrumbs ***
+            $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Task View", "#/task-view"], ["Edit Task View", ""]]});
+            // *** /OpenMRS breadcrumbs ***
         }
         else {
             // Add New
+            $scope.isAddNewTask=true;
             console.log("add");
             $scope.formProperties = ["Save", "Add New Task"];
+            // *** /OpenMRS breadcrumbs ***
+            $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Task View", "#/task-view"], ["Add Task View", ""]]});
+            // *** /OpenMRS breadcrumbs ***
         }
     }
 
@@ -39,6 +48,7 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
     }
 
     $scope.getTaskDetails = function(taskName){
+
         console.log("getTaskDetails : " + taskName);
         if(typeof($scope.requestTaskDetails)!=undefined){
             delete $scope.requestTaskDetails;
@@ -71,7 +81,19 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
         });
     }
 
-    $scope.saveNewTaskDefinitions = function () {
+    $scope.saveTaskDefinitions = function () {
+        if($scope.isAddNewTask){
+            // New Task
+            var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/taskdefinition";
+        }
+        else{
+            //update the task
+            var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/taskdefinition/" + $routeParams.classUUID;
+        }
+        $scope.SaveNewTaskDefinitions(uploadUrl);
+    }
+
+    $scope.SaveNewTaskDefinitions = function (uploadUrl) {
         if(validateAddNewTaskDefinitions()){
             if(typeof($scope.isSavedTaskDefinitions)!=undefined){
                 delete $scope.isSavedTaskDefinitions;
@@ -79,7 +101,7 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
             if(typeof($scope.validationErrorMessage)!=undefined){
                 delete $scope.validationErrorMessage;
             }
-            var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/taskdefinition";
+            // var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/taskdefinition";
 
             var startTime = $filter('date')(new Date($scope.startTimeVal), "yyyy-MM-ddTHH:mm:ss.sssZ", "UTC");
 

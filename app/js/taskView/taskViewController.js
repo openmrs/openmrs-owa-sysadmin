@@ -35,7 +35,7 @@ taskViewControllerModule.controller('taskViewCtrl', ['$scope','$http','OWARoutes
 
     // *** /OpenMRS breadcrumbs ***
     $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Task View", ""]]});
-// *** /OpenMRS breadcrumbs ***
+    // *** /OpenMRS breadcrumbs ***
 
     $scope.getAllTaskDetails = function(){
         console.log("getAllTaskDetails");
