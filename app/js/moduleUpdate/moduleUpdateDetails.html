@@ -3,8 +3,9 @@
  	tr td {word-wrap:break-word;}
  	/*style="word-wrap:break-word"*/
  </style>
- 
+
 <!--<div data-ng-init="compareVersion()"></div>-->
+
 
 <div class="container" data-ng-init="checkAllModulesForUpdate()">
 	<div class="row">
@@ -68,34 +69,41 @@
     </div>
     
 
-     <div class="row" ng-if="isDownloading==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we download the module!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
+     <!--<div class="row" ng-if="isDownloading==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Please wait while we download the module!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
 
-    <div class="row" ng-if="isUploading==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we upload the module!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
+    <!--<div class="row" ng-if="isUploading==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Please wait while we upload the module!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
     
 <!--    // Module Upgrade Notifications-->
 
 <!--    Module update check Notifications-->
         
-    <div class="row" ng-if="searchingForUpdate==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Searching for Updates!</h3>
-            <img src="img/inprogress.gif" >
-        </div>
-    </div>
+    <!--<div class="row" ng-if="searchingForUpdate==true">-->
+        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
+            <!--<h3 style="text-align: center;">Searching for Updates!</h3>-->
+            <!--<img src="img/inprogress.gif" >-->
+        <!--</div>-->
+    <!--</div>-->
+
     <div class="alert alert-danger alert-dismissable" ng-show="checkUpdateForAllModuleError">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        {{checkUpdateForAllModuleError}}
+        {{checkUpdateForAllModuleError}} <br/>
+        <div ng-if="updateErrorModules.length">
+            Failed Modules :
+            <p ng-repeat="errorModule in updateErrorModules">{{index}}. {{errorModule}} </p>
+        </div>
+
     </div>
+
     <div class="alert alert-info alert-dismissable" ng-if="UpdatesFound==false">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         No Updates found. All modules are upto date!
@@ -120,19 +128,19 @@
 							<th> Description </th>
 							<th style="max-width: 60px;"> Cu.Ver </th>
                             <th style="max-width: 60px;"> New.Ver </th>
-							<th style="max-width: 140px;"> Actions </th>
+							<th style="min-width: 120px;"> Actions </th>
 						</tr>
 
 						<tr ng-repeat="updateData in availableUpdateData"> 
 							<td valign="top">
-								<a href="#/module-show/{{class.uuid}}">{{updateData[2]}}</a>				
+								<a href="#">{{updateData.display}}</a>
 							</td>
-							<td valign="top">{{updateData[3]}}</td>
-							<td valign="top" >{{updateData[4]}}</td>
-							<td valign="top">{{updateData[5]}}</td>
-                            <td valign="top">{{updateData[6]}}</td>
+							<td valign="top">{{updateData.author}}</td>
+							<td valign="top" >{{updateData.description}}</td>
+							<td valign="top">{{updateData.version}}</td>
+                            <td valign="top">{{updateData.newversion}}</td>
 							<td valign="top" style="width: 130px;">
-								<button ng-click="updateModule(updateData[7])"> <i class="icon-repeat"> </i> Update </button>
+								<button ng-click="updateModule(updateData.downloadurl)"> <i class="icon-repeat"> </i> Update </button>
 							</td>
 						</tr>
 					</tbody>
@@ -140,8 +148,12 @@
 			 
 			</div>
 		</div>
+
+
+
 </div>
 <!--	</div>-->
+
 
 
 	<style>
@@ -159,3 +171,27 @@
 
 		}
 	</style>
+
+
+  <!--Loading Pop Up to prevent other actions while working on a action-->
+  <div class="modal fade loading-popup" id="loadingModal" aria-labelledby="loading" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <form>
+                  <div class="modal-body">
+                      <div class="row">
+                          <div class="col-md-3 col-xs-3 text-center" >
+                              <img src="img/inprogress.gif" >
+                          </div>
+                          <div class="col-md-7 col-xs-7 text-center center-block loading-pop-up-msg" >
+                              <h1>Please wait while we complete the actions!</h1>
+                          </div>
+                      </div>
+
+                  </div>
+                  <!--<button type="button" class="btn btn-info btn-lg" ng-click="hideLoadingPopUp()">Hide Modal</button>-->
+              </form>
+          </div>
+      </div>
+  </div>
+  <!--//Loading Pop Up to prevent other actions while working on a action-->
