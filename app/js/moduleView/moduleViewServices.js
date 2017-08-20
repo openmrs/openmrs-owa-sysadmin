@@ -53,8 +53,8 @@ manageModuleService.service('ModuleService',['$http', 'OWARoutesUtil','$q', func
 
         getModuleDetailsFromOnline : function(modulePackageName){
             var def = $q.defer();
-           // var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
-            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon/"+modulePackageName;
+            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+            //var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon/"+modulePackageName;
             $http.get(requestUrl, {})
                 .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
                     def.resolve(["GET",1,data,status]);
@@ -98,8 +98,8 @@ manageModuleService.service('ModuleService',['$http', 'OWARoutesUtil','$q', func
         
         checkModuleUpdate : function(modulePackageName){
             var def = $q.defer();
-           // var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
-            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon/"+modulePackageName;
+            var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage="+modulePackageName;
+
             $http.get(requestUrl, {})
                 .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
                     def.resolve(["GET",1,data,status]);

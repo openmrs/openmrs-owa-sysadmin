@@ -242,7 +242,16 @@
     <div class="row col-12" ng-if="onlineDataFound!=false">
          <div class="panel-body" style="width:100%;" >
              <div class=""  ng-if="onlineDataFound==true">
+
                 <div style="width:100%;" ng-show="nonInstalledModuleDetails">
+
+                    <div class="alert alert-warning"  style="text-align:center;">
+                        You haven't installed this module on your system.
+                        <a href="#/view-search-module-details/{{nonInstalledModuleDetails.uid}}">
+                            <button style="margin-left:15px;"> <i class="icon-upload"> </i> Install this module</button>
+                        </a>
+                    </div>
+
                     <h4> Module Name : {{nonInstalledModuleDetails.name}}</h4>
                     <table class="layout display responsive-table">
                         <tbody>
