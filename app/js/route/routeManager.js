@@ -12,12 +12,12 @@ managemodule.config(['$routeProvider',
                           templateUrl: 'js/moduleView/viewModules.html',
                           controller: 'ModuleListCtrl',
                         }).
-                        when('/install-from-module-repository', {
+                        when('/view-search', {
                           templateUrl: 'js/moduleSearch/searchModules.html',
                             controller: 'searchModuleCtrl'
                         }).
-                      when('/search-modules-view-detaisl', {
-                          templateUrl: 'js/moduleSearch/searchModulesViewDetails',
+                      when('/view-search-module-details/:UUID', {
+                          templateUrl: 'js/moduleSearch/searchModulesViewDetails.html',
                             controller: 'searchModuleCtrl'
                         }).
                         when('/upload-module', {
