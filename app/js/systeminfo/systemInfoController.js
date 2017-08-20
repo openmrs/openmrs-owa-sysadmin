@@ -113,4 +113,19 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
         });        
     };
     
+    $scope.replaceModuleInfo = function (info) {
+        var updated=info.replace('Not Started', ' ');
+        updated=updated.replace('Started', ' ');
+        return updated;
+    }
+
+    $scope.getModuleStartedOrNot = function (info) {
+        if(info.indexOf("Not Started") !== -1){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
 }]);
