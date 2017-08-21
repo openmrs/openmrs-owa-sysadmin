@@ -6,26 +6,33 @@
         </div>
     </div>
 
-    <div class="alert alert-success alert-dismissable" ng-if="isDeletedTaskDefinition[0]==true">
+    <div class="alert alert-success alert-dismissable" ng-if="isActionStatus[0]==true">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        Successfully deleted task definition[{{isDeletedTaskDefinition[1]}}]
+        {{isActionStatus[1]}}
     </div>
 
-    <div class="alert alert-danger alert-dismissable" ng-if="isDeletedTaskDefinition[0]==false">
+    <div class="alert alert-danger alert-dismissable" ng-if="isActionStatus[0]==false">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        Task Definition[{{isDeletedTaskDefinition[1]}}] delete failed.
+        {{isActionStatus[1]}}
     </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="requestAllTaskDetails==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Could not get the task information from the system.
+    </div>
+
 
     <div class="row col-12">
-        <div class="panel-body" style="width: 100%">
+        <div class="panel-body" style="width: 100%" ng-show="allTasksData">
 
             <div style="padding-bottom: 10px;">
                 <a href="#/add-new-task">
                     <button><i class="icon-plus"> </i> Add Tasks</button>
                 </a>
-                <a href="#">
-                    <button><i class="icon-repeat"> </i> Refresh Tasks</button>
-                </a>
+                <a> <button ng-click="getAllTaskDetails()"><i class="icon-repeat"> </i> Refresh</button> </a>
+                <a> <button ng-click="rescheduleAllTasks()"><i class="icon-repeat"> </i> Reschedule All</button> </a>
+                <a> <button ng-click="shutdownAllTasks()"><i class="icon-repeat"> </i> Shutdown All</button> </a>
+                <a> <button ng-click="startOnStartupTasks()"><i class="icon-repeat"> </i>Start Startup Tasks</button> </a>
 
             </div>
 
@@ -37,7 +44,7 @@
                     <th> Task </th>
                     <th style="min-width: 350px;"> Schedule </th>
                     <th> On Startup </th>
-                    <th  style="min-width: 130px;"> Actions </th>
+                    <th  style="min-width: 160px;"> Actions </th>
                 </tr>
 
                 <tr ng-repeat="task in allTasksData">
@@ -60,10 +67,12 @@
                     <td valign="top" ng-if="task.startOnStartup==false" style="vertical-align: middle;"><b>No</b>(manual)</td>
 
                     <td valign="top" align="center" valign="middle" style="vertical-align:middle;">
-                        <button ng-click="stopConfirmationShow(class.packageName,class.uuid, class.display)" ng-if="task.started == true"> <img src="img/stop-new-1.png" /> </button>
-                        <button ng-click="StartModule(class.uuid,'ALLMODULES', class.display)" ng-if="task.started != true"> <img src="img/start-new-1.png" /> </button>
-
-                        <button class="btn btn-danger" ng-click="unloadConfirmationShow(task.name, task.uuid)"> <i class="icon-trash"></i></button>
+                        <a></a><button ng-click="stopConfirmationShow(task.uuid, task.name)" style="width:160px;" ng-if="task.started == true"> <img src="img/stop-new-1.png" /> Stop</button> </a>
+                        <a><button ng-click="startTask(task.uuid, task.name)" style="width:160px;" ng-if="task.started != true"> <img src="img/start-new-1.png" /> Start</button> </a>
+                        <br/>
+                        <a><button class="btn btn-danger" style="width:160px; margin-top: 5px;" ng-click="rescheduleTasks(task.uuid, task.name )"> <i class="icon-repeat"></i> Reschedule</button> </a>
+                        <br/>
+                        <a><button class="btn btn-danger" style="width:160px; margin-top: 5px;" ng-click="unloadConfirmationShow(task.uuid, task.name )"> <i class="icon-trash"></i> Delete</button> </a>
                     </td>
                 </tr>
                 </tbody>
@@ -80,14 +89,32 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Do you want to delete {{uploadConfirmModuleData.name}}?</h5>
+                <h5 class="modal-title">Do you want to delete {{unloadConfirmModuleData.name}}?</h5>
             </div>
             <form>
                 <div class="modal-footer" >
-                    <button class=" btn-danger" ng-click="unloadModule(uploadConfirmModuleData.uuid, uploadConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+                    <button class=" btn-danger" ng-click="unloadTask(unloadConfirmModuleData.uuid, unloadConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
                     <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="stopConfirmation" aria-labelledby="stopConfirmation" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to stop {{stopConfirmModuleData.name}}?</h5>
+            </div>
+            <form>
+                <div class="modal-footer" >
+                    <button class=" btn-danger" ng-click="stopTask(stopConfirmModuleData.uuid, stopConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<ng-include src="'js/common/loadingPopUp.html'"></ng-include>

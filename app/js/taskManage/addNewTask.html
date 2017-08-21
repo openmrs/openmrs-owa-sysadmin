@@ -6,12 +6,12 @@
         </div>
     </div>
 
-    <div class="alert alert-danger alert-dismissable" ng-show="!isSavedTaskDefinitions">
+    <div class="alert alert-danger alert-dismissable" ng-show="isValidationError">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{validationErrorMessage}}
     </div>
 
-    <div class="alert alert-success alert-dismissable" ng-show="isSavedTaskDefinitions">
+    <div class="alert alert-success alert-dismissable" ng-if="isValidationError==false">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         Task definition saved successfully.
     </div>
@@ -33,9 +33,9 @@
                     <option value="org.openmrs.scheduler.tasks.AutoCloseVisitsTask">org.openmrs.scheduler.tasks.AutoCloseVisitsTask</option>
                     <option value="org.openmrs.scheduler.tasks.ProcessHL7InQueueTask">org.openmrs.scheduler.tasks.ProcessHL7InQueueTask</option>
                     <option value="org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask">org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask</option>
-                    <option value="org.openmrs.scheduler.tasks.AlertReminderTask ">org.openmrs.scheduler.tasks.AlertReminderTask</option>
-                    <option value="org.openmrs.scheduler.tasks.CheckInternetConnectivityTask  ">org.openmrs.scheduler.tasks.CheckInternetConnectivityTask</option>
-                    <option value="org.openmrs.scheduler.tasks.SendEmailTask ">org.openmrs.scheduler.tasks.SendEmailTask</option>
+                    <option value="org.openmrs.scheduler.tasks.AlertReminderTask">org.openmrs.scheduler.tasks.AlertReminderTask</option>
+                    <option value="org.openmrs.scheduler.tasks.CheckInternetConnectivityTask ">org.openmrs.scheduler.tasks.CheckInternetConnectivityTask</option>
+                    <option value="org.openmrs.scheduler.tasks.SendEmailTask">org.openmrs.scheduler.tasks.SendEmailTask</option>
                 </select>
             </div>
         </div>
@@ -56,7 +56,15 @@
 
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Started </div>
-            <div class="col-9 col-xl-9 col-sm-9 form"> {{started}} </div>
+            <div class="col-9 col-xl-9 col-sm-9 form">
+                <p ng-if="started == true">
+                    <img src="img/running-module.png"  height="20" style="top: 5px;left: auto; padding-right: 15px;" /> Started
+                </p>
+               <p ng-if="started != true">
+                   <img src="img/stopped-module.png"  height="20" style="top: 5px;left: auto; padding-right: 15px;"/> Not Started
+               </p>
+
+            </div>
         </div>
 
         <div class="row" style="margin-bottom:15px;">
@@ -96,7 +104,7 @@
 
     <div class="panel-body">
         <h2> Properties </h2>
-        <div class="bd-callout bd-callout-info" ng-repeat="choice in properties">
+        <div class="bd-callout bd-callout-info" ng-repeat="properties in taskProperties">
             <h4 id="" style="margin-bottom:10px;">New Property</h4>
             <div class="row" style="margin-bottom:10px;">
                 <div style="padding-left: 5px; padding-right: 5px; padding-top: 10px;">Name</div>
@@ -108,12 +116,12 @@
                 <div class="col-4 col-xl-4 col-sm-4 form">
                     <input type="text" placeholder="Enter property value" ng-model="properties.value" style="width:95%;" required>
                 </div>
-                <button class="btn btn-danger" ng-click="removeProperties()"><i class="icon-remove"> </i></button>
+                <button class="btn btn-danger" ng-click="removeTaskProperties()"><i class="icon-remove"> </i></button>
             </div>
 
         </div>
 
-        <button ng-click="addNewProperties()"><i class="icon-plus"> </i> Add New</button>
+        <button ng-click="addNewTaskProperties()"><i class="icon-plus"> </i> Add New</button>
 
     </div>
 

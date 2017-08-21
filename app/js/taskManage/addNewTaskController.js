@@ -6,14 +6,15 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
     $scope.startOnStartup = false;
     $scope.started  = false;
     $scope.isAddNewTask=true;
-    $scope.properties = [];
-    $scope.addNewProperties = function() {
-        $scope.properties.push({});
+    $scope.taskProperties = [];
+
+    $scope.addNewTaskProperties = function() {
+        $scope.taskProperties.push({});
     };
 
-    $scope.removeProperties = function() {
-        var lastItem = $scope.properties.length-1;
-        $scope.properties.splice(lastItem);
+    $scope.removeTaskProperties = function() {
+        var lastItem = $scope.taskProperties.length-1;
+        $scope.taskProperties.splice(lastItem);
     };
 
     $scope.initializeAddNewTask = function () {
@@ -47,6 +48,14 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
         return newJson;
     }
 
+    function convertJsonToProperties(json){
+        $scope.taskProperties = [];
+        angular.forEach(json, function(jsonValue, key) {
+            var newJson = {name : key, value : jsonValue};
+            $scope.taskProperties.push(newJson);
+        });
+    }
+
     $scope.getTaskDetails = function(taskName){
 
         console.log("getTaskDetails : " + taskName);
@@ -71,7 +80,7 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
                     $scope.startTimeVal = responseData.startTime;
                     $scope.repeatInterval = responseData.repeatInterval;
                     $scope.started = responseData.started;
-                   // $scope.properties
+                    convertJsonToProperties(responseData.properties);
                 }
                 else{
                     console.log("error");
@@ -90,13 +99,14 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
             //update the task
             var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/taskdefinition/" + $routeParams.classUUID;
         }
+        console.log(uploadUrl);
         $scope.SaveNewTaskDefinitions(uploadUrl);
     }
 
     $scope.SaveNewTaskDefinitions = function (uploadUrl) {
         if(validateAddNewTaskDefinitions()){
-            if(typeof($scope.isSavedTaskDefinitions)!=undefined){
-                delete $scope.isSavedTaskDefinitions;
+            if(typeof($scope.isValidationError)!=undefined){
+                delete $scope.isValidationError;
             }
             if(typeof($scope.validationErrorMessage)!=undefined){
                 delete $scope.validationErrorMessage;
@@ -113,14 +123,14 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
                     "startOnStartup": $scope.startOnStartup,
                     "startTime": startTime,
                     "repeatInterval" : ''+$scope.repeatInterval,
-                    "properties" : createPropertyJson($scope.properties)
+                    "properties" : createPropertyJson($scope.taskProperties)
                 };
             console.log(moduleData);
             $http.post(uploadUrl, moduleData ,  {
                 headers: {
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
             }) .success(function (data, status, headers, config) {
-                $scope.isSavedTaskDefinitions = true;
+                $scope.isValidationError = false;
                 console.log("taskdefinition saved");
             }).error(function (data, status, headers, config) {
 
@@ -177,11 +187,11 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope','$http','OWARoutesUtil',
                 }
 
 
-                $scope.isSavedTaskDefinitions = false;
+                $scope.isValidationError = true;
             });
         }
         else{
-            $scope.isSavedTaskDefinitions = false;
+            $scope.isValidationError = true;
             //console.log("Validation Failed");
         }
     }
