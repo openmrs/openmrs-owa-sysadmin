@@ -108,6 +108,8 @@ manageModuleService.service('ModuleService',['$http', 'OWARoutesUtil','$q', func
             });
             return def.promise;
         },
+
+
         
 //        getModuleReleaseDetails : function(moduleId,releaseId){
 //           var def = $q.defer();

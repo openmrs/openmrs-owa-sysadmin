@@ -5,6 +5,10 @@ var managemodule =angular.module('managemodule',
             'seacrchModuleController', 'systemInfoController', 'systemInfoService',
             'mainController', 'mainService', 'taskViewController', 'addNewTaskController']);
 
+managemodule.config(function($httpProvider){
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    });
+
 managemodule.config(['$routeProvider',
                     function ($routeProvider) {
                       $routeProvider.

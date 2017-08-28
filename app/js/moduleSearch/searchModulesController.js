@@ -13,13 +13,28 @@
                      def.resolve(["GET", 0, data, status]);
                  });
                  return def.promise;
+             },
+             downloadModule : function (requestUrl) {
+                 var def = $q.defer();
+
+                 $http.jsonp(requestUrl, {
+                     responseType: "arraybuffer",
+                     data: '',
+                     dataType: 'jsonp',
+                     headers: { 'Accept': 'application/zip, */*' }
+                 })
+                     .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
+                         def.resolve(["GET",1,data,status]);
+                     }).error(function (data,status){ // GET REQUEST ERROR HANDLE
+                     def.resolve(["GET",0,data,status]);
+                 });
+                 return def.promise;
              }
          };
      }]);
 
 
-     
-     SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil','$rootScope', 'SearchModuleService', '$routeParams',
+     SearchRepoModule.controller('searchModuleCtrl', [ '$scope', '$http', 'OWARoutesUtil','$rootScope', 'SearchModuleService', '$routeParams',
          function($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams) {
          
       // *** /OpenMRS breadcrumbs ***  
@@ -178,7 +193,33 @@
         alertsClear(); // clear all alerts $scope variables
         showLoadingPopUp(); // Show loadingPop to prevent other Actions
       var fd = new FormData();
-      $http.get(moduleUrl, {responseType: "arraybuffer"})
+      // Getting last value with download_file?file_path=xyz
+      console.log(moduleUrl);
+      var filename = moduleUrl.replace(/^.*[\\\/]/, '');
+      // remove download_file?file_path=
+      filename = filename.replace("download_file?file_path=", '');
+      //http://dl.bintray.com/openmrs/omod/
+     moduleUrl = "https://dl.bintray.com/openmrs/omod/" + filename + '?json_callback=JSON_CALLBACK';
+     // moduleUrl = "https://modules.openmrs.org/modulus/api/releases/1546/download/"+ filename;
+      console.log(moduleUrl);
+
+      // var response = SearchModuleService.downloadModule(moduleUrl);
+      //   response.then(function(result){
+      //       if(result[2]==1){
+      //           console.log("ok");
+      //       }
+      //       else{
+      //           console.log("eerr");
+      //       }
+      //   });
+      delete $http.defaults.headers.common['X-Requested-With'];
+      delete $http.defaults.origin;
+      $http.jsonp(moduleUrl, {
+          responseType: "arraybuffer",
+          headers : {
+              'X-Requested-With' : 'https://bintray.com/openmrs/omod/accesslogging'
+          }
+      })
       .success(function (data){ // GET REQUEST ERROR HANDLE
 
 
