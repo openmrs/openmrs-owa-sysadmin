@@ -1,120 +1,63 @@
-
-
 <style type="text/css">
     input[type=text] {
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-    padding: 10px;
-    width: 95%;
-}
+        -webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;
+        padding: 10px;
+        width: 95%;
+    }
 
-
-/* When the input field gets focus, change its width to 100% */
-input[type=text]:focus {
-    width: 95%;
-}
+    /* When the input field gets focus, change its width to 100% */
+    input[type=text]:focus {
+        width: 95%;
+    }
 </style>
 
-<div class="container"> 
-
+<div class="container">
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <h2>Search Modules from Online </h2>
         </div>
     </div>
+    <div class="panel-body" ng-hide="isDownloading && isUploading">
+        <form style="margin-bottom: 15px;">
+            <input type="text" name="search" placeholder="Search Modules.." ng-model="searchText"
+                   ng-change="change(text)"/>
+        </form>
+        <table ng-if="moduleFound==true">
+            <tr>
+                <th> Name</th>
+                <th> Version</th>
+                <th> Discription</th>
+                <th style="min-width: 120px;"> Action</th>
+            </tr>
+            <tbody>
+            <tr ng-repeat="module in modules">
+                <td>
+                    <a href="#/view-search-module-details/{{module.uid}}">
+                        {{module.name}}
+                    </a>
+                </td>
+                <td> {{module.latestVersion}}</td>
+                <td> {{module.description}}</td>
+                <td>
+                    <a href="#/view-search-module-details/{{module.uid}}">
+                        <button><i class="icon-list-alt"> </i> View</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-
-    <!--<div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">-->
-        <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
-        <!--{{startupsuccessMsg}}-->
-    <!--</div>-->
-
-    <!--<div ng-show="startuperrorMsg">-->
-        <!--<div class="alert alert-success alert-dismissable" ng-show="uplodedsuccessMsg">-->
-            <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
-            <!--{{uplodedsuccessMsg}}-->
-        <!--</div>-->
-        <!--<div class="alert alert-danger alert-dismissable" ng-show="startuperrorMsg">-->
-            <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
-            <!--{{startuperrorMsg}}-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="alert alert-danger alert-dismissable" ng-show="uploadederrorMsg">-->
-        <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
-        <!--{{uploadederrorMsg}}-->
-    <!--</div>-->
-
-    <!--<div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">-->
-        <!--<a class="close" data-dismiss="alert" aria-label="close">×</a>-->
-        <!--{{downloadErrorMsg}}-->
-    <!--</div>-->
-    
-
-     <!--<div class="row" ng-if="isDownloading==true">-->
-        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
-            <!--<h3 style="text-align: center;">Please wait while we download the module!</h3>-->
-            <!--<img src="img/inprogress.gif" >-->
-        <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row" ng-if="isUploading==true">-->
-        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
-            <!--<h3 style="text-align: center;">Please wait while we upload the module!</h3>-->
-            <!--<img src="img/inprogress.gif" >-->
-        <!--</div>-->
-    <!--</div>-->
-
-
-
-<!--
-    <div class="panel panel-primary"  ng-hide="isDownloading && isUploading">
-        <div class="panel-heading">Search Modules</div>
--->
-
-        <div class="panel-body" ng-hide="isDownloading && isUploading">
-            <form style="margin-bottom: 15px;">
-            <input type="text" name="search" placeholder="Search Modules.."  ng-model="searchText" ng-change="change(text)"/>
-            </form>
-
-            <table ng-if="moduleFound==true">
-                    <tr>
-                        <th> Name </th>
-                        <th> Version </th>
-                        <th> Discription </th>
-                        <th style="min-width: 120px;"> Action </th>
-                    </tr>
-                    <tbody>
-                    <tr ng-repeat="module in modules">
-                        <td>
-                            <a href="#/view-search-module-details/{{module.uid}}">
-                            {{module.name}}
-                            </a>
-                        </td>
-                        <td> {{module.latestVersion}} </td>
-                        <td> {{module.description}} </td>
-                        <td>
-                           <a href="#/view-search-module-details/{{module.uid}}"> <button> <i class="icon-list-alt"> </i> View </button></a>
-                        </td>
-                    </tr>
-                    </tbody>
-            </table>   
-
-            <div class="alert alert-info text-center" ng-if="moduleFound==false && !isSearching">
-                No Modules found.
-            </div>
-
-            <div class="col-md-3 col-xs-3 text-center center-block" ng-show="isSearching">
-                <img src="img/inprogress.gif" >
-            </div>
-
-            <div class="center-block" style="text-align: center; padding-top: 15px;">
-                Module Information from <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a>
-            </div>
-
-         </div>
-      
-<!--    </div>-->
+        <div class="alert alert-info text-center" ng-if="moduleFound==false && !isSearching">
+            No Modules found.
+        </div>
+        <div class="col-md-3 col-xs-3 text-center center-block" ng-show="isSearching">
+            <img src="img/inprogress.gif">
+        </div>
+        <div class="center-block" style="text-align: center; padding-top: 15px;">
+            Module Information from <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a>
+        </div>
+    </div>
 
     <ng-include src="'js/common/loadingPopUp.html'"></ng-include>
 

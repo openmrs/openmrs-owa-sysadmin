@@ -1,94 +1,95 @@
-  var updateModule = angular.module('ModuleService',['OWARoutes']);
+var updateModule = angular.module('ModuleService', ['OWARoutes']);
 
- updateModule.service('updateModuleService',['$scope', '$http', 'OWARoutesUtil', function ($scope, $http, OWARoutesUtil) {
-        //var property = 'First';
-        var isDownloading = true;
-        var downloadSuccessMsg ='';
-        var downloadErrorMsg = '';
-        var isUploading=true;
-        var uplodedsuccessMsg='';
-        var uploadederrorMsg='';
-        var startupsuccessMsg='';
-        var startuperrorMsg='';
-        var responseJsonData=null;
-     
-        return {
-            updateAndInstallModule : function (moduleUrl){
-                 ////////////////////////////////
-                  isDownloading=true;
+updateModule.service('updateModuleService', ['$scope', '$http', 'OWARoutesUtil', function ($scope, $http, OWARoutesUtil) {
+    //var property = 'First';
+    var isDownloading = true;
+    var downloadSuccessMsg = '';
+    var downloadErrorMsg = '';
+    var isUploading = true;
+    var uplodedsuccessMsg = '';
+    var uploadederrorMsg = '';
+    var startupsuccessMsg = '';
+    var startuperrorMsg = '';
+    var responseJsonData = null;
 
-                  var fd = new FormData();
-                  $http.get(moduleUrl, {responseType: "arraybuffer"})
-                  .success(function (data){ // GET REQUEST ERROR HANDLE
-                        var filename = moduleUrl.substring(moduleUrl.lastIndexOf('/')+1);
-                        let blob = new Blob([data], {type: 'application/octet-stream'});  
-                        var url=(window.URL).createObjectURL(blob);
-                        var file = new File([data], filename, {type:"application/octet-stream", lastModified: new Date().getTime()});
-                        fd.append('file', file);
-                        isDownloading=false;
-                        downloadSuccessMsg="Module Download Completed";
-                      
+    return {
+        updateAndInstallModule: function (moduleUrl) {
+            isDownloading = true;
+
+            var fd = new FormData();
+            $http.get(moduleUrl, {responseType: "arraybuffer"})
+                .success(function (data) { // GET REQUEST ERROR HANDLE
+                    var filename = moduleUrl.substring(moduleUrl.lastIndexOf('/') + 1);
+                    let blob = new Blob([data], {type: 'application/octet-stream'});
+                    var url = (window.URL).createObjectURL(blob);
+                    var file = new File([data], filename, {
+                        type: "application/octet-stream",
+                        lastModified: new Date().getTime()
+                    });
+                    fd.append('file', file);
+                    isDownloading = false;
+                    downloadSuccessMsg = "Module Download Completed";
+
                     console.log("POST started...");
-                    var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/?";
+                    var uploadUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/module/?";
 
-                    isUploading=true;
+                    isUploading = true;
 
-                 $http.post(uploadUrl, fd, {
-                   transformRequest: angular.identity,
-                   headers: { 
-                    'Content-Type': undefined ,  
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
-                  }) .success(function (data, status, headers, config) {  // POST REQUEST ERROR HANDLE
-                       console.log("UPLOAD - Sucess.");
-                       isUploading=false;
-                       var x2js = new X2JS();
-                       var JsonSuccessResponse = x2js.xml_str2json(data);
-                            var moduleName = JsonSuccessResponse["org.openmrs.module.Module"].name;
-                            uplodedsuccessMsg=moduleName+" has been loaded"
-                            responseJsonData=JsonSuccessResponse;
-                            if (typeof(JsonSuccessResponse["org.openmrs.module.Module"].startupErrorMessage) == "undefined")
-                                {
-                                    // Started Successfully
-                                    startupsuccessMsg=moduleName+" has been loaded and started Successfully"
-                                }
-                            else{
-                                    //start up Error Found 
-                                    startuperrorMsg="Could not start "+moduleName+" Module."
-                            }
-                 })
-                      .error(function (data, status, header, config) { // POST REQUEST ERROR HANDLE
-                       console.log("UPLOAD - Error.");
-                       isUploading=false;
-                       var x2js = new X2JS();
-                       var JsonErrorResponse = x2js.xml_str2json(data);
-                            if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
+                    $http.post(uploadUrl, fd, {
+                        transformRequest: angular.identity,
+                        headers: {
+                            'Content-Type': undefined,
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+                        }
+                    }).success(function (data, status, headers, config) {  // POST REQUEST ERROR HANDLE
+                        console.log("UPLOAD - Sucess.");
+                        isUploading = false;
+                        var x2js = new X2JS();
+                        var JsonSuccessResponse = x2js.xml_str2json(data);
+                        var moduleName = JsonSuccessResponse["org.openmrs.module.Module"].name;
+                        uplodedsuccessMsg = moduleName + " has been loaded"
+                        responseJsonData = JsonSuccessResponse;
+                        if (typeof(JsonSuccessResponse["org.openmrs.module.Module"].startupErrorMessage) == "undefined") {
+                            // Started Successfully
+                            startupsuccessMsg = moduleName + " has been loaded and started Successfully"
+                        }
+                        else {
+                            //start up Error Found
+                            startuperrorMsg = "Could not start " + moduleName + " Module."
+                        }
+                    })
+                        .error(function (data, status, header, config) { // POST REQUEST ERROR HANDLE
+                            console.log("UPLOAD - Error.");
+                            isUploading = false;
+                            var x2js = new X2JS();
+                            var JsonErrorResponse = x2js.xml_str2json(data);
+                            if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined") {
                                 // File Error Catched
-                                if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined"){
+                                if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined") {
                                     // Error Message given
-                                    uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
+                                    uploadederrorMsg = JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
                                 }
-                                else{
+                                else {
                                     // Unknown Error Message
-                                    uploadederrorMsg="Error loading module, no config.xml file found"
+                                    uploadederrorMsg = "Error loading module, no config.xml file found"
                                 }
                             }
-                            else{
+                            else {
                                 //unknown Error
-                                uploadederrorMsg="Error loading module!"
+                                uploadederrorMsg = "Error loading module!"
                             }
-                 });
-                }).error(function (data){ // GET REQUEST ERROR HANDLE
-                      isDownloading=false;
-                      downloadErrorMsg="Could not download the Module";
-                });
-                
-                var returnArray=[[isDownloading,downloadSuccessMsg,downloadErrorMsg],[isUploading,uplodedsuccessMsg,uploadederrorMsg],[startupsuccessMsg,startuperrorMsg],[responseJsonData]];
-                return returnArray;
-                ////////////////////////////////
-            },
-            getProperty: function () {
-                return 'a';
-            }
-        };
-     
-    }]);
+                        });
+                }).error(function (data) { // GET REQUEST ERROR HANDLE
+                isDownloading = false;
+                downloadErrorMsg = "Could not download the Module";
+            });
+
+            var returnArray = [[isDownloading, downloadSuccessMsg, downloadErrorMsg], [isUploading, uplodedsuccessMsg, uploadederrorMsg], [startupsuccessMsg, startuperrorMsg], [responseJsonData]];
+            return returnArray;
+        },
+        getProperty: function () {
+            return 'a';
+        }
+    };
+
+}]);

@@ -1,304 +1,195 @@
-     var SearchRepoModule = angular.module('seacrchModuleController',['OWARoutes']);
+var SearchRepoModule = angular.module('searchModuleController', ['OWARoutes']);
 
-     SearchRepoModule.service('SearchModuleService',['$http', 'OWARoutesUtil','$q', function ($http, OWARoutesUtil,$q) {
+SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'SearchModuleService', '$routeParams', 'logger',
+    function ($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams, logger) {
 
-         return {
-             getSeatchModuleDetails: function (moduleUuid) {
-                 var def = $q.defer();
-                 var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon/"+moduleUuid;
-                 $http.get(requestUrl, {params: {v: 'full'}})
-                     .success(function (data, status) { // GET REQUEST SUCCESS HANDLE
-                         def.resolve(["GET", 1, data, status]);
-                     }).error(function (data, status) { // GET REQUEST ERROR HANDLE
-                     def.resolve(["GET", 0, data, status]);
-                 });
-                 return def.promise;
-             },
-             downloadModule : function (requestUrl) {
-                 var def = $q.defer();
+        //OpenMRS breadcrumbs
+        $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", ""]]});
 
-                 $http.jsonp(requestUrl, {
-                     responseType: "arraybuffer",
-                     data: '',
-                     dataType: 'jsonp',
-                     headers: { 'Accept': 'application/zip, */*' }
-                 })
-                     .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
-                         def.resolve(["GET",1,data,status]);
-                     }).error(function (data,status){ // GET REQUEST ERROR HANDLE
-                     def.resolve(["GET",0,data,status]);
-                 });
-                 return def.promise;
-             }
-         };
-     }]);
+        $scope.modules = [];
+        $scope.searchText = null;
 
+        function showLoadingPopUp() {
+            $('#loadingModal').show();
+            $('#loadingModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
 
-     SearchRepoModule.controller('searchModuleCtrl', [ '$scope', '$http', 'OWARoutesUtil','$rootScope', 'SearchModuleService', '$routeParams',
-         function($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams) {
-         
-      // *** /OpenMRS breadcrumbs ***  
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Search Module",""]]});
-      // *** /OpenMRS breadcrumbs ***
+        function hideLoadingPopUp() {
+            angular.element('#loadingModal').modal('hide');
+        }
 
-         function showLoadingPopUp(){
-             $('#loadingModal').show();
-             $('#loadingModal').modal({
-                 backdrop: 'static',
-                 keyboard: false
-             });
-             console.log("showLoadingPopUp ");
-             console.log(angular.element('#loadingModal').status);
-         }
-         function hideLoadingPopUp(){
-             angular.element('#loadingModal').modal('hide');
-             console.log("hideLoadingPopUp ");
-         }
+        function alertsClear() {
+            if (typeof($scope.downloadErrorMsg) != undefined) {
+                delete $scope.downloadErrorMsg;
+            }
+            if (typeof($scope.downloadSuccessMsg) != undefined) {
+                delete $scope.downloadSuccessMsg;
+            }
 
-         function alertsClear() {
-             if(typeof($scope.downloadErrorMsg)!=undefined){
-                 delete $scope.downloadErrorMsg;
-             }
-             if(typeof($scope.downloadSuccessMsg)!=undefined){
-                 delete $scope.downloadSuccessMsg;
-             }
+            if (typeof($scope.startuperrorMsg) != undefined) {
+                delete $scope.startuperrorMsg;
+            }
+            if (typeof($scope.startupsuccessMsg) != undefined) {
+                delete $scope.startupsuccessMsg;
+            }
+            if (typeof($scope.uplodedsuccessMsg) != undefined) {
+                delete $scope.uplodedsuccessMsg;
+            }
+            if (typeof($scope.uploadederrorMsg) != undefined) {
+                delete $scope.uploadederrorMsg;
+            }
+            if (typeof($scope.isSearching) != undefined) {
+                delete $scope.isSearching;
+            }
+        }
 
-             if(typeof($scope.startuperrorMsg)!=undefined){
-                 delete $scope.startuperrorMsg;
-             }
-             if(typeof($scope.startupsuccessMsg)!=undefined){
-                 delete $scope.startupsuccessMsg;
-             }
-             if(typeof($scope.uplodedsuccessMsg)!=undefined){
-                 delete $scope.uplodedsuccessMsg;
-             }
-             if(typeof($scope.uploadederrorMsg)!=undefined){
-                 delete $scope.uploadederrorMsg;
-             }
-             if(typeof($scope.isSearching)!=undefined){
-                 delete $scope.isSearching;
-             }
-         }
-       $scope.modules=[];
-       $scope.searchText = null;
+        $scope.change = function () {
+            // clear all alerts $scope variables
+            alertsClear();
+            $scope.moduleFound = false;
+            $scope.isSearching = true;
+            $scope.modules = [];
+            var searchValue = $scope.searchText;
+            var requestUrl = "https://addons-stg.openmrs.org/api/v1//addon?&q=" + searchValue;
+            if (searchValue) {
+                $http.get(requestUrl, {})
+                    .success(function (data, status) { // GET REQUEST SUCCESS HANDLE
+                        if (data.length > 0) {
+                            // Modules Found
+                            $scope.moduleFound = true;
+                            $scope.modules = data;
+                        }
+                        else {
+                            // No Modules Found
+                            $scope.moduleFound = false;
+                        }
+                        $scope.isSearching = false;
+                    }).error(function (data, status) { // GET REQUEST ERROR HANDLE
+                    logger.error("Could not perform search action through the AddOns REST API", data);
+                });
+            }
+            else {
+                // Search text empty
+                $scope.isSearching = false;
+                $scope.moduleFound = false;
+            }
 
-         $scope.change = function() {
-             alertsClear(); // clear all alerts $scope variables
-             $scope.moduleFound=false;
-             $scope.isSearching=true;
-             $scope.modules=[];
-             var searchValue = $scope.searchText;
-             var requestUrl = "https://addons-stg.openmrs.org/api/v1//addon?&q="+searchValue;
-             if(searchValue){
-                 $http.get(requestUrl, {})
-                     .success(function (data,status){ // GET REQUEST SUCCESS HANDLE
-                         console.log(data.length);
-                         if(data.length>0){
-                             // Modules Found
-                             $scope.moduleFound=true;
-                             $scope.modules = data;
-                         }
-                         else {
-                             // No Modules Found
-                             $scope.moduleFound=false;
-                         }
-                         $scope.isSearching=false;
-                     }).error(function (data,status){ // GET REQUEST ERROR HANDLE
-                     console.error('Search  error : ', status, data);
-                 });
-             }
-             else{
-                 // Search text empty
-                 $scope.isSearching=false;
-                 $scope.moduleFound=false;
-             }
+        }
 
-         }
+        $scope.getSearchModuleDetails = function () {
+            //OpenMRS breadcrumbs
+            $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", "#/view-search"], ["Module Information", ""]]});
 
-     //   $scope.change = function(text) {
-     //       alertsClear(); // clear all alerts $scope variables
-     //       $scope.moduleFound=false;
-     //       $scope.modules=[];
-     //
-     //       var searchValue = $scope.searchText;
-     //       var column_count=5;
-     //       var columns="Action%2CName%2CVersion%2CAuthor%2CDescription";
-     //       var displayStart=0;
-     //       var displayLength=15;
-     //
-     //       var urll="https://modules.openmrs.org/modulus/modules/findModules?callback=JSON_CALLBACK&sEcho=13&iColumns="+column_count+"&sColumns="+columns+"&iDisplayStart="+displayStart+"&iDisplayLength="+displayLength+"&bEscapeRegex=true&sSearch="+searchValue;
-     //
-     //       $http({
-     //         method: 'JSONP',
-     //         url: urll
-     //       })
-     //       .success(function(data) {
-     //
-     //         console.log(data.iTotalDisplayRecords);
-     //         if(data.iTotalDisplayRecords>0){
-     //                    // Modules Found
-     //                    $scope.moduleFound=true;
-     //                    $scope.modules = data.aaData;
-     //                  }
-     //                  else {
-     //                    // No Modules Found
-     //                    $scope.moduleFound=false;
-     //                  }
-     //
-     //                console.log('Data Retrived');
-     //              })
-     //       .error(function(data, status) {
-     //         console.error('Repos error', status, data);
-     //       })
-     //       .finally(function() {
-     //         console.log("finally finished search");
-     //       });
-     //
-     // };
+            if (typeof($scope.nonInstalledModuleDetails) != undefined) {
+                delete $scope.nonInstalledModuleDetails;
+            }
+            if (typeof($scope.onlineDataFound) != undefined) {
+                delete $scope.onlineDataFound;
+            }
+            showLoadingPopUp(); // Show loadingPop to prevent other Actions
+            var moduleUuid = $routeParams.UUID;
+            console.log(moduleUuid);
+            var responseModuleDetails = SearchModuleService.getSeatchModuleDetails(moduleUuid);
+            responseModuleDetails.then(function (resultModule) {
+                if (resultModule[0] == "GET") {
+                    if (resultModule[1] == 1) {
+                        $scope.onlineDataFound = true;
+                        $scope.nonInstalledModuleDetails = resultModule[2];
+                    } else {
+                        $scope.onlineDataFound = false;
+                        logger.error("Could not find the searched module information", resultModule[2]);
+                    }
+                    hideLoadingPopUp() // hide the loading Popup
+                }
+            });
+        }
 
+        $scope.downloadAndUpdateModule = function (moduleUrl) {
+            $scope.isDownloading = true;
+            alertsClear();
+            showLoadingPopUp();
+            var fd = new FormData();
+            // Getting last value with download_file?file_path=xyz
+            var filename = moduleUrl.replace(/^.*[\\\/]/, '');
+            filename = filename.replace("download_file?file_path=", '');
+            moduleUrl = "https://dl.bintray.com/openmrs/omod/" + filename + '?json_callback=JSON_CALLBACK';
+            // moduleUrl = "https://modules.openmrs.org/modulus/api/releases/1546/download/"+ filename;
 
-         $scope.getSearchModuleDetails = function() {
-             // *** /OpenMRS breadcrumbs ***
-             $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["Modules","#/module-show"], ["Search Module","#/view-search"], ["Module Information",""]]});
-             // *** /OpenMRS breadcrumbs ***
-             console.log("getNotInstalledModuleDetailsFromOnline");
-             if(typeof($scope.nonInstalledModuleDetails)!=undefined){
-                 delete $scope.nonInstalledModuleDetails;
-             }
-             if(typeof($scope.onlineDataFound)!=undefined){
-                 delete $scope.onlineDataFound;
-             }
-             showLoadingPopUp(); // Show loadingPop to prevent other Actions
-             var moduleUuid=$routeParams.UUID;
-             console.log(moduleUuid);
-             var responseModuleDetails = SearchModuleService.getSeatchModuleDetails(moduleUuid);
-             responseModuleDetails.then(function(resultModule){
-                 if(resultModule[0]=="GET"){
-                     if(resultModule[1]==1){
-                         $scope.onlineDataFound=true;
-                         console.log("1");
-                         $scope.nonInstalledModuleDetails=resultModule[2];
-                     }else{console.log("3");
-                         $scope.onlineDataFound=false;
-                     }
-                     hideLoadingPopUp() // hide the loading Popup
-                 }
-             });
-         }
+            $http.jsonp(moduleUrl, {
+                responseType: "arraybuffer",
+                headers: {
+                    'X-Requested-With': 'https://bintray.com/openmrs/omod/accesslogging'
+                }
+            }).success(function (data) { // GET REQUEST ERROR HANDLE
+                var filename = moduleUrl.substring(moduleUrl.lastIndexOf('/') + 1);
+                let blob = new Blob([data], {type: 'application/octet-stream'});
+                var url = (window.URL).createObjectURL(blob);
+                var file = new File([data], filename, {
+                    type: "application/octet-stream",
+                    lastModified: new Date().getTime()
+                });
+                fd.append('file', file);
 
+                $scope.isDownloading = false;
+                $scope.downloadSuccessMsg = "Module Download Completed";
+                var uploadUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/module/?";
+                $scope.isUploading = true;
+                $http.post(uploadUrl, fd, {
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined,
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+                    }
+                }).success(function (data, status, headers, config) {  // POST REQUEST ERROR HANDLE
+                    $scope.isUploading = false;
+                    var x2js = new X2JS();
+                    var JsonSuccessResponse = x2js.xml_str2json(data);
 
-    $scope.trysearch = function(moduleUrl) {
-      $scope.isDownloading=true;
+                    var moduleName = JsonSuccessResponse["org.openmrs.module.Module"].name;
+                    $scope.uplodedsuccessMsg = moduleName + " has been loaded"
+                    $scope.responseJsonData = JsonSuccessResponse;
 
-        alertsClear(); // clear all alerts $scope variables
-        showLoadingPopUp(); // Show loadingPop to prevent other Actions
-      var fd = new FormData();
-      // Getting last value with download_file?file_path=xyz
-      console.log(moduleUrl);
-      var filename = moduleUrl.replace(/^.*[\\\/]/, '');
-      // remove download_file?file_path=
-      filename = filename.replace("download_file?file_path=", '');
-      //http://dl.bintray.com/openmrs/omod/
-     moduleUrl = "https://dl.bintray.com/openmrs/omod/" + filename + '?json_callback=JSON_CALLBACK';
-     // moduleUrl = "https://modules.openmrs.org/modulus/api/releases/1546/download/"+ filename;
-      console.log(moduleUrl);
-
-      // var response = SearchModuleService.downloadModule(moduleUrl);
-      //   response.then(function(result){
-      //       if(result[2]==1){
-      //           console.log("ok");
-      //       }
-      //       else{
-      //           console.log("eerr");
-      //       }
-      //   });
-      delete $http.defaults.headers.common['X-Requested-With'];
-      delete $http.defaults.origin;
-      $http.jsonp(moduleUrl, {
-          responseType: "arraybuffer",
-          headers : {
-              'X-Requested-With' : 'https://bintray.com/openmrs/omod/accesslogging'
-          }
-      })
-      .success(function (data){ // GET REQUEST ERROR HANDLE
-
-
-            var filename = moduleUrl.substring(moduleUrl.lastIndexOf('/')+1);
-
-            let blob = new Blob([data], {type: 'application/octet-stream'});  
-            var url=(window.URL).createObjectURL(blob);
-
-            var file = new File([data], filename, {type:"application/octet-stream", lastModified: new Date().getTime()});
-            fd.append('file', file);
-
-            $scope.isDownloading=false;
-            $scope.downloadSuccessMsg="Module Download Completed";
-
-    
-        console.log("POST started...");
-        var uploadUrl = OWARoutesUtil.getOpenmrsUrl()+"/ws/rest/v1/module/?";
-
-        $scope.isUploading=true;
-
-     $http.post(uploadUrl, fd, {
-       transformRequest: angular.identity,
-       headers: { 
-        'Content-Type': undefined ,  
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
-      }) .success(function (data, status, headers, config) {  // POST REQUEST ERROR HANDLE
-           console.log("UPLOAD - Sucess.");
-           $scope.isUploading=false;
-           var x2js = new X2JS();
-           var JsonSuccessResponse = x2js.xml_str2json(data);
-
-                var moduleName = JsonSuccessResponse["org.openmrs.module.Module"].name;
-                $scope.uplodedsuccessMsg=moduleName+" has been loaded"
-                $scope.responseJsonData=JsonSuccessResponse;
-
-
-
-                if (typeof(JsonSuccessResponse["org.openmrs.module.Module"].startupErrorMessage) == "undefined")
-                    {
+                    if (typeof(JsonSuccessResponse["org.openmrs.module.Module"].startupErrorMessage) == "undefined") {
                         // Started Successfully
-                        $scope.startupsuccessMsg=moduleName+" has been loaded and started Successfully"
+                        $scope.startupsuccessMsg = moduleName + " has been loaded and started Successfully"
                     }
-                else{
-                        //start up Error Found 
-                        $scope.startuperrorMsg="Could not start "+moduleName+" Module."
-                }
+                    else {
+                        //start up Error Found
+                        $scope.startuperrorMsg = "Could not start " + moduleName + " Module."
+                    }
+                    hideLoadingPopUp();
+                }).error(function (data, status, header, config) { // POST REQUEST ERROR HANDLE
+                    $scope.isUploading = false;
+                    var x2js = new X2JS();
+                    var JsonErrorResponse = x2js.xml_str2json(data);
+                    if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined") {
+                        // File Error Catched
+                        if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined") {
+                            // Error Message given
+                            $scope.uploadederrorMsg = JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
+                        }
+                        else {
+                            // Unknown Error Message
+                            $scope.uploadederrorMsg = "Error loading module, no config.xml file found"
+                        }
+                    }
+                    else {
+                        //unknown Error
+                        $scope.uploadederrorMsg = "Error loading module!"
+                    }
+                    hideLoadingPopUp();
+                    logger.error($scope.uploadederrorMsg, data);
+                });
+            }).error(function (data) { // GET REQUEST ERROR HANDLE
+                $scope.isDownloading = false;
+                $scope.downloadErrorMsg = "Could not download the Module";
                 hideLoadingPopUp();
-     })
-          .error(function (data, status, header, config) { // POST REQUEST ERROR HANDLE
-           console.log("UPLOAD - Error.");
-           $scope.isUploading=false;
-           var x2js = new X2JS();
-           var JsonErrorResponse = x2js.xml_str2json(data);
-                if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined"){
-                    // File Error Catched
-                    if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined"){
-                        // Error Message given
-                        $scope.uploadederrorMsg=JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
-                    }
-                    else{
-                        // Unknown Error Message
-                        $scope.uploadederrorMsg="Error loading module, no config.xml file found"
-                    }
-                }
-                else{
-                    //unknown Error
-                    $scope.uploadederrorMsg="Error loading module!"
-                }
-                hideLoadingPopUp();
-
-     });
-    }).error(function (data){ // GET REQUEST ERROR HANDLE
-          $scope.isDownloading=false;
-          $scope.downloadErrorMsg="Could not download the Module";
-          hideLoadingPopUp();
-    });
-
-    };
-         
+                logger.error($scope.downloadErrorMsg, data);
+            });
+        };
     }]);
 
 

@@ -1,31 +1,23 @@
-
 <div>
-<h2> Upload Module Normal</h2>
+    <h2> Upload Module Normal</h2>
+    <h3>{{responseMessage}}</h3>
+    <br/>
 
-	<h3>{{responseMessage}}</h3>
+    <form name="classForm" enctype="multipart/form-data" method="post"
+          action="http://localhost:8080/openmrs/ws/rest/v1/module/?">
+        <table>
+            <tbody>
+            <tr>
+                <td valign="top">File Upload</td>
+                <td>
+                    <input type="file" id="file" name="file"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
- <br/>
-
-
- 
- 
-	<form name="classForm" enctype="multipart/form-data" method="post" action="http://localhost:8080/openmrs/ws/rest/v1/module/?">
-	<table>
-		<tbody> 
-		<tr>
-			<td valign="top">File Upload</td>
-			<td>			
-				<input type="file" id="file" name="file" />
-			</td>
-		</tr>	
-		
-	</tbody></table>
-	
-	<br>
-		<input type="submit" value="Subm">
-		<input type="reset" value="Cancel">
-	</form>
-
-
-
+        <br>
+        <input type="submit" value="Subm">
+        <input type="reset" value="Cancel">
+    </form>
 </div>

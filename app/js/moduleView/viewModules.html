@@ -1,27 +1,32 @@
 <style type="text/css">
- 	table {width:100%;}
- 	tr td {word-wrap:break-word;}
- 	/*style="word-wrap:break-word"*/
- </style>
- 
+    table {
+        width: 100%;
+    }
+
+    tr td {
+        word-wrap: break-word;
+    }
+
+    /*style="word-wrap:break-word"*/
+</style>
+
 <div data-ng-init="compareVersion()"></div>
 
 <div class="container" data-ng-init="getAllModuleDetails()">
-	<div class="row">
-		<div class="col-md-12 col-xs-12">
-			<h2>Manage Module</h2>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Manage Module</h2>
+        </div>
+    </div>
 
-    <!--<button type="button" class="btn btn-info btn-lg" ng-click="showLoadingPopUp()">Open Modal</button>-->
 
     <!--Module Action-->
-    
+
     <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startModuleSuccess}}
     </div>
-    
+
     <div class="alert alert-success alert-dismissable" ng-show="stopModuleSuccess">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{stopModuleSuccess}}
@@ -31,7 +36,7 @@
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startModuleError}}
     </div>
-    
+
     <div class="alert alert-success alert-dismissable" ng-show="unloadModuleSuccess">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{unloadModuleSuccess}}
@@ -41,17 +46,10 @@
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{unloadModuleError}}
     </div>
-<!--//Module Action-->
-    
-<!--Module Action    -->
+    <!--//Module Action-->
 
-    <!--<div class="row" ng-if="isStartAllModules==true || isStartModule==true || isStopModule==true || isUnloadModule==true">-->
-        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
-            <!--<h3 style="text-align: center;">Please wait while we complete the actions!</h3>-->
-            <!--<img src="img/inprogress.gif" >-->
-        <!--</div>-->
-    <!--</div>-->
-    <!---->
+    <!--Module Action    -->
+
 
     <div class="alert alert-success alert-dismissable" ng-show="startAllModuleSuccess">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
@@ -62,167 +60,166 @@
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startAllModuleError}}
     </div>
-<!-- //Module Action    -->
-    
+    <!-- //Module Action    -->
 
- 
+
     <div class="row col-12">
-		<div class="panel-body" ng-disabled="isStartAllModules" ng-class="{'disabled': disableExpression}">
-            
-				<div style="padding-bottom: 10px;">
-					<a href="#/upload-module">
-                        <button><i class="icon-plus"> </i> Add/Upgrade Modules</button>
-                    </a>
-					<a href="#/view-search">
-                        <button><i class="icon-search"> </i> Search Modules</button>
-                    </a>
-					<a href="#/check-for-module-updates">
-                        <button><i class="icon-repeat"> </i> Check for Updates</button>
-                    </a>
+        <div class="panel-body" ng-disabled="isStartAllModules" ng-class="{'disabled': disableExpression}">
 
-                    <a href="" style="float: right;">
-                        <button ng-click='StartAllModules()'><i class="icon-play"> </i> Start All</button>
-                    </a>
-                     
-				</div>
-				
+            <div style="padding-bottom: 10px;">
+                <a href="#/upload-module">
+                    <button><i class="icon-plus"> </i> Add/Upgrade Modules</button>
+                </a>
+                <a href="#/view-search">
+                    <button><i class="icon-search"> </i> Search Modules</button>
+                </a>
+                <a href="#/check-for-module-updates">
+                    <button><i class="icon-repeat"> </i> Check for Updates</button>
+                </a>
 
-				<table class="layout display responsive-table">
-					<tbody>
-						<tr>
-							<th style="max-width: 40px;"> Status </th>
-							<th> Name </th>
-							<th> Author </th>
-							<th style="max-width: 60px;"> Version </th>
-							<th> Description </th>
-							<th  style="min-width: 180px;"> Actions </th>
-						</tr>
+                <a href="" style="float: right;">
+                    <button ng-click='StartAllModules()'><i class="icon-play"> </i> Start All</button>
+                </a>
 
-						<tr ng-repeat="class in AllModuleViewData"> 
-							<td valign="top" style="max-width: 30px;">
-								<img src="img/running-module.png" ng-if="class.started == true" height="20" style="top: 5px;left: auto;" /> 
-								<img src="img/stopped-module.png" ng-if="class.started != true" height="20" style="top: 5px;left: auto;"/> 
-							</td>
-							<td valign="top">
-								<a href="#/module-show/{{class.uuid}}">{{class.display}}</a>				
-							</td>
-							<td valign="top">{{class.author}}</td>
-							<td valign="top" style="max-width: 60px;">{{class.version}}</td>
-							<td valign="top">{{class.description}}</td>
+            </div>
 
-							<td valign="top" align="center" valign="middle" style="vertical-align:middle;">
-								<button ng-click="stopConfirmationShow(class.packageName,class.uuid, class.display)" ng-if="class.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
-								<button ng-click="StartModule(class.uuid,'ALLMODULES', class.display)" ng-if="class.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
-							
-								<button class="btn btn-danger" ng-click="unloadConfirmationShow(class.packageName, class.uuid, class.display)"> <i class="icon-trash"></i></button>
-							</td>
-						</tr>
-					</tbody>
-					</table>	
-			 
-			</div>
-    </div>     
+
+            <table class="layout display responsive-table">
+                <tbody>
+                <tr>
+                    <th style="max-width: 40px;"> Status</th>
+                    <th> Name</th>
+                    <th> Author</th>
+                    <th style="max-width: 60px;"> Version</th>
+                    <th> Description</th>
+                    <th style="min-width: 180px;"> Actions</th>
+                </tr>
+
+                <tr ng-repeat="class in AllModuleViewData">
+                    <td valign="top" style="max-width: 30px;">
+                        <img src="img/running-module.png" ng-if="class.started == true" height="20"
+                             style="top: 5px;left: auto;"/>
+                        <img src="img/stopped-module.png" ng-if="class.started != true" height="20"
+                             style="top: 5px;left: auto;"/>
+                    </td>
+                    <td valign="top">
+                        <a href="#/module-show/{{class.uuid}}">{{class.display}}</a>
+                    </td>
+                    <td valign="top">{{class.author}}</td>
+                    <td valign="top" style="max-width: 60px;">{{class.version}}</td>
+                    <td valign="top">{{class.description}}</td>
+
+                    <td valign="top" align="center" valign="middle" style="vertical-align:middle;">
+                        <button ng-click="stopConfirmationShow(class.packageName,class.uuid, class.display)"
+                                ng-if="class.started == true" style="width: 100px;"><img src="img/stop-new-1.png"/>Stop
+                        </button>
+                        <button ng-click="StartModule(class.uuid,'ALLMODULES', class.display)"
+                                ng-if="class.started != true" style="width: 100px;"><img src="img/start-new-1.png"/>Start
+                        </button>
+
+                        <button class="btn btn-danger"
+                                ng-click="unloadConfirmationShow(class.packageName, class.uuid, class.display)"><i
+                                class="icon-trash"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
 </div>
-
 
 
 <div class="modal fade" id="deleteConfirmation" aria-labelledby="deleteConfirmation" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Do you want to delete {{uploadConfirmModuleData.moduleDisplayName}}?</h5>
-      </div>
-    <form>
-    <div class="modal-body">
-        <div class="row" ng-hide="uploadConfirmModuleData.requiredModules">
-            <div class="col-md-12 col-xs-12 text-center center-block">
-                <img src="img/inprogress.gif" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to delete {{uploadConfirmModuleData.moduleDisplayName}}?</h5>
             </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row" ng-hide="uploadConfirmModuleData.requiredModules">
+                        <div class="col-md-12 col-xs-12 text-center center-block">
+                            <img src="img/inprogress.gif">
+                        </div>
+                    </div>
+                    <p>
+                        <b ng-if="uploadConfirmModuleData.requiredModules.length>0">It will stop the following modules
+                            which are currently loaded.</b>
+                        <b ng-if="uploadConfirmModuleData.requiredModules.length<1">There are no modules that depend on
+                            this. So stopping it will not affect any module.</b>
+                    </p>
+                    <ul class="list-group" ng-show="uploadConfirmModuleData">
+                        <li class="list-group-item"
+                            ng-repeat="requiredModules in uploadConfirmModuleData.requiredModules"><i
+                                class="icon-exclamation-sign"> </i> {{requiredModules}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button class=" btn-danger"
+                            ng-click="unloadModule(uploadConfirmModuleData.uuid, uploadConfirmModuleData.moduleDisplayName)"
+                            data-dismiss="modal"><i class="icon-ok"></i> Yes
+                    </button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                </div>
+            </form>
         </div>
-        <p>
-            <b ng-if="uploadConfirmModuleData.requiredModules.length>0">It will stop the following modules which are currently loaded.</b>
-            <b ng-if="uploadConfirmModuleData.requiredModules.length<1">There are no modules that depend on this. So stopping it will not affect any module.</b>
-        </p>
-        <ul class="list-group" ng-show="uploadConfirmModuleData">
-          <li class="list-group-item" ng-repeat="requiredModules in uploadConfirmModuleData.requiredModules"><i class="icon-exclamation-sign"> </i> {{requiredModules}}</li>
-        </ul>
-    </div>    
-    <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="unloadModule(uploadConfirmModuleData.uuid, uploadConfirmModuleData.moduleDisplayName)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
-        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
-    </form>
-    </div>
-  </div>
 </div>
 
 <div class="modal fade" id="stopConfirmation" aria-labelledby="stopConfirmation" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Do you want to stop {{stopConfirmModuleData.moduleDisplayName}}?</h5>
-      </div>
-    <form>
-    <div class="modal-body">
-        <div class="row" ng-hide="stopConfirmModuleData.requiredModules">
-            <div class="col-md-12 col-xs-12 text-center center-block">
-                <img src="img/inprogress.gif" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to stop {{stopConfirmModuleData.moduleDisplayName}}?</h5>
             </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row" ng-hide="stopConfirmModuleData.requiredModules">
+                        <div class="col-md-12 col-xs-12 text-center center-block">
+                            <img src="img/inprogress.gif">
+                        </div>
+                    </div>
+                    <p>
+                        <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules
+                            which are currently loaded.</b>
+                        <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on
+                            this. So stopping it will not affect any module.</b>
+                    </p>
+                    <ul class="list-group" ng-show="stopConfirmModuleData">
+                        <li class="list-group-item"
+                            ng-repeat="requiredModules in stopConfirmModuleData.requiredModules"><i
+                                class="icon-exclamation-sign"> </i> {{requiredModules}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button class=" btn-danger"
+                            ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES', stopConfirmModuleData.moduleDisplayName)"
+                            data-dismiss="modal"><i class="icon-ok"> </i> Yes
+                    </button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                </div>
+            </form>
         </div>
-        <p>
-            <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules which are currently loaded.</b>
-            <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on this. So stopping it will not affect any module.</b>
-        </p>
-        <ul class="list-group" ng-show="stopConfirmModuleData">
-          <li class="list-group-item" ng-repeat="requiredModules in stopConfirmModuleData.requiredModules"><i class="icon-exclamation-sign"> </i> {{requiredModules}}</li>
-        </ul>
-    </div>    
-    <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES', stopConfirmModuleData.moduleDisplayName)" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
-        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
-    </form>
-    </div>
-  </div>
 </div>
 
-  <ng-include src="'js/common/loadingPopUp.html'"></ng-include>
+<ng-include src="'js/common/loadingPopUp.html'"></ng-include>
 
-  <!--&lt;!&ndash;Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
-  <!--<div class="modal fade loading-popup" id="loadingModal" aria-labelledby="loading" role="dialog">-->
-      <!--<div class="modal-dialog">-->
-          <!--<div class="modal-content">-->
-              <!--<form>-->
-                  <!--<div class="modal-body">-->
-                      <!--<div class="row">-->
-                          <!--<div class="col-md-3 col-xs-3 text-center" >-->
-                              <!--<img src="img/inprogress.gif" >-->
-                          <!--</div>-->
-                          <!--<div class="col-md-7 col-xs-7 text-center center-block loading-pop-up-msg" >-->
-                              <!--<h1>Please wait while we complete the actions!</h1>-->
-                          <!--</div>-->
-                      <!--</div>-->
+<style>
+    button {
+        postion: relative;
+        text-align: right;
+        vertical-align: middle;
+    }
 
-                  <!--</div>-->
-                  <!--&lt;!&ndash;<button type="button" class="btn btn-info btn-lg" ng-click="hideLoadingPopUp()">Hide Modal</button>&ndash;&gt;-->
-              <!--</form>-->
-          <!--</div>-->
-      <!--</div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash;//Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
+    button img {
+        position: relative;
+        padding-right: 7px;
+        vertical-align: middle;
+        display: inline-block;
 
-	<style>
-		button {
-			postion: relative;
-			text-align: right;
-			vertical-align: middle;
-		}
-
-		button img {
-			position: relative;
-			padding-right: 7px;
-			vertical-align: middle;
-			display: inline-block;
-
-		}
-	</style>
+    }
+</style>

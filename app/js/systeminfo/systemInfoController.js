@@ -2,18 +2,16 @@
 var SystemInfoControllerModule = angular.module('systemInfoController', ['OWARoutes']);
         
 // SystemInfo Controller used for system-info.html 
-SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', 'systemInfoService', function($scope,$http,OWARoutesUtil,$rootScope, systemInfoService){
+SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', 'systemInfoService', 'logger',
+    function($scope,$http,OWARoutesUtil,$rootScope, systemInfoService, logger){
     
-      // *** /OpenMRS breadcrumbs ***  
+      // OpenMRS breadcrumbs
       $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["SystemInfo",""]]});
-      // *** /OpenMRS breadcrumbs ***
-    
-    // getSystemInfo() used to get all System Infromation
+
     $scope.getSystemInfo = function(){
         // variable dataLoading used to indicate data fetching status
         // set True to indicate data fetching is just started
         $scope.dataLoading=true;
-
         //delete previous initilized data values
         if(typeof($scope.openmrsInformation)!=undefined){
             delete $scope.openmrsInformation;
@@ -48,7 +46,7 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                         $scope.openmrsInformation = data.systemInfo["SystemInfo.title.openmrsInformation"];
                     }
                     else {
-                        console.log("Couldn't fetch the openmrsInformation data");
+                        logger.error("Couldn't fetch the OpenMRS Information data");
                         failedSections+="openmrsInformation, ";
                     }
 
@@ -56,8 +54,8 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     {
                         $scope.javaRuntimeEnvironmentInformation = data.systemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"];
                     }
-                    else { 
-                        console.log("Couldn't fetch the javaRuntimeEnvironmentInformation data"); 
+                    else {
+                        logger.error("Couldn't fetch the javaRuntimeEnvironmentInformation data");
                         failedSections+="javaRuntimeEnvironmentInformation, ";
                     }
 
@@ -65,8 +63,8 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     {
                         $scope.memoryInformation = data.systemInfo["SystemInfo.title.memoryInformation"];
                     }
-                    else { 
-                        console.log("Couldn't fetch the memoryInformation data"); 
+                    else {
+                        logger.error("Couldn't fetch the memoryInformation data");
                         failedSections+="memoryInformation, ";
                     }
 
@@ -74,8 +72,8 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     {
                         $scope.dataBaseInformation = data.systemInfo["SystemInfo.title.dataBaseInformation"];
                     }
-                    else { 
-                        console.log("Couldn't fetch the dataBaseInformation data"); 
+                    else {
+                        logger.error("Couldn't fetch the dataBaseInformation data");
                         failedSections+="dataBaseInformation, ";
                     }
 
@@ -83,31 +81,33 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     {
                         $scope.moduleInformation = data.systemInfo["SystemInfo.title.moduleInformation"];
                     }
-                    else { 
-                        console.log("Couldn't fetch the moduleInformation data"); 
+                    else {
+                        logger.error("Couldn't fetch the moduleInformation data");
                         failedSections+="moduleInformation, ";
                     }
 
                     if(failedSections!=''){
                         $scope.sysInfoErrorMessage="Could not get the " + failedSections.slice(0,failedSections.length-2)+" data";
+                        logger.error($scope.sysInfoErrorMessage);
                     }
                 }
                 else{
                     // unexpected Error 
                     var data=result[2];
                     $scope.dataLoading=false;
-                    console.log("ERROR SystemInfo");
                     if (typeof(data.error.message)!="undefined"){
                         $scope.sysInfoErrorMessage=data.error.message;
                     }
                     else{
                         $scope.sysInfoErrorMessage="Could not fetch the data from server";
                     }
+                    logger.error($scope.sysInfoErrorMessage);
                 }
             }
             else{
                 $scope.dataLoading=false;
                 $scope.sysInfoErrorMessage="Could not fetch the data from server";
+                logger.error($scope.sysInfoErrorMessage);
             }
             
         });        

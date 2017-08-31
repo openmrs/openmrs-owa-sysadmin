@@ -1,16 +1,12 @@
- 
-
-
-
 <div class="container" data-ng-init="getModuleViewDetails()">
-  <div class="row">
-    <div class="col-md-12 col-xs-12">
-      <h2>Module Information</h2>
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Module Information</h2>
+        </div>
     </div>
-  </div>
-    
-    
-<!--Module Action-->
+
+
+    <!--Module Action-->
     <div class="alert alert-success alert-dismissable" ng-show="startModuleSuccess">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startModuleSuccess}}
@@ -24,31 +20,25 @@
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startModuleError}}
     </div>
-    
-    <!--<div class="row" ng-if=" isStartModule==true || isStopModule==true">-->
-        <!--<div class="col-md-12 col-xs-12 text-center center-block">-->
-            <!--<h3 style="text-align: center;">Please Wait until modules actions complete!</h3>-->
-            <!--<img src="img/inprogress.gif" >-->
-        <!--</div>-->
-    <!--</div>-->
+    <!--Module Action-->
 
-<!--Module Action-->
-    
-<!--    Module update-->
+    <!--    Module update-->
     <div class="alert alert-success alert-dismissable" ng-if="moduleNewUpdateFound==1">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        Newest version of this module is avialable for upgrade! 
-          <button ng-click="updateModule(moduleUpdateURL)" ng-show="moduleUpdateURL" style="margin-left:15px;"> <i class="icon-upload"> </i> Update</button>
+        Newest version of this module is avialable for upgrade!
+        <button ng-click="updateModule(moduleUpdateURL)" ng-show="moduleUpdateURL" style="margin-left:15px;"><i
+                class="icon-upload"> </i> Update
+        </button>
     </div>
-    
+
     <div class="alert alert-info alert-dismissable" ng-show="moduleNewUpdateFound==-1">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         Module version is upto date. No updates found!
     </div>
-<!--    // Module update-->
+    <!--    // Module update-->
 
-<!--    Module Upgrade Notifications-->
-    
+    <!--    Module Upgrade Notifications-->
+
     <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{startupsuccessMsg}}
@@ -74,203 +64,156 @@
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{downloadErrorMsg}}
     </div>
-    
 
-     <div class="row" ng-if="isDownloading==true">
+
+    <div class="row" ng-if="isDownloading==true">
         <div class="col-md-12 col-xs-12 text-center center-block">
             <h3 style="text-align: center;">Please wait while we download the module!</h3>
-            <img src="img/inprogress.gif" >
+            <img src="img/inprogress.gif">
         </div>
     </div>
 
     <div class="row" ng-if="isUploading==true">
         <div class="col-md-12 col-xs-12 text-center center-block">
             <h3 style="text-align: center;">Please wait while we upload the module!</h3>
-            <img src="img/inprogress.gif" >
+            <img src="img/inprogress.gif">
         </div>
     </div>
-    
-<!--    Module Upgrade Notifications-->
 
-    
- 
-    
+    <!--    Module Upgrade Notifications-->
+    <div class="row col-12" ng-show="requestModuleViewDetails">
+        <div class="panel-body" style="width: 100%;">
+            <h2> Module Name : {{ModuleViewData.display}} </h2>
+            <div style="padding-bottom: 10px;">
+                <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid, ModuleViewData.display)"
+                        ng-if="ModuleViewData.started == true" style="width: 100px;"><img src="img/stop-new-1.png"/>Stop
+                </button>
+                <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')"
+                        ng-if="ModuleViewData.started != true" style="width: 100px;"><img src="img/start-new-1.png"/>Start
+                </button>
+                <button ng-click="checkModuleUpdate(ModuleViewData.uuid,ModuleViewData.packageName, ModuleViewData.version)">
+                    <i class="icon-repeat"> </i> Check for Updates
+                </button>
+            </div>
+            <table class="layout display responsive-table">
+                <tbody>
+                <tr>
+                    <td valign="top"><b>Module Name</b></td>
+                    <td valign="top">{{ModuleViewData.name}}</td>
+                </tr>
+                <tr>
+                    <td valign="top"><b>Display Name</b></td>
+                    <td valign="top">{{ModuleViewData.display}}</td>
+                </tr>
+                <tr>
+                    <td valign="top"><b>Module Description</b></td>
+                    <td valign="top">{{ModuleViewData.description}}</td>
+                </tr>
+                <tr>
+                    <td valign="top"><b>Author Name</b></td>
+                    <td valign="top">{{ModuleViewData.author}}</td>
+                </tr>
+                <tr>
+                    <td valign="top"><b>Module Version</b></td>
+                    <td valign="top">{{ModuleViewData.version}}</td>
+                </tr>
+                <tr>
+                    <td valign="top"><b>Current Status</b></td>
+                    <td valign="top">{{ModuleViewData.started}}</td>
+                </tr>
+                <tr>
+                    <td valign="top"><b>Required OpenMRS Version</b></td>
+                    <td valign="top">{{ModuleViewData.requireOpenmrsVersion}}</td>
+                </tr>
+                </tbody>
+            </table>
 
-    
-<div class="row col-12" ng-show="requestModuleViewDetails">
-    <div class="panel-body" style="width: 100%;">
-        <h2> Module Name : {{ModuleViewData.display}}  </h2> 
-      <div style="padding-bottom: 10px;">
-<!--
-        <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true"> <i class="icon-play"> </i> Start Module</button>
-        <button ng-click="stopConfirmationShow(ModuleViewData.uuid)" ng-if="ModuleViewData.started == true"> <i class="icon-stop"> </i> Stop Module</button>
--->
+            <h2> Aware of Modules</h2>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="class1 in moduleViewRequiredModules.awareOfModules">
+                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class1[1]}} ">{{class1[0]}}</a>
+                    </li>
+                    <div class="alert alert-info" ng-hide="moduleViewRequiredModules.awareOfModules.length">
+                        There are no aware of modules.
+                    </div>
+                </ul>
+            </div>
 
-          
-          <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid, ModuleViewData.display)" ng-if="ModuleViewData.started == true" style="width: 100px;"> <img src="img/stop-new-1.png" />Stop </button>
-          <button ng-click="StartModule(ModuleViewData.uuid,'MODULEDETAILS')" ng-if="ModuleViewData.started != true" style="width: 100px;"> <img src="img/start-new-1.png" />Start </button>
-          
-        <button ng-click="checkModuleUpdate(ModuleViewData.uuid,ModuleViewData.packageName, ModuleViewData.version)"> <i class="icon-repeat"> </i> Check for Updates</button>
-      </div>
-      <table class="layout display responsive-table">
-        <tbody>
-         <tr> 
-          <td valign="top"><b>Module Name</b></td>
-          <td valign="top">{{ModuleViewData.name}}</td>
-        </tr>
-        <tr> 
-          <td valign="top"><b>Display Name</b></td>
-          <td valign="top">{{ModuleViewData.display}}</td>
-        </tr>
-        <tr> 
-          <td valign="top"><b>Module Description</b></td>
-          <td valign="top">{{ModuleViewData.description}}</td>
-        </tr>
-        <tr> 
-          <td valign="top"><b>Author Name</b></td>
-          <td valign="top">{{ModuleViewData.author}}</td>
-        </tr>
-        <tr> 
-          <td valign="top"><b>Module Version</b></td>
-          <td valign="top">{{ModuleViewData.version}}</td>
-        </tr>
-        <tr> 
-          <td valign="top"><b>Current Status</b></td>
-          <td valign="top">{{ModuleViewData.started}}</td>
-        </tr>
-        <tr> 
-          <td valign="top"><b>Required OpenMRS Version</b></td>
-          <td valign="top">{{ModuleViewData.requireOpenmrsVersion}}</td>
-        </tr>
-      </tbody>
-    </table>
-        
-    <h2> Aware of Modules</h2>
-        <div class="modal-body">
-            <ul class="list-group">
-                <li class="list-group-item" ng-repeat="class1 in moduleViewRequiredModules.awareOfModules">
-                    <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class1[1]}} ">{{class1[0]}}</a>
-                </li>
-                <div class="alert alert-info" ng-hide="moduleViewRequiredModules.awareOfModules.length">
-                    There are no aware of modules.
-                </div>
-            </ul>
+
+            <h2> Required Modules</h2>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="class2 in moduleViewRequiredModules.requiredModules">
+                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a>
+                    </li>
+                    <div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">
+                        There are no required modules.
+                    </div>
+                </ul>
+            </div>
+
+            <h2> Dependent Modules on {{ModuleViewData.name}}</h2>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="class3 in DependentModuleList">
+                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class3[1]}} ">{{class3[0]}}</a>
+                    </li>
+                    <div class="alert alert-info" ng-hide="DependentModuleList.length">
+                        There are no modules which depend on this module.
+                    </div>
+                </ul>
+            </div>
+
         </div>
-    <!--<table class="layout display responsive-table">-->
-      <!--<tbody>-->
-        <!--<tr ng-repeat="class in moduleViewAwareOfModules.awareOfModules"> -->
-            <!--<td> <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class[1]}} ">{{class[0]}} </a></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-            <!--<div class="alert alert-info" ng-hide="moduleViewAwareOfModules.awareOfModules.length">-->
-                <!--There are no aware of modules.-->
-            <!--</div> -->
-        <!--</tr>-->
-<!--&lt;!&ndash;-->
-            <!--<div class="alert alert-info" style="text-align:center;" ng-if="moduleViewAwareOfModules.awareOfModules.length<1">-->
-                <!--There are no aware of modules for this Module.-->
-            <!--</div>  -->
-<!--&ndash;&gt;-->
-        <!---->
-      <!--</tbody>-->
-    <!--</table>  -->
-        
-    <h2> Required Modules</h2>
-    <!--<table class="layout display responsive-table">-->
-        <div class="modal-body">
-            <ul class="list-group">
-                <li class="list-group-item" ng-repeat="class2 in moduleViewRequiredModules.requiredModules">
-                    <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a>
-                </li>
-                <div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">
-                    There are no required modules.
-                </div>
-            </ul>
-        </div>
-      <!--<tbody>-->
-        <!--<tr ng-repeat="class2 in moduleViewRequiredModules.requiredModules"> -->
-            <!--<td> <i class="icon-signin"></i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-            <!--<div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">-->
-                <!--There are no required modules.-->
-            <!--</div> -->
-        <!--</tr>-->
- <!---->
-    <!---->
-      <!--</tbody>-->
-    <!--</table>  -->
-        
-    <h2> Dependent Modules on {{ModuleViewData.name}}</h2>
-        <div class="modal-body">
-            <ul class="list-group">
-                <li class="list-group-item" ng-repeat="class3 in DependentModuleList">
-                    <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class3[1]}} ">{{class3[0]}}</a>
-                </li>
-                <div class="alert alert-info" ng-hide="DependentModuleList.length">
-                    There are no modules which depend on this module.
-                </div>
-            </ul>
-        </div>
-    <!--<table class="layout display responsive-table">-->
-      <!--<tbody>-->
-        <!--<tr ng-repeat="class3 in DependentModuleList"> -->
-            <!--<td> <i class="icon-lock"></i> <a href="#/module-show/{{class3[1]}} ">{{class3[0]}}</a></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-            <!--<div class="alert alert-info" ng-hide="DependentModuleList.length">-->
-                <!--There are no modules which depend on this module.-->
-            <!--</div> -->
-        <!--</tr>-->
-      <!--</tbody>-->
-    <!--</table>-->
-        
-        
-  </div>
-    </div>    
-    
-<!-- If Module details not found in server-->
-    
-<div class="alert alert-danger" ng-hide="requestModuleViewDetails || onlineDataFound" style="text-align:center;">
-    <p style="padding-bottom:15px;">
-        Could not get this module details from this Server! <br/>
-        Goto <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a> to get more about this module. <br/>
-    </p>
-    <button ng-click="getNotInstalledModuleDetailsFromOnline()"> <i class="icon-search"> </i> Get details from Online!</button>
-</div>
+    </div>
+
+    <!-- If Module details not found in server-->
+
+    <div class="alert alert-danger" ng-hide="requestModuleViewDetails || onlineDataFound" style="text-align:center;">
+        <p style="padding-bottom:15px;">
+            Could not get this module details from this Server! <br/>
+            Goto <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a> to get more about this module.
+            <br/>
+        </p>
+        <button ng-click="getNotInstalledModuleDetailsFromOnline()"><i class="icon-search"> </i> Get details from
+            Online!
+        </button>
+    </div>
 
     <div class="row col-12" ng-if="onlineDataFound!=false">
-         <div class="panel-body" style="width:100%;" >
-             <div class=""  ng-if="onlineDataFound==true">
+        <div class="panel-body" style="width:100%;">
+            <div class="" ng-if="onlineDataFound==true">
 
                 <div style="width:100%;" ng-show="nonInstalledModuleDetails">
 
-                    <div class="alert alert-warning"  style="text-align:center;">
+                    <div class="alert alert-warning" style="text-align:center;">
                         You haven't installed this module on your system.
                         <a href="#/view-search-module-details/{{nonInstalledModuleDetails.uid}}">
-                            <button style="margin-left:15px;"> <i class="icon-upload"> </i> Install this module</button>
+                            <button style="margin-left:15px;"><i class="icon-upload"> </i> Install this module</button>
                         </a>
                     </div>
 
                     <h4> Module Name : {{nonInstalledModuleDetails.name}}</h4>
                     <table class="layout display responsive-table">
                         <tbody>
-                            <tr>
-                                <td style="width: 20%;"> Description </td>
-                                <td> {{nonInstalledModuleDetails.description}} </td>
-                            </tr>
-                            <tr>
-                                <td> Latest Version </td>
-                                <td> {{nonInstalledModuleDetails.latestVersion}} </td>
-                            </tr>
-                            <tr>
-                                <td> Module Hosted URL </td>
-                                <td> <a href="{{nonInstalledModuleDetails.hostedUrl}}" target="_blank">{{nonInstalledModuleDetails.hostedUrl}} </a> </td>
-                            </tr>
-                            <tr>
-                                <td> Required OpenMRS Version</td>
-                                <td> {{nonInstalledModuleDetails.versions[0].requireOpenmrsVersion}} </td>
-                            </tr>
+                        <tr>
+                            <td style="width: 20%;"> Description</td>
+                            <td> {{nonInstalledModuleDetails.description}}</td>
+                        </tr>
+                        <tr>
+                            <td> Latest Version</td>
+                            <td> {{nonInstalledModuleDetails.latestVersion}}</td>
+                        </tr>
+                        <tr>
+                            <td> Module Hosted URL</td>
+                            <td><a href="{{nonInstalledModuleDetails.hostedUrl}}" target="_blank">{{nonInstalledModuleDetails.hostedUrl}} </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> Required OpenMRS Version</td>
+                            <td> {{nonInstalledModuleDetails.versions[0].requireOpenmrsVersion}}</td>
+                        </tr>
                         </tbody>
                     </table>
 
@@ -280,102 +223,83 @@
                     </li>
 
                     <h4> Required Modules </h4>
-                    <li class="list-group-item" ng-repeat="requireModules in nonInstalledModuleDetails.versions[0].requireModules">
+                    <li class="list-group-item"
+                        ng-repeat="requireModules in nonInstalledModuleDetails.versions[0].requireModules">
                         <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{requireModules.module}} ">{{requireModules.module}}</a>
                     </li>
                     <div class="alert alert-info" ng-hide="nonInstalledModuleDetails.versions[0].requireModules.length">
                         There are no required modules.
                     </div>
                 </div>
-                 <div class="center-block" style="text-align: center; padding-top: 15px;">
-                     Module Information from <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a>
-                 </div>
-             </div>
-             
+                <div class="center-block" style="text-align: center; padding-top: 15px;">
+                    Module Information from <a href="https://addons.openmrs.org/"> https://addons.openmrs.org/ </a>
+                </div>
+            </div>
+
             <div class="alert alert-danger text-center" ng-if="onlineDataFound==false">
                 Could not get details from Online server.
             </div>
 
 
-
-
-         </div>
+        </div>
     </div>
-<!-- //If Module details not found in server-->
-    
+    <!-- //If Module details not found in server-->
+
 </div>
 
 
 <div class="modal fade" id="stopConfirmation" aria-labelledby="stopConfirmation" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Do you want to stop {{stopConfirmModuleData.moduleDisplayName}}?</h5>
-      </div>
-    <form>
-    <div class="modal-body">
-        <div class="row" ng-hide="stopConfirmModuleData.requiredModules">
-            <div class="col-md-12 col-xs-12 text-center center-block">
-                <img src="img/inprogress.gif" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Do you want to stop {{stopConfirmModuleData.moduleDisplayName}}?</h5>
             </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row" ng-hide="stopConfirmModuleData.requiredModules">
+                        <div class="col-md-12 col-xs-12 text-center center-block">
+                            <img src="img/inprogress.gif">
+                        </div>
+                    </div>
+                    <p>
+                        <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules
+                            which are currently loaded.</b>
+                        <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on
+                            this. So stopping it will not affect any module.</b>
+                    </p>
+
+                    <ul class="list-group" ng-show="stopConfirmModuleData">
+                        <li class="list-group-item"
+                            ng-repeat="requiredModules in stopConfirmModuleData.requiredModules"><i
+                                class="icon-exclamation-sign"> </i> {{requiredModules}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'MODULEDETAILS')"
+                            data-dismiss="modal"><i class="icon-ok"> </i> Yes
+                    </button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                </div>
+            </form>
         </div>
-        <p>
-            <b ng-if="stopConfirmModuleData.requiredModules.length>0">It will stop the following modules which are currently loaded.</b>
-            <b ng-if="stopConfirmModuleData.requiredModules.length<1">There are no modules that depend on this. So stopping it will not affect any module.</b>
-        </p>
- 
-        <ul class="list-group" ng-show="stopConfirmModuleData">
-          <li class="list-group-item" ng-repeat="requiredModules in stopConfirmModuleData.requiredModules"><i class="icon-exclamation-sign"> </i> {{requiredModules}}</li>
-        </ul>
-    </div>    
-    <div class="modal-footer" >
-        <button class=" btn-danger" ng-click="StopModule(stopConfirmModuleData.uuid,'MODULEDETAILS')" data-dismiss="modal"><i class="icon-ok"> </i> Yes</button>
-        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
     </div>
-    </form>
-    </div>
-  </div>
 </div>
 
 <ng-include src="'js/common/loadingPopUp.html'"></ng-include>
 
-<!--&lt;!&ndash;Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
-<!--<div class="modal fade loading-popup" id="loadingModal" aria-labelledby="loading" role="dialog">-->
-    <!--<div class="modal-dialog">-->
-        <!--<div class="modal-content">-->
-            <!--<form>-->
-                <!--<div class="modal-body">-->
-                    <!--<div class="row">-->
-                        <!--<div class="col-md-3 col-xs-3 text-center" >-->
-                            <!--<img src="img/inprogress.gif" >-->
-                        <!--</div>-->
-                        <!--<div class="col-md-7 col-xs-7 text-center center-block loading-pop-up-msg" >-->
-                            <!--<h1>Please wait while we complete the actions!</h1>-->
-                        <!--</div>-->
-                    <!--</div>-->
+<style>
+    button {
+        postion: relative;
+        text-align: right;
+        vertical-align: middle;
+    }
 
-                <!--</div>-->
-                <!--&lt;!&ndash;<button type="button" class="btn btn-info btn-lg" ng-click="hideLoadingPopUp()">Hide Modal</button>&ndash;&gt;-->
-            <!--</form>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-<!--&lt;!&ndash;//Loading Pop Up to prevent other actions while working on a action&ndash;&gt;-->
+    button img {
+        position: relative;
+        padding-right: 7px;
+        vertical-align: middle;
+        display: inline-block;
 
-
-
-	<style>
-		button {
-			postion: relative;
-			text-align: right;
-			vertical-align: middle;
-		}
-
-		button img {
-			position: relative;
-			padding-right: 7px;
-			vertical-align: middle;
-			display: inline-block;
-
-		}
-	</style>
+    }
+</style>

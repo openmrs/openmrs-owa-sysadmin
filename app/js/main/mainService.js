@@ -1,8 +1,7 @@
-// mainController module initilation
+
 var mainServiceModule = angular.module('mainService', ['OWARoutes']);
 
 mainServiceModule.service('mainService',['$http', 'OWARoutesUtil','$q', function ($http, OWARoutesUtil,$q) {
-    
     return{
         getOpenMRSLocation : function(){
             var def = $q.defer();
