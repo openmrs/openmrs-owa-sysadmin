@@ -16,12 +16,12 @@
         Task definition saved successfully.
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body" style="font-size: 18px;">
         <h2> Task Configuration </h2>
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Name *</div>
             <div class="col-9 col-xl-9 col-sm-9 form">
-                <input type="text" placeholder="Enter task name" ng-model="taskName" style="width:95%;" required>
+                <input type="text" placeholder="Enter task name" ng-model="taskName" style="width:95%; font-size: 18px;" required>
             </div>
         </div>
 
@@ -29,7 +29,7 @@
             <div class="col-2 col-xl-2 col-sm-2">Schedulable Class *</div>
             <div class="col-9 col-xl-9 col-sm-9 form">
                 <!--<input type="text" placeholder="Enter Schedulable Class" ng-model="schedulableClass" style="width:95%;" required>-->
-                <select class="form-control" ng-model="schedulableClass" style="min-width: 95%;">
+                <select class="form-control" ng-model="schedulableClass" style="min-width: 95%; font-size: 18px;">
                     <option value="org.openmrs.scheduler.tasks.AutoCloseVisitsTask">org.openmrs.scheduler.tasks.AutoCloseVisitsTask</option>
                     <option value="org.openmrs.scheduler.tasks.ProcessHL7InQueueTask">org.openmrs.scheduler.tasks.ProcessHL7InQueueTask</option>
                     <option value="org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask">org.openmrs.scheduler.tasks.InitializeLogicRuleProvidersTask</option>
@@ -43,12 +43,12 @@
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Description</div>
             <div class="col-9 col-xl-9 col-sm-9 form">
-                <textarea ng-model="description" style="width:95%;" required> </textarea>
+                <textarea ng-model="description" style="width:95%; font-size: 18px;" required> </textarea>
             </div>
         </div>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body" style="font-size: 18px;">
         <h2> Schedule </h2>
         <div class="row" style="margin-bottom:15px;">
             <div class="col-11 col-xl-11 col-sm-11">PLEASE NOTE: Changes to the schedule below are NOT passed onto task instances that are already running. After saving your changes, you MUST stop/start the desired task on the Task List page in order to pass these schedule changes onto that task. </div>
@@ -79,7 +79,7 @@
             <div class="col-7 col-xl-7 col-sm-7 form">
 
                 <div class="input-append date" id="component-date-time-picker" data-original-title="" title="">
-                    <input class="input-large" ng-model="startTimeVal" size="16" type="text" style="display : inline-block;">
+                    <input class="input-large" ng-model="startTimeVal" size="16" type="text" style="display : inline-block; font-size: 18px;">
                     <span class="add-on" style="display : inline-block; margin-top: 4px;"><i class="icon-th"></i></span>
                 </div>
 
@@ -89,10 +89,10 @@
         <div class="row" style="margin-bottom:15px;">
             <div class="col-2 col-xl-2 col-sm-2">Repeat interval</div>
             <div class="col-3 col-xl-3 col-sm-3 form">
-                <input type="number" placeholder="Enter repeat interval" ng-model="repeatInterval"  style="width:95%;" required>
+                <input type="number" placeholder="Enter repeat interval" ng-model="repeatInterval"  style="width:95%; font-size: 18px;" required>
             </div>
             <div class="col-3 col-xl-3 col-sm-3 form">
-                <select class="form-control" id="repeatInterval" style="min-width: 100%;">
+                <select class="form-control"  ng-model="repeatIntervalType" style="min-width: 100%; font-size: 18px;">
                     <option value="seconds">Seconds</option>
                     <option value="minutes">Minutes</option>
                     <option value="hours">Hours</option>
@@ -102,19 +102,19 @@
         </div>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body" style="font-size: 18px;">
         <h2> Properties </h2>
         <div class="bd-callout bd-callout-info" ng-repeat="properties in taskProperties">
             <h4 id="" style="margin-bottom:10px;">New Property</h4>
             <div class="row" style="margin-bottom:10px;">
                 <div style="padding-left: 5px; padding-right: 5px; padding-top: 10px;">Name</div>
                 <div class="col-4 col-xl-4 col-sm-4 form">
-                    <input type="text" placeholder="Enter property name" ng-model="properties.name" style="width:95%;" required>
+                    <input type="text" placeholder="Enter property name" ng-model="properties.name" style="width:95%; font-size: 18px;" required>
                 </div>
 
                 <div style="padding-left: 5px; padding-right: 5px; padding-top: 10px;">Value</div>
                 <div class="col-4 col-xl-4 col-sm-4 form">
-                    <input type="text" placeholder="Enter property value" ng-model="properties.value" style="width:95%;" required>
+                    <input type="text" placeholder="Enter property value" ng-model="properties.value" style="width:95%; font-size: 18px;" required>
                 </div>
                 <button class="btn btn-danger" ng-click="removeTaskProperties()"><i class="icon-remove"> </i></button>
             </div>
@@ -128,7 +128,9 @@
     <div class="row" >
         <div class="modal-footer" style="width: 100%;">
             <button type="button" class="btn btn-secondary" ng-click="saveTaskDefinitions()"><i class="icon-save"> </i> {{formProperties[0]}}</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
+           <a href="#/task-view">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
+           </a>
         </div>
     </div>
 
@@ -139,7 +141,7 @@
     // MM/dd/yyyy HH:mm:ss
     $(function () {
         $('#component-date-time-picker').datetimepicker({
-            format: 'yyyy-mm-ddTHH:mm:ss.sss'
+            format: 'yyyy-mm-dd HH:mm:ss.sss'
         });
     });
 

@@ -1,7 +1,7 @@
 var managemodule = angular.module('managemodule',
     ['ngRoute', 'manageModuleController', 'manageModuleService', 'uploadModuleController',
         'searchModuleController', 'searchModuleService', 'systemInfoController', 'systemInfoService',
-        'mainController', 'mainService', 'taskViewController', 'taskViewService', 'addNewTaskController']);
+        'mainController', 'mainService', 'taskViewController', 'taskViewService', 'addNewTaskController', 'logAppender']);
 
 managemodule.config(['$routeProvider',
     function ($routeProvider) {

@@ -2,7 +2,8 @@
 var taskViewControllerModule = angular.module('taskViewController', ['OWARoutes']);
 
 // SystemInfo Controller used for system-info.html
-taskViewControllerModule.controller('taskViewCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'taskViewService', function ($scope, $http, OWARoutesUtil, $rootScope, taskViewService) {
+taskViewControllerModule.controller('taskViewCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'taskViewService','logger',
+    function ($scope, $http, OWARoutesUtil, $rootScope, taskViewService, logger) {
 
     // OpenMRS breadcrumbs
     $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Task View", ""]]});

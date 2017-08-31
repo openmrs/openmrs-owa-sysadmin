@@ -78,7 +78,7 @@ manageModuleService.service('ModuleService', ['$http', 'OWARoutesUtil', '$q', 'l
 
             checkModuleUpdate: function (modulePackageName) {
                 var def = $q.defer();
-                var requestUrl = "https://addons-stg.openmrs.org/api/v1/addon?&modulePackage=" + modulePackageName;
+                var requestUrl = "https://addons.openmrs.org/api/v1/addon?&modulePackage=" + modulePackageName;
 
                 $http.get(requestUrl, {})
                     .success(function (data, status) { // GET REQUEST SUCCESS HANDLE

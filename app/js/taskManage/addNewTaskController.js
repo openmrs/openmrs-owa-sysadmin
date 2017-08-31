@@ -17,6 +17,15 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope', '$http', 'OWARoutesUtil
             $scope.taskProperties.splice(lastItem);
         };
 
+
+        $scope.go = function (path) {
+            $location.path(path);
+        };
+
+        $scope.redirect = function (redirectPage) {
+            window.location = redirectPage;
+        }
+
         $scope.initializeAddNewTask = function () {
             console.log($routeParams.classUUID);
             if ($routeParams.classUUID != undefined) {
@@ -74,6 +83,7 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope', '$http', 'OWARoutesUtil
                         $scope.startTimeVal = responseData.startTime;
                         $scope.repeatInterval = responseData.repeatInterval;
                         $scope.started = responseData.started;
+                        $scope.repeatIntervalType = "seconds";
                         convertJsonToProperties(responseData.properties);
                     }
                     else {
@@ -106,6 +116,18 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope', '$http', 'OWARoutesUtil
                 }
                 var startTime = $filter('date')(new Date($scope.startTimeVal), "yyyy-MM-ddTHH:mm:ss.sssZ", "UTC");
 
+                // change repeat interval to seconds while saving
+                var repeatInterval = $scope.repeatInterval;
+                if($scope.repeatIntervalType=='minutes'){
+                    repeatInterval = repeatInterval*60;
+                }
+                else if($scope.repeatIntervalType=='hours'){
+                    repeatInterval = repeatInterval*60*60;
+                }
+                else if($scope.repeatIntervalType=='days'){
+                    repeatInterval = repeatInterval*60*60*24;
+                }
+
                 var moduleData =
                     {
                         "name": $scope.taskName,
@@ -113,7 +135,7 @@ addNewTaskModule.controller('addNewTaskCtrl', ['$scope', '$http', 'OWARoutesUtil
                         "description": $scope.description,
                         "startOnStartup": $scope.startOnStartup,
                         "startTime": startTime,
-                        "repeatInterval": '' + $scope.repeatInterval,
+                        "repeatInterval": '' + repeatInterval,
                         "properties": createPropertyJson($scope.taskProperties)
                     };
                 $http.post(uploadUrl, moduleData, {

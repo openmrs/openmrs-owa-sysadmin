@@ -53,7 +53,7 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
             $scope.isSearching = true;
             $scope.modules = [];
             var searchValue = $scope.searchText;
-            var requestUrl = "https://addons-stg.openmrs.org/api/v1//addon?&q=" + searchValue;
+            var requestUrl = "https://addons.openmrs.org/api/v1//addon?&q=" + searchValue;
             if (searchValue) {
                 $http.get(requestUrl, {})
                     .success(function (data, status) { // GET REQUEST SUCCESS HANDLE

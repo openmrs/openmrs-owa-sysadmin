@@ -135,8 +135,8 @@ manageModuleController.controller('ModuleListCtrl',
                 $location.path(path);
             };
 
-            $scope.redirect = function () {
-                window.location = "#/page.html";
+            $scope.redirect = function (redirectPage) {
+                window.location = redirectPage;
             }
 
             $scope.StartModule = function (moduleUuid, resource, moduleDisplayName) {

@@ -30,9 +30,9 @@
                     <button><i class="icon-plus"> </i> Add Tasks</button>
                 </a>
                 <a> <button ng-click="getAllTaskDetails()"><i class="icon-repeat"> </i> Refresh</button> </a>
-                <a> <button ng-click="rescheduleAllTasks()"><i class="icon-repeat"> </i> Reschedule All</button> </a>
-                <a> <button ng-click="shutdownAllTasks()"><i class="icon-repeat"> </i> Shutdown All</button> </a>
-                <a> <button ng-click="startOnStartupTasks()"><i class="icon-repeat"> </i>Start Startup Tasks</button> </a>
+                <a style="float: right;"> <button ng-click="rescheduleAllTasks()"><i class="icon-repeat"> </i> Reschedule All</button> </a>
+                <!--<a> <button ng-click="shutdownAllTasks()"><i class="icon-repeat"> </i> Shutdown All</button> </a>-->
+                <!--<a> <button ng-click="startOnStartupTasks()"><i class="icon-repeat"> </i>Start Startup Tasks</button> </a>-->
 
             </div>
 
@@ -57,7 +57,7 @@
                     </td>
                     <td valign="top">
                         <ul class="list-group" style="margin-top: 10px;">
-                            <li class="list-group-item"> Runs every : <b>{{task.repeatInterval}}</b></li>
+                            <li class="list-group-item"> Runs every : <b>{{task.repeatInterval}} s</b></li>
                             <li class="list-group-item"> Last Execution : <b>{{task.lastExecutionTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
                             <li class="list-group-item"> Started : <b>{{task.startTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
                         </ul>

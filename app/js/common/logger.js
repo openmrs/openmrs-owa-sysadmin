@@ -6,9 +6,13 @@ owaLoggerModule.factory('logger', function(){
     var DISPLAY_INFO_LOGS_STACK = false;
     var DISPLAY_ERROR_LOGS = true;
     var DISPLAY_ERROR_LOGS_STACK = false;
+    var DISPLAY_WARN_LOGS = true;
     return {
+        // to print the info logs
         info : function (message, data) {
-            console.log(message);
+            if(DISPLAY_INFO_LOGS){
+                console.log(message);
+            }
 
             if(typeof(data)!=undefined && DISPLAY_INFO_LOGS_STACK){
                 if(typeof(data)!=String){
@@ -19,11 +23,17 @@ owaLoggerModule.factory('logger', function(){
                 }
             }
         },
+        // to print the warn logs
         warn : function (message) {
-            console.warn(message);
+            if(DISPLAY_WARN_LOGS){
+                console.warn(message);
+            }
         },
+        // to print the error logs
         error : function (message , data) {
-            console.error(message);
+            if(DISPLAY_ERROR_LOGS){
+                console.error(message);
+            }
 
             if(typeof(data)!=undefined && DISPLAY_ERROR_LOGS_STACK){
                 if(typeof(data)!=String){
