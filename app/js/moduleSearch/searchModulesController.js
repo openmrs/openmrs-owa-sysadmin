@@ -52,7 +52,7 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
             $scope.moduleFound = false;
             $scope.isSearching = true;
             $scope.modules = [];
-            var searchValue = $scope.searchText;
+            var searchValue = $scope.searchText.toLowerCase();
             var requestUrl = "https://addons.openmrs.org/api/v1//addon?&q=" + searchValue;
             if (searchValue) {
                 $http.get(requestUrl, {})
