@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+  - '5.1'
+install:
+  - npm install -g bower gulp
+  - npm install
+  - bower install
+script: gulp
+deploy:
+  provider: bintray
+  file: "bintray.json"
+  user: "rkorytkowski"
+  key: $BINTRAY_API_KEY
+  dry-run: false
+  on:
+    tags: true

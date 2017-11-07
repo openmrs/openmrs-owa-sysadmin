@@ -1,0 +1,15 @@
+{
+    "package": {
+        "name": "openmrs-owa-sysadmin",
+        "repo": "owa",
+        "subject": "openmrs"
+    },
+
+    "version": {
+        "name": "1.0.1",
+        "released": "2017-11-07"
+    },
+
+    "files":[{"includePattern": "dist/(.*\\.zip)", "uploadPattern": "$1"}],
+    "publish": true
+}
