@@ -24,6 +24,7 @@ var gutil = require('gulp-util');
 var plugins = gulpLoadPlugins();
 
 var THIS_APP_ID = 'SystemAdministration';
+var THIS_APP_VERSION = '1.0.1';
 
 var htmlGlob = ['app/**/*.html'];
 var resourcesGlob = ['app/**/*.{png,svg,jpg,gif}', 'app/**/*.{css,less}', 
@@ -130,7 +131,7 @@ gulp.task('deploy-local', ['build'], function() {
 
 gulp.task('build', ['resources', 'html'], function() {
   return gulp.src('dist/**/*')
-    .pipe(plugins.zip(THIS_APP_ID + '.zip'))
+    .pipe(plugins.zip(THIS_APP_ID + '-' + THIS_APP_VERSION + '.zip'))
     .pipe(gulp.dest('dist'));
 });
 
