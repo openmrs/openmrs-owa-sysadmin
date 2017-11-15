@@ -60,18 +60,18 @@ You will need JDK 1.7, maven and OpenMRS SDK. Please refer to [the wiki page] (h
 You need to setup a server (first time only) as follows:
 You should install and run the OpenWebApp Module and REST WebServices module to run this System Admin Open Web App
 
-````
+```
 mvn openmrs-sdk:setup-platform -DserverId=adminmodule
 mvn openmrs-sdk:install -DartifactId=owa -Dversion=1.7-SNAPSHOT -DserverId=adminmodule
 mvn openmrs-sdk:install -DartifactId=webservices.rest -Dversion=2.21 -DserverId=adminmodule
 mvn openmrs-sdk:install -DartifactId=uiframework -Dversion=3.6 -DserverId=adminmodule
 mvn openmrs-sdk:install -DartifactId=uicommons -Dversion=1.7 -DserverId=adminmodule
-````
+```
 
 Now you can run the server:
-````
+```
 mvn openmrs-sdk:run -DserverId=adminmodule
-````
+```
 Once it says "Started Jetty Server", visit http://localhost:8080/openmrs in your browser.
 
 ### Production Build
@@ -79,9 +79,9 @@ Once it says "Started Jetty Server", visit http://localhost:8080/openmrs in your
 You will need NodeJS 4+ installed to do this. See the install instructions [here](https://nodejs.org/en/download/package-manager/).
 
 Once you have NodeJS installed, you need to install Gulp and Bower (first time only) as follows:
-````
+```
 npm install -g gulp bower
-````
+```
 
 Install the dependencies (first time only):
 
@@ -91,11 +91,15 @@ npm install && bower install
 
 Build the distributable using [Gulp](http://gulpjs.com/) as follows:
 
-````
+```
 gulp
-````
+```
 
 This will create a file called `ManageModule.zip` file in the `dist` directory, which can be uploaded to the OpenMRS Open Web Apps module.
+
+## Release
+
+The release is automated by Travis-CI. You just need to create a new tag/release on GitHub. Before releasing set version in package.json, gulpfile.js and bintray.json and then create a new tag with name matching the release version. It should be automatically built and deployed to Bintray under https://bintray.com/openmrs/owa/openmrs-owa-sysadmin
 
 ## License
 
