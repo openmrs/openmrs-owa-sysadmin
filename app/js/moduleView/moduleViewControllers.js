@@ -560,7 +560,7 @@ manageModuleController.controller('ModuleListCtrl',
                     if (responseType == "GET") {
                         if (responseValue == 1) {
                             $scope.requestAllModuleDetails = true;
-                            $scope.AllModuleViewData = responseData.results;
+                            $scope.AllModuleViewData = orderModuleInformationByaAphabet(responseData.results);
                         }
                         else {
                             $scope.requestAllModuleDetails = false;
@@ -570,6 +570,30 @@ manageModuleController.controller('ModuleListCtrl',
                 });
             }
 
+            function compareStrings(a, b) {
+                a = a.toLowerCase();
+                b = b.toLowerCase();
+                return (a < b) ? -1 : (a > b) ? 1 : 0;
+              }
+
+            function orderModuleInformationByaAphabet(modulesData) {
+                OrderedModuleDisplay = []
+                for(var i=0; i<modulesData.length; i++) {
+                    tmp = {};
+                    tmp["display"] = modulesData[i].display;
+                    tmp["index"] = i;
+                    OrderedModuleDisplay.push(tmp);
+                };
+                OrderedModuleDisplay.sort(function(a, b) {
+                    return compareStrings(a.display, b.display);
+                });
+                results = [];
+                for(var i=0; i<OrderedModuleDisplay.length; i++) {
+                    index = OrderedModuleDisplay[i].index;
+                    results.push(modulesData[index])
+                };
+                return results;
+            }
 
             $scope.checkAllModulesForUpdate = function () {
 
