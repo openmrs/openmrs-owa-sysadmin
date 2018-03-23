@@ -128,27 +128,26 @@
                 </tbody>
             </table>
 
-            <h2> Aware of Modules</h2>
+            <h2> Required Modules</h2>
             <div class="modal-body">
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="class1 in moduleViewRequiredModules.awareOfModules">
-                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class1[1]}} ">{{class1[0]}}</a>
+                    <li class="list-group-item" ng-repeat="module in moduleViewRequiredModules.requiredModules">
+                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
                     </li>
-                    <div class="alert alert-info" ng-hide="moduleViewRequiredModules.awareOfModules.length">
-                        There are no aware of modules.
+                    <div class="alert alert-info" ng-if="moduleViewRequiredModules.requiredModules.length <= 0">
+                        There are no required modules.
                     </div>
                 </ul>
             </div>
 
-
-            <h2> Required Modules</h2>
+            <h2> Aware of Modules (Optional Required Modules) </h2>
             <div class="modal-body">
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="class2 in moduleViewRequiredModules.requiredModules">
-                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class2[1]}} ">{{class2[0]}}</a>
+                    <li class="list-group-item" ng-repeat="module in moduleViewAwareOfModules.awareModules">
+                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
                     </li>
-                    <div class="alert alert-info" ng-hide="moduleViewRequiredModules.requiredModules.length">
-                        There are no required modules.
+                    <div class="alert alert-info" ng-if="moduleViewAwareOfModules.awareModules.length <= 0">
+                        There are no aware of modules.
                     </div>
                 </ul>
             </div>
@@ -156,10 +155,10 @@
             <h2> Dependent Modules on {{ModuleViewData.name}}</h2>
             <div class="modal-body">
                 <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="class3 in DependentModuleList">
-                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{class3[1]}} ">{{class3[0]}}</a>
+                    <li class="list-group-item" ng-repeat="module in moduleViewDependentModules.dependentModules">
+                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
                     </li>
-                    <div class="alert alert-info" ng-hide="DependentModuleList.length">
+                    <div class="alert alert-info" ng-if="moduleViewDependentModules.dependentModules.length <= 0">
                         There are no modules which depend on this module.
                     </div>
                 </ul>
