@@ -1,0 +1,264 @@
+<link rel="stylesheet" href="css/liveLogViewer.css" type="text/css"/>
+
+<div class="container" data-ng-init="getAllServerLogs()">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h2>Live Log Viewer</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-success alert-dismissable" ng-if="isActionStatus[0]==true">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{isActionStatus[1]}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="isActionStatus[0]==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{isActionStatus[1]}}
+    </div>
+
+    <div class="alert alert-danger alert-dismissable" ng-if="requestAllServerLog==false">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        Could not get the log information from the system.
+    </div>
+
+
+    <div class="row col-12">
+        <div class="panel-body" style="width: 100%; padding:0px;" ng-show="allServerLog">
+
+            
+            <div class="logAnalyzeInfo">
+                <div class="col-md-12" style="padding-left: 5px;">
+                    <div class="row">
+                        <div class="col-md-4 logTypeDataBox" title="Click to filter by Info level" ng-click="logTypeBoxesClicked('INFO')" ng-show="infoChecked">
+                            <div class="informationBox colorInfo">
+                                <p class="informationText"> {{logAnalyzeData['infoCount']}} Info Logs</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 logTypeDataBox" title="Click to filter by Error level" ng-click="logTypeBoxesClicked('ERROR')" ng-show="errorChecked">
+                            <div class="informationBox colorError">
+                                <p class="informationText"> {{logAnalyzeData['errorCount']}} Error logs </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 logTypeDataBox" title="Click to filter by Warn level" ng-click="logTypeBoxesClicked('WARN')" ng-show="warnChecked">
+                            <div class="informationBox colorWarn">
+                                <p class="informationText"> {{logAnalyzeData['warnCount']}} Warn Logs </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" style="margin-bottom:15px; height: 25px;">
+                <p style="float:left; padding-top: 10px;padding-bottom: 15px;"> 
+                Last fetched : {{lastDataFetchedTime |  date:'yyyy-MM-dd HH:mm:ss'}} ({{logAnalyzeData['totalCount']}} logs)
+                </p>
+                <ul style="float:right; width:350px; padding-top:10px; padding-bottom:15px;">
+                    <li class="col-3 col-xl-3 col-sm-3 form" style="padding:0px; float:left;">
+                        <input type="checkbox" id="infoChecked" ng-model="infoChecked" ng-click="logTypeOptionsClicked()" value="true"> Info
+                    </li>
+                    <li class="col-3 col-xl-3 col-sm-3 form" style="padding:0px; float:left;">
+                        <input type="checkbox" id="errorChecked" ng-model="errorChecked" ng-click="logTypeOptionsClicked()" value="true"> Error
+                    </li>
+                    <li class="col-3 col-xl-3 col-sm-3 form" style="padding:0px; float:left;">
+                        <input type="checkbox" id="warnChecked" ng-model="warnChecked" ng-click="logTypeOptionsClicked()" value="true"> Warn
+                    </li>
+                    <li class="col-3 col-xl-3 col-sm-3 form" style="padding:0px; float:left;">
+                        <input type="checkbox" id="debugChecked" ng-model="debugChecked" ng-click="logTypeOptionsClicked()" value="true"> Debug
+                    </li>
+                </ul>
+            </div>
+
+                <div id="loganalyzer" style="width:98%;">
+                    <div class="container awsLogviewer_container">
+                        <div class="OpenMRSLogBody" style="height: 400px; min-height: 350px; overflow-y: scroll; overflow-x: hidden; max-width:100%;">            
+                            <!--  Log Part -->                 
+                            <span>
+                                <div id="livelogviewerLogsContainer"> 
+                                    <div class='logLineBox' ng-repeat="logs in allServerLog" ng-init="$last && openMRSLogBodyRepeatCompleted()">
+
+                                    <span class='logLine'>
+                                        
+                                        <div class='messageline' ng-mouseover="terminalLogLineMouseHover($index)" ng-mouseleave="terminalLogLineMouseLeave($index)"> 
+                                        <div class="logLineCheckBox" style="position:relative; width:100%;">
+                                            <input style="float:right; display:none; margin-bottom:10px;margin-right: 15px;margin-top: 5px;" type="checkbox" id="terminalLogLine_{{$index}}" ng-model="terminalLogLine[$index]" ng-click="terminalLogLineSelected($index,true)" value="true">
+                                        </div>    
+                                        <ul style='cursor: pointer;margin:0px 0px;white-space: initial; word-wrap:break-word; padding-bottom:5px;' ng-click="terminalLogLineSelected($index,false)" title="Click to select & copy">
+                                            <li class="{{logs['logTypeCSS']}}"> {{logs['logType']}}</li>
+                                            <li class="{{logs['logTypeArrowCSS']}}"></li>
+                                            <li class='logTrace'>{{logs['timeForDisplay']}}</li>
+                                            <li class="arrow_logTrace"></li>
+                                            <li><xmp class="xmpLogMessage"> [{{logs['appender']}}] - {{logs['message']}}</xmp></li>
+                                        </ul>
+                                        </div>
+                                        </span>                             
+                                    </div> 
+                                </div>
+                                <div class="logLineBox">
+                                    <span class="logLine" id="loadingDiv" style="height: 40px;">
+                                        <div class="" style="float:left; height: 40px"><div class="loader" id="loadingIcon"></div> </div>
+                                      
+                                        <div class="logLevel" style="font-size:16px; font-weight:bold; float:left;" id="loadingText"> . . . </div>
+                                    </span>
+                                    <br/>
+                                </div>
+                            </span>
+                            <!--  // Log Part -->
+                        </div>
+                   </div>
+                </div>       
+                
+                <div class="col-md-12 newLogsUpdatedContainer" ng-show="newLogsUpdated"> 
+                    <div class="col-md-2 center-block newLogsUpdated" style="height:30px; background-color:white; border-radius:10px; padding-top:6px; text-align:center; margin-top:-45px;">
+                        New logs updated
+                    </div>
+                </div>
+
+             <div style="padding-bottom: 10px; padding-top:20px;">
+                <a>
+                    <button ng-click="copyLogToClipboard()"><i class="icon-{{copiedToClipboardIcon}}"> </i> {{copyToClipboardText}} </button>
+                </a>
+                <a> <button ng-click="exportLogsModalShow()"><i class="icon-download"> </i> Download Logs</button> </a>
+                <a> <button ng-click="exportToGistModalShow()"><i class="icon-share"> </i> Create Gist</button> </a>
+                <a style="float: right; margin-right:5px;"> <button ng-click="refreshLogsClicked()"><i class="icon-repeat"> </i> Refresh</button> </a>
+            </div>
+        </div>   
+    </div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="exportLogModal" aria-labelledby="exportLogModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Download Logs</h5>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div style="padding-bottom: 10px; 
+                        border-bottom: 1px solid #e5e5e5; ">
+                           <!-- <h2> Download Logs </h2> -->
+                           <p>Please select the format to download the logs.</p>
+                            <a> <button ng-click="prepareForTextDownload()"><i class="icon-download"> </i> Text File</button> </a>
+                            <a> <button ng-click="prepareForJSONDownload()"><i class="icon-download"> </i> JSON File</button> </a>
+                            <a> <button ng-click="prepareForXMLDownload()"><i class="icon-download"> </i> XML File</button> </a>
+                            <a> <button ng-click="prepareForCSVDownload()"><i class="icon-download"> </i> CSV File</button> </a>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade  loading-popup" id="exportToGistModal" aria-labelledby="exportToGistModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create new Gist</h5>
+                </div>
+                <form>
+                    <div class="modal-body">
+
+                        <div id="gistPreparationContent" ng-model="gistPreparationContent" style="padding-bottom: 10px;">
+                           <!-- <h2> Create New Gist</h2> -->
+                           <div class="row" style="margin-bottom:15px;">
+                                <div class="alert alert-danger alert-dismissable" ng-show="gistDiscriptionEmptyError" >
+                                    Gist description can't be empty.
+                                </div>
+
+                                <div class="col-3 col-xl-3 col-sm-3" style="padding-top: 10px;">Title Description *</div>
+                                <div class="col-7 col-xl-7 col-sm-7 form">
+                                    <input type="text" placeholder="Enter gist description" ng-model="gistDescription" style="width:95%; font-size: 18px;" required>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:15px;">
+                                <div class="col-3 col-xl-3 col-sm-3">Secure Gist</div>
+                                <div class="col-7 col-xl-7 col-sm-7 form">
+                                    <input type="checkbox" id="creatSecureGist" ng-model="creatSecureGist" value="true">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom:15px;">
+                                <div class="col-11 col-xl-11 col-sm-11">
+                                    <div class="alert alert-danger alert-dismissable" >
+                                        Please make sure, you haven't exposed any confidential information through the logs.
+                                    </div>
+                                    <button style="float:right; margin-right: 15px;" class=" btn-secondary" data-dismiss="modal" ng-click="createNewGist()"><i class="icon-plus"> </i> Create new Gist</button>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+ <div class="modal fade" id="gistURLModal" aria-labelledby="gistURLModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create new Gist</h5>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row" ng-hide="uploadConfirmModuleData.requiredModules">
+                        <div class="col-md-11 col-xs-11" style="padding-top:12px;">
+                            <b>Successfully created, Prelase copy this URL for sharing</b>
+                            <div class="alert alert-success" style="margin-top: 15px">
+                                <a class="close" aria-label="close" style="    border: 1px solid;
+                                border-radius: 6px;
+                                background-color: white;
+                                padding: 5px;
+                                margin-top: 15px;" ng-click="copyCreatedGistURL(gistURL)">
+                                    <i class="icon-{{copyGistURLIcon}}"> </i>
+                                </a>
+                                <textarea cols="45" rows="2">{{gistURL}}</textarea>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{gistURL}}" target="_blank" style="float:left;"> 
+                        <i class="icon-share"> </i> Open Gist
+                    </a>
+            
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> Close</button>
+                </div>    
+            </form>
+        </div>
+    </div>
+</div>
+   
+<div class="modal fade" id="preparingFileForDownloadModal" aria-labelledby="preparingFileForDownloadModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Export logs</h5>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row" ng-hide="uploadConfirmModuleData.requiredModules">
+                        <div class="col-md-2 col-xs-2 text-center center-block">
+                            <img src="img/inprogress.gif" width="48">
+                        </div>
+                        <div class="col-md-8 col-xs-8" style="padding-top:12px;">
+                            <b>Please wait, Preparing file for download.</b>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<ng-include src="'js/common/loadingPopUp.html'"></ng-include>
+
+
+ 

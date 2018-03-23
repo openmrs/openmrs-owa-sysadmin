@@ -1,7 +1,8 @@
 var managemodule = angular.module('managemodule',
     ['ngRoute', 'manageModuleController', 'manageModuleService', 'uploadModuleController',
         'searchModuleController', 'searchModuleService', 'systemInfoController', 'systemInfoService',
-        'mainController', 'mainService', 'taskViewController', 'taskViewService', 'addNewTaskController', 'logAppender']);
+        'mainController', 'mainService', 'taskViewController', 'taskViewService', 'addNewTaskController', 'logAppender',
+        'serverLogController', 'serverLogService', 'ngClickCopy']);
 
 managemodule.config(['$routeProvider',
     function ($routeProvider) {
@@ -41,6 +42,9 @@ managemodule.config(['$routeProvider',
         }).when('/add-ons-test', {
             templateUrl: 'js/moduleView/testDelete.html',
             controller: 'ModuleListCtrl',
+        }).when('/server-log', {
+            templateUrl: 'js/serverLog/serverLog.html',
+            controller: 'serverLogCtrl',
         }).otherwise({
             //redirectTo: '/module-show'
             templateUrl: 'js/main/home.html',
