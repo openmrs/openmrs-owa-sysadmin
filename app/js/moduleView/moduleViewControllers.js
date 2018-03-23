@@ -10,6 +10,9 @@ manageModuleController.controller('ModuleListCtrl',
 
             //holds objects of selected checkboxes
             $scope.selected = {};
+            $scope.moduleSearchText = null;
+            // used to store the modules list
+            var moduleListResults = [];
 
             function showLoadingPopUp() {
                 $('#loadingModal').show();
@@ -58,6 +61,24 @@ manageModuleController.controller('ModuleListCtrl',
                 if (typeof($scope.moduleUpdateURL) != undefined) {
                     delete $scope.moduleUpdateURL;
                 }
+            }
+
+            $scope.moduleNameSearch = function () {
+                var searchedModuleData = []
+                var searchText = $scope.moduleSearchText.toLowerCase();
+                // search from display name, description, and authors name
+                for(module in moduleListResults) {
+                    if(moduleListResults[module]["display"].toLowerCase().indexOf(searchText) !== -1) {
+                        searchedModuleData.push(moduleListResults[module]);
+                    }
+                    else if(moduleListResults[module]["description"].toLowerCase().indexOf(searchText) !== -1) {
+                        searchedModuleData.push(moduleListResults[module]);
+                    }
+                    else if(moduleListResults[module]["author"].toLowerCase().indexOf(searchText) !== -1) {
+                        searchedModuleData.push(moduleListResults[module]);
+                    }
+                }
+                $scope.AllModuleViewData = searchedModuleData;
             }
 
             $scope.updateModule = function (moduleUrl) {
@@ -560,7 +581,8 @@ manageModuleController.controller('ModuleListCtrl',
                     if (responseType == "GET") {
                         if (responseValue == 1) {
                             $scope.requestAllModuleDetails = true;
-                            $scope.AllModuleViewData = orderModuleInformationByaAphabet(responseData.results);
+                            moduleListResults = orderModuleInformationByaAphabet(responseData.results);
+                            $scope.AllModuleViewData = moduleListResults;
                         }
                         else {
                             $scope.requestAllModuleDetails = false;

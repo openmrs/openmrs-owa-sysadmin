@@ -7,6 +7,17 @@
         word-wrap: break-word;
     }
 
+    .module-search-box {
+        width: 100%;
+        color: #363463;
+        display: block;
+        padding: 5px 10px;
+        margin: 0;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        background-color: #FFF;
+        border: 1px solid #dddddd;
+    }
     /*style="word-wrap:break-word"*/
 </style>
 
@@ -82,9 +93,17 @@
                 </a>
 
             </div>
+            
+            <div class="row col-12">
+                <input class="module-search-box" type="text" name="search" placeholder="Search Modules.." ng-model="moduleSearchText"
+                       ng-change="moduleNameSearch()"/>
+            </div>
 
+            <div class="alert alert-info" ng-if="AllModuleViewData.length == 0" style="text-align:center;">
+                No module found.
+            </div>
 
-            <table class="layout display responsive-table">
+            <table class="layout display responsive-table" ng-if="AllModuleViewData.length > 0">
                 <tbody>
                 <tr>
                     <th style="max-width: 40px;"> Status</th>
