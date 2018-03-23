@@ -14,6 +14,8 @@
     "tests"
   ],
   "dependencies": {
+    "bootstrap": "^3.3.7",
+    "smalot-bootstrap-datetimepicker" : "2.4.4",
     "modernizr": "3.3.1",
     "angular": "1.4.x",
     "angular-mocks": "1.4.x",
@@ -22,5 +24,13 @@
     "ng-file-upload": "^12.2.13",
     "angular-upload": "^1.0.12",
     "angular-xml": "^2.2.2"
-  }
+  },
+  "overrides":{
+    "bootstrap":{
+      "main":[
+      "dist/js/bootstrap.js",
+      "dist/css/bootstrap.min.css",
+      "less/bootstrap.less"
+      ]
+    }}
 }
