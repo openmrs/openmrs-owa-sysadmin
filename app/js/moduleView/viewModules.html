@@ -94,7 +94,7 @@
 
             </div>
             
-            <div class="row col-12">
+            <div class="col-12">
                 <input class="module-search-box" type="text" name="search" placeholder="Search Modules.." ng-model="moduleSearchText"
                        ng-change="moduleNameSearch()"/>
             </div>
@@ -106,16 +106,16 @@
             <table class="layout display responsive-table" ng-if="AllModuleViewData.length > 0">
                 <tbody>
                 <tr>
-                    <th style="max-width: 40px;"> Status</th>
+                    <th style="min-width: 40px;"> Status</th>
                     <th> Name</th>
                     <th> Author</th>
-                    <th style="max-width: 60px;"> Version</th>
+                    <th style="min-width: 60px;"> Version</th>
                     <th> Description</th>
-                    <th style="min-width: 180px;"> Actions</th>
+                    <th style="min-width: 190px;"> Actions</th>
                 </tr>
 
                 <tr ng-repeat="class in AllModuleViewData">
-                    <td valign="top" style="max-width: 30px;">
+                    <td valign="top" style="max-width: 30px; text-align: center;">
                         <img src="img/running-module.png" ng-if="class.started == true" height="20"
                              style="top: 5px;left: auto;"/>
                         <img src="img/stopped-module.png" ng-if="class.started != true" height="20"
@@ -176,7 +176,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button class=" btn-danger"
+                    <button class="btn btn-danger"
                             ng-click="unloadModule(uploadConfirmModuleData.uuid, uploadConfirmModuleData.moduleDisplayName)"
                             data-dismiss="modal"><i class="icon-ok"></i> Yes
                     </button>
@@ -214,7 +214,7 @@
                     </ul>
                 </div>
                 <div class="modal-footer">
-                    <button class=" btn-danger"
+                    <button class="btn btn-danger"
                             ng-click="StopModule(stopConfirmModuleData.uuid,'ALLMODULES', stopConfirmModuleData.moduleDisplayName)"
                             data-dismiss="modal"><i class="icon-ok"> </i> Yes
                     </button>

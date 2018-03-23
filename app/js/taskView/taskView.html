@@ -40,7 +40,7 @@
             <table class="layout display responsive-table">
                 <tbody>
                 <tr>
-                    <th style="max-width: 40px;">Status</th>
+                    <th style="min-width: 40px;">Status</th>
                     <th> Task </th>
                     <th style="min-width: 350px;"> Schedule </th>
                     <th> On Startup </th>
@@ -48,7 +48,7 @@
                 </tr>
 
                 <tr ng-repeat="task in allTasksData">
-                    <td valign="top" style="max-width: 30px; vertical-align: middle;">
+                    <td valign="top" style="max-width: 30px; vertical-align: middle; text-align:center;">
                         <img src="img/running-module.png" ng-if="task.started == true" height="20" style="top: 5px;left: auto;" />
                         <img src="img/stopped-module.png" ng-if="task.started != true" height="20" style="top: 5px;left: auto;"/>
                     </td>
@@ -70,7 +70,7 @@
                         <a></a><button ng-click="stopConfirmationShow(task.uuid, task.name)" style="width:160px;" ng-if="task.started == true"> <img src="img/stop-new-1.png" /> Stop</button> </a>
                         <a><button ng-click="startTask(task.uuid, task.name)" style="width:160px;" ng-if="task.started != true"> <img src="img/start-new-1.png" /> Start</button> </a>
                         <br/>
-                        <a><button class="btn btn-danger" style="width:160px; margin-top: 5px;" ng-click="rescheduleTasks(task.uuid, task.name )"> <i class="icon-repeat"></i> Reschedule</button> </a>
+                        <a><button style="width:160px; margin-top: 5px;" ng-click="rescheduleTasks(task.uuid, task.name )"> <i class="icon-repeat"></i> Reschedule</button> </a>
                         <br/>
                         <a><button class="btn btn-danger" style="width:160px; margin-top: 5px;" ng-click="unloadConfirmationShow(task.uuid, task.name )"> <i class="icon-trash"></i> Delete</button> </a>
                     </td>
@@ -93,7 +93,7 @@
             </div>
             <form>
                 <div class="modal-footer" >
-                    <button class=" btn-danger" ng-click="unloadTask(unloadConfirmModuleData.uuid, unloadConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+                    <button class="btn btn-danger" ng-click="unloadTask(unloadConfirmModuleData.uuid, unloadConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
                     <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
                 </div>
             </form>
@@ -109,7 +109,7 @@
             </div>
             <form>
                 <div class="modal-footer" >
-                    <button class=" btn-danger" ng-click="stopTask(stopConfirmModuleData.uuid, stopConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
+                    <button class="btn btn-danger" ng-click="stopTask(stopConfirmModuleData.uuid, stopConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
                     <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
                 </div>
             </form>
