@@ -132,7 +132,17 @@
             <div class="modal-body">
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="module in moduleViewRequiredModules.requiredModules">
-                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
+                        <img src="img/running-module.png" ng-if="module.isStarted == true" height="20"
+                            style="top: 5px;left: auto; margin-right:10px;"/>
+                        <img src="img/stopped-module.png" ng-if="module.isStarted != true" height="20"
+                            style="top: 5px;left: auto; margin-right:10px;"/>      
+                        <a href="#/module-show/{{module.uuid}} "> {{module.display}}</a>
+                        <div style="float:right;" ng-if="module.isInstalled == true">
+                            <span class="badge ">v {{module.version}}</span>
+                        </div>
+                        <div style="float:right;" ng-if="module.isInstalled == false">
+                            <span class="badge badge-danger">Not Installed</span>
+                        </div>
                     </li>
                     <div class="alert alert-info" ng-if="moduleViewRequiredModules.requiredModules.length <= 0">
                         There are no required modules.
@@ -144,7 +154,17 @@
             <div class="modal-body">
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="module in moduleViewAwareOfModules.awareModules">
-                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
+                        <img src="img/running-module.png" ng-if="module.isStarted == true" height="20"
+                            style="top: 5px;left: auto; margin-right:10px;"/>
+                        <img src="img/stopped-module.png" ng-if="module.isStarted != true" height="20"
+                            style="top: 5px;left: auto; margin-right:10px;"/>  
+                        <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
+                        <div style="float:right;" ng-if="module.isInstalled == true">
+                            <span class="badge ">v {{module.version}}</span>
+                        </div>
+                        <div style="float:right;" ng-if="module.isInstalled == false">
+                            <span class="badge badge-danger">Not Installed</span>
+                        </div>
                     </li>
                     <div class="alert alert-info" ng-if="moduleViewAwareOfModules.awareModules.length <= 0">
                         There are no aware of modules.
@@ -156,7 +176,17 @@
             <div class="modal-body">
                 <ul class="list-group">
                     <li class="list-group-item" ng-repeat="module in moduleViewDependentModules.dependentModules">
-                        <i class="icon-exclamation-sign"> </i> <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
+                        <img src="img/running-module.png" ng-if="module.isStarted == true" height="20"
+                            style="top: 5px;left: auto; margin-right:10px;"/>
+                        <img src="img/stopped-module.png" ng-if="module.isStarted != true" height="20"
+                            style="top: 5px;left: auto; margin-right:10px;"/>  
+                        <a href="#/module-show/{{module.uuid}} ">{{module.display}}</a>
+                        <div style="float:right;" ng-if="module.isInstalled == true">
+                            <span class="badge ">v {{module.version}}</span>  
+                        </div>
+                        <div style="float:right;" ng-if="module.isInstalled == false">
+                            <span class="badge badge-danger">Not Installed</span>
+                        </div>
                     </li>
                     <div class="alert alert-info" ng-if="moduleViewDependentModules.dependentModules.length <= 0">
                         There are no modules which depend on this module.

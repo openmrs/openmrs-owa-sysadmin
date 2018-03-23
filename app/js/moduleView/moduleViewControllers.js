@@ -501,10 +501,17 @@ manageModuleController.controller('ModuleListCtrl',
                                 var awareModuleUUID = awareModulePackageName.replace("org.openmrs.module.", "");
                                 moduleData["display"] = awareModuleUUID;
                                 moduleData["uuid"] = awareModuleUUID;
+                                moduleData["isInstalled"] = false;
+                                moduleData["isStarted"] = false;
+                                moduleData["message"] = "";    
+                                moduleData["version"] = "";
 
                                 if(awareModulePackageName in moduleDataWithPackageNameKey) {
                                     moduleData["display"] = moduleDataWithPackageNameKey[awareModulePackageName].display;
                                     moduleData["uuid"] = moduleDataWithPackageNameKey[awareModulePackageName].uuid;
+                                    moduleData["isInstalled"] = true;
+                                    moduleData["isStarted"] = moduleDataWithPackageNameKey[awareModulePackageName].started;
+                                    moduleData["version"] = moduleDataWithPackageNameKey[awareModulePackageName].version;
                                 }
                                 else {
                                     moduleData["message"] = "Module isn't in the installed list for this server - " + awareModuleUUID;
@@ -521,10 +528,17 @@ manageModuleController.controller('ModuleListCtrl',
                                 var requiredModuleUUID = requiredModulePackageName.replace("org.openmrs.module.", "");
                                 moduleData["display"] = requiredModuleUUID;
                                 moduleData["uuid"] = requiredModuleUUID;
+                                moduleData["isInstalled"] = false;
+                                moduleData["isStarted"] = false;
+                                moduleData["message"] = "";    
+                                moduleData["version"] = "";
 
                                 if(requiredModulePackageName in moduleDataWithPackageNameKey) {
                                     moduleData["display"] = moduleDataWithPackageNameKey[requiredModulePackageName].display;
                                     moduleData["uuid"] = moduleDataWithPackageNameKey[requiredModulePackageName].uuid;
+                                    moduleData["isInstalled"] = true;
+                                    moduleData["isStarted"] = moduleDataWithPackageNameKey[requiredModulePackageName].started;
+                                    moduleData["version"] = moduleDataWithPackageNameKey[requiredModulePackageName].version;
                                 }
                                 else {
                                     moduleData["message"] = "Module isn't in the installed list for this server - " + requiredModuleUUID;
@@ -540,6 +554,10 @@ manageModuleController.controller('ModuleListCtrl',
                                     moduleData = {};
                                     moduleData["display"] = key1.display;
                                     moduleData["uuid"] = key1.uuid;
+                                    moduleData["isInstalled"] = false;
+                                    moduleData["isStarted"] = key1.started;
+                                    moduleData["message"] = "";    
+                                    moduleData["version"] = key1.version;
 
                                     dependentModuleDisplayNames.push(moduleData);
                                 }
