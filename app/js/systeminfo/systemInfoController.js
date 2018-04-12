@@ -2,11 +2,54 @@
 var SystemInfoControllerModule = angular.module('systemInfoController', ['OWARoutes']);
         
 // SystemInfo Controller used for system-info.html 
-SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', 'systemInfoService', 'logger',
-    function($scope,$http,OWARoutesUtil,$rootScope, systemInfoService, logger){
+SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARoutesUtil','$rootScope', 'systemInfoService', 'logger', 'ngCopy', '$timeout',
+    function($scope,$http,OWARoutesUtil,$rootScope, systemInfoService, logger, ngCopy, $timeout){
     
-      // OpenMRS breadcrumbs
-      $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["SystemInfo",""]]});
+    // OpenMRS breadcrumbs
+    $rootScope.$emit("updateBreadCrumb", {breadcrumbs : [["SysAdmin","#"],["SystemInfo",""]]});
+
+    $scope.copyToClipboardText = "Copy System Info";
+    $scope.copiedToClipboardIcon = "copy";
+    $scope.SystemInfoImportantContent = {};
+
+    $scope.copyLogToClipboard = function() {
+        logTextDocument="System Information\n----------------------------------------\n";
+        angular.forEach($scope.SystemInfoImportantContent, function(value, key) { 
+            if(key!='modules') {
+                logTextDocument+=key + " : " + value + "\n";
+            }
+        });
+        logTextDocument +="\nModule Information (" + $scope.SystemInfoImportantContent['modules']['SystemInfo.Module.repositoryPath'] + ")\n----------------------------------------\n";
+        indexCount = 1;
+        angular.forEach($scope.SystemInfoImportantContent['modules'], function(value, key) {
+            if(key!='SystemInfo.Module.repositoryPath') {
+                logTextDocument+=indexCount + ". " + key + " (v " + value.trim() + ")\n";
+                indexCount++;
+            } 
+        });
+
+        $scope.copiedToClipboard = ngCopy(logTextDocument);
+        if(ngCopy(logTextDocument)) {
+            $scope.copyToClipboardText = "Copied";
+            $scope.copiedToClipboardIcon = "ok";
+            $timeout(function(){ $scope.copyToClipboardText = "Copy System Info"; $scope.copiedToClipboardIcon = "copy";  }, 3000);  
+        }
+        else {
+            $scope.copyToClipboardText = "Error";
+            $scope.copiedToClipboardIcon = "remove";
+            $timeout(function(){ $scope.copyToClipboardText = "Copy System Info"; $scope.copiedToClipboardIcon = "copy"; }, 3000); 
+        }
+    }
+
+    function keyCount(obj) {
+        var count=0;
+        for(var prop in obj) {
+           if (obj.hasOwnProperty(prop)) {
+              ++count;
+           }
+        }
+        return count;
+     }
 
     $scope.getSystemInfo = function(){
         // variable dataLoading used to indicate data fetching status
@@ -44,6 +87,7 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     if (typeof(data.systemInfo["SystemInfo.title.openmrsInformation"]) != "undefined")
                     {
                         $scope.openmrsInformation = data.systemInfo["SystemInfo.title.openmrsInformation"];
+                        $scope.SystemInfoImportantContent["OpenMRS Version"] = $scope.openmrsInformation["SystemInfo.OpenMRSInstallation.openmrsVersion"];
                     }
                     else {
                         logger.error("Couldn't fetch the OpenMRS Information data");
@@ -53,6 +97,10 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     if (typeof(data.systemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"]) != "undefined")
                     {
                         $scope.javaRuntimeEnvironmentInformation = data.systemInfo["SystemInfo.title.javaRuntimeEnvironmentInformation"];
+                        $scope.SystemInfoImportantContent["Java Version"] = $scope.javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.javaVersion"];
+                        $scope.SystemInfoImportantContent["OS Name"] = $scope.javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.operatingSystem"];
+                        $scope.SystemInfoImportantContent["OS Architecture"] = $scope.javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.operatingSystemArch"];
+                        $scope.SystemInfoImportantContent["OS Version"] = $scope.javaRuntimeEnvironmentInformation["SystemInfo.JavaRuntimeEnv.operatingSystemVersion"];
                     }
                     else {
                         logger.error("Couldn't fetch the javaRuntimeEnvironmentInformation data");
@@ -62,6 +110,9 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     if (typeof(data.systemInfo["SystemInfo.title.memoryInformation"]) != "undefined")
                     {
                         $scope.memoryInformation = data.systemInfo["SystemInfo.title.memoryInformation"];
+                        $scope.SystemInfoImportantContent["Total Memory"] = $scope.memoryInformation["SystemInfo.Memory.totalMemory"];
+                        $scope.SystemInfoImportantContent["Free Memory"] = $scope.memoryInformation["SystemInfo.Memory.freeMemory"];
+                        $scope.SystemInfoImportantContent["Total HeapSize"] = $scope.memoryInformation["SystemInfo.Memory.maximumHeapSize"];
                     }
                     else {
                         logger.error("Couldn't fetch the memoryInformation data");
@@ -80,6 +131,8 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     if (typeof(data.systemInfo["SystemInfo.title.moduleInformation"]) != "undefined")
                     {
                         $scope.moduleInformation = data.systemInfo["SystemInfo.title.moduleInformation"];
+                        $scope.SystemInfoImportantContent["Total Modules"] = keyCount($scope.moduleInformation);
+                        $scope.SystemInfoImportantContent["modules"] =  $scope.moduleInformation;
                     }
                     else {
                         logger.error("Couldn't fetch the moduleInformation data");
