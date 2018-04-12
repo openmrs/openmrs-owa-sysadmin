@@ -1,6 +1,6 @@
 var updateModule = angular.module('ModuleService', ['OWARoutes']);
 
-updateModule.service('updateModuleService', ['$scope', '$http', 'OWARoutesUtil', function ($scope, $http, OWARoutesUtil) {
+updateModule.service('updateModuleService', ['$scope', '$http', 'OWARoutesUtil', '$q', function ($scope, $http, OWARoutesUtil,$q) {
     //var property = 'First';
     var isDownloading = true;
     var downloadSuccessMsg = '';
@@ -15,7 +15,7 @@ updateModule.service('updateModuleService', ['$scope', '$http', 'OWARoutesUtil',
     return {
         updateAndInstallModule: function (moduleUrl) {
             isDownloading = true;
-
+            var def = $q.defer();
             var fd = new FormData();
             $http.get(moduleUrl, {responseType: "arraybuffer"})
                 .success(function (data) { // GET REQUEST ERROR HANDLE
@@ -31,7 +31,7 @@ updateModule.service('updateModuleService', ['$scope', '$http', 'OWARoutesUtil',
                     downloadSuccessMsg = "Module Download Completed";
 
                     console.log("POST started...");
-                    var uploadUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/module/?";
+                    // var uploadUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/module/?";
 
                     isUploading = true;
 
@@ -57,6 +57,8 @@ updateModule.service('updateModuleService', ['$scope', '$http', 'OWARoutesUtil',
                             //start up Error Found
                             startuperrorMsg = "Could not start " + moduleName + " Module."
                         }
+                        var returnArray = [[isDownloading, downloadSuccessMsg, downloadErrorMsg], [isUploading, uplodedsuccessMsg, uploadederrorMsg], [startupsuccessMsg, startuperrorMsg], [responseJsonData]];
+                        def.resolve(returnArray);
                     })
                         .error(function (data, status, header, config) { // POST REQUEST ERROR HANDLE
                             console.log("UPLOAD - Error.");
@@ -78,14 +80,19 @@ updateModule.service('updateModuleService', ['$scope', '$http', 'OWARoutesUtil',
                                 //unknown Error
                                 uploadederrorMsg = "Error loading module!"
                             }
+                            var returnArray = [[isDownloading, downloadSuccessMsg, downloadErrorMsg], [isUploading, uplodedsuccessMsg, uploadederrorMsg], [startupsuccessMsg, startuperrorMsg], [responseJsonData]];
+                            def.resolve(returnArray);
                         });
                 }).error(function (data) { // GET REQUEST ERROR HANDLE
                 isDownloading = false;
                 downloadErrorMsg = "Could not download the Module";
+                var returnArray = [[isDownloading, downloadSuccessMsg, downloadErrorMsg], [isUploading, uplodedsuccessMsg, uploadederrorMsg], [startupsuccessMsg, startuperrorMsg], [responseJsonData]];
+                def.resolve(returnArray);
             });
 
-            var returnArray = [[isDownloading, downloadSuccessMsg, downloadErrorMsg], [isUploading, uplodedsuccessMsg, uploadederrorMsg], [startupsuccessMsg, startuperrorMsg], [responseJsonData]];
-            return returnArray;
+            // var returnArray = [[isDownloading, downloadSuccessMsg, downloadErrorMsg], [isUploading, uplodedsuccessMsg, uploadederrorMsg], [startupsuccessMsg, startuperrorMsg], [responseJsonData]];
+            // return returnArray;
+            return def.promise;
         },
         getProperty: function () {
             return 'a';

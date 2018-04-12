@@ -31,7 +31,7 @@ manageModuleService.service('ModuleService', ['$http', 'OWARoutesUtil', '$q', 'l
                         }).success(function (data, status, headers, config) {  // POST REQUEST ERROR HANDLE
                             def.resolve(["UPLOAD", 1, data, status]);
                         }).error(function (data, status, header, config) { // POST REQUEST ERROR HANDLE
-                                def.resolve(["UPLOAD", 0, data, status]);
+                            def.resolve(["UPLOAD", 0, data, status]);
                         });
                     }).error(function (data, status) { // GET REQUEST ERROR HANDLE
                     def.resolve(["DOWNLOAD", 0, data, status]);

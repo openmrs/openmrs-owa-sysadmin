@@ -2,8 +2,8 @@ var manageModuleController = angular.module('manageModuleController', ['OWARoute
 
 
 manageModuleController.controller('ModuleListCtrl',
-    ['$scope', '$location', '$route', '$routeParams', 'OWARoutesUtil', '$http', '$rootScope', 'ModuleService', 'logger',
-        function ($scope, $location, $route, $routeParams, OWARoutesUtil, $http, $rootScope, ModuleService, logger) {
+    ['$scope', '$location', '$route', '$routeParams', 'OWARoutesUtil', '$http', '$rootScope', 'ModuleService', 'logger', '$rootScope',
+        function ($scope, $location, $route, $routeParams, OWARoutesUtil, $http, $rootScope, ModuleService, logger, $rootScope) {
 
             // OpenMRS breadcrumbs
             $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", ""]]});
@@ -81,74 +81,49 @@ manageModuleController.controller('ModuleListCtrl',
                 $scope.AllModuleViewData = searchedModuleData;
             }
 
-            $scope.updateModule = function (moduleUrl) {
-                console.log("update Module");
-                // Remove the notification about Update
-                if (typeof($scope.moduleUpdateURL) != undefined) {
-                    delete $scope.moduleUpdateURL;
-                }
-                $scope.moduleNewUpdateFound = "0"; // working or disabled
-                alertsClear(); // clear all alerts $scope variables
-                showLoadingPopUp(); // Show loadingPop to prevent other Actions
+            $scope.updateModule = function(moduleUuid, moduleDownloadURL) {
                 $scope.isDownloading = true;
-                var response = ModuleService.uploadModules(moduleUrl);
-                response.then(function (result) {
-                    responseType = result[0]; //UPLOAD or DOWNLOAD
-                    responseValue = result[1]; // 1- success | 0 - fail
-                    responseData = result[2];
-                    responseStatus = result[3];
-
-                    if (responseType == "UPLOAD") {
-                        $scope.isDownloading = false;
-                        $scope.downloadSuccessMsg = "Module Download Completed";
-                        if (responseValue == 1) {
-                            $scope.isUploading = false;
-                            var x2js = new X2JS();
-                            var JsonSuccessResponse = x2js.xml_str2json(responseData);
-                            var moduleName = JsonSuccessResponse["org.openmrs.module.Module"].name;
-                            uplodedsuccessMsg = moduleName + " has been loaded"
-                            responseJsonData = JsonSuccessResponse;
-                            if (typeof(JsonSuccessResponse["org.openmrs.module.Module"].startupErrorMessage) == "undefined") {
-                                // Started Successfully
-                                $scope.startupsuccessMsg = moduleName + " has been loaded and started Successfully"
-                                $scope.checkAllModulesForUpdate();
+                alertsClear();
+                showLoadingPopUp();
+                var uploadUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/moduleaction";
+                moduleData = {  "modules":[moduleUuid],
+                                "action":"install",
+                                "installUri": moduleDownloadURL
                             }
-                            else {
-                                //start up Error Found
-                                $scope.startuperrorMsg = "Could not start " + moduleName + " Module."
-                                logger.error($scope.startuperrorMsg);
-                            }
-                            hideLoadingPopUp();
+                $http.post(uploadUrl, moduleData, {
+                    headers: {
+                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+                    }
+                }).success(function (data, status, headers, config) {
+                    $scope.isUploading = false;
+                    $scope.isDownloading = false;
+                    hideLoadingPopUp();
+                    $scope.startupsuccessMsg = moduleName + " has been loaded and started Successfully";
+                    $scope.checkAllModulesForUpdate();
+                    
+                }).error(function (data, status, headers, config) {
+                    $scope.isDownloading = false;
+                    var x2js = new X2JS();
+                    var JsonSuccessResponse = x2js.xml_str2json(data);
+                     
+                    if (typeof(JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined") {
+                        // File Error Catched
+                        if (typeof(JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined") {
+                            // Error Message given
+                            $scope.downloadErrorMsg = JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
                         }
                         else {
-                            $scope.isUploading = false;
-                            var x2js = new X2JS();
-                            var JsonErrorResponse = x2js.xml_str2json(responseData);
-                            if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined") {
-                                // File Error Catched
-                                if (typeof(JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined") {
-                                    // Error Message given
-                                    $scope.uploadederrorMsg = JsonErrorResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
-                                }
-                                else {
-                                    // Unknown Error Message
-                                    $scope.uploadederrorMsg = "Error loading module, no config.xml file found"
-                                }
-                            }
-                            else {
-                                //unknown Error
-                                $scope.uploadederrorMsg = "Error loading module!"
-                            }
-                            hideLoadingPopUp();
-                            logger.error($scope.uploadederrorMsg, responseData);
+                            // Unknown Error Message
+                            $scope.downloadErrorMsg = "Action failed, Could not download and load the " + moduleUuid + " module!"
                         }
                     }
                     else {
-                        $scope.isDownloading = false;
-                        $scope.downloadErrorMsg = "Could not download the Module";
-                        hideLoadingPopUp();
-                        logger.error($scope.downloadErrorMsg, responseData);
+                        //unknown Error
+                        $scope.downloadErrorMsg = "Action failed, Could not  download and load  the " + moduleUuid + " module!"
                     }
+                    
+                    hideLoadingPopUp();
+                    logger.error($scope.downloadErrorMsg, data);
                 });
             }
 
@@ -486,6 +461,12 @@ manageModuleController.controller('ModuleListCtrl',
                 if (typeof($scope.moduleViewRequiredModules) != undefined) {
                     delete $scope.moduleViewRequiredModules;
                 }
+                
+                if (typeof($rootScope.SEARCH_MODULE_DOWNLOADED_INSTALLED) != undefined) {
+                    $scope.SEARCH_MODULE_DOWNLOADED_INSTALLED = $rootScope.SEARCH_MODULE_DOWNLOADED_INSTALLED;
+                    delete $rootScope.SEARCH_MODULE_DOWNLOADED_INSTALLED;
+                }
+                
                 showLoadingPopUp();
 
                 buildModuleStructure_keyAsPackageName(function(moduleDataWithPackageNameKey) {
@@ -650,8 +631,8 @@ manageModuleController.controller('ModuleListCtrl',
                     if (resultModule[0] == "GET") {
                         if (resultModule[1] == 1) {
                             responseModuleDetailsData = resultModule[2].results; //data.results
+                            count = 0;
                             angular.forEach(responseModuleDetailsData, function (Modulevalue, Modulekey) {
-
                                 var moduleCurrentVeriosn = Modulevalue.version;
                                 var responseUpdate = ModuleService.checkModuleUpdate(Modulevalue.packageName);
                                 responseUpdate.then(function (resultUpdate) {
@@ -680,15 +661,20 @@ manageModuleController.controller('ModuleListCtrl',
                                             $scope.checkUpdateForAllModuleError = "Could not get some the module update details."
                                             logger.error("Modulevalue.packageName : " + Modulevalue.packageName, resultUpdate[1]);
                                         }
-
-                                        hideLoadingPopUp();
+                                        count++;
+                                        if(count>=responseModuleDetailsData.length) {
+                                            hideLoadingPopUp();
+                                        }
                                     }
                                     else {
                                         // error in retrive Module update details
                                         if (count >= responseModuleDetailsData.length) {
                                             $scope.searchingForUpdate = false;
                                         }
-                                        hideLoadingPopUp();
+                                        count++;
+                                        if(count>=responseModuleDetailsData.length) {
+                                            hideLoadingPopUp();
+                                        }
                                         $scope.updateErrorModules.push(Modulevalue.name);
                                         $scope.checkUpdateForAllModuleError = "Could not get some the module update details."
                                         logger.error("Modulevalue.packageName : " + Modulevalue.packageName, resultUpdate[1]);

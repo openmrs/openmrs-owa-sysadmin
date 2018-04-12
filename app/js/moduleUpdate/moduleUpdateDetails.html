@@ -99,20 +99,18 @@
                     <th style="max-width: 80px;"> Author</th>
                     <th> Description</th>
                     <th style="max-width: 60px;"> Cu.Ver</th>
-                    <th style="max-width: 60px;"> New.Ver</th>
-                    <th style="min-width: 120px;"> Actions</th>
+                    <th style="min-width: 250px;"> Actions</th>
                 </tr>
 
                 <tr ng-repeat="updateData in availableUpdateData">
                     <td valign="top">
-                        <a href="#">{{updateData.display}}</a>
+                        <a href="#/module-show/{{updateData.uuid}}">{{updateData.display}}</a>
                     </td>
                     <td valign="top">{{updateData.author}}</td>
                     <td valign="top">{{updateData.description}}</td>
                     <td valign="top">{{updateData.version}}</td>
-                    <td valign="top">{{updateData.newversion}}</td>
                     <td valign="top" style="width: 130px;">
-                        <button ng-click="updateModule(updateData.downloadurl)"><i class="icon-repeat"> </i> Update
+                        <button ng-click="updateModule(updateData.uuid, updateData.downloadurl)" style="width: 100%;text-align: center;"><i class="icon-repeat"> </i> Upgrade to {{updateData.newversion}}
                         </button>
                     </td>
                 </tr>
