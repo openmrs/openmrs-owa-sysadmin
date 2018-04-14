@@ -1,7 +1,18 @@
 <div class="container" data-ng-init="getSearchModuleDetails()">
     <div class="row">
-        <div class="col-md-12 col-xs-12">
+        <div class="col-md-6 col-xs-6">
             <h2>Module Information</h2>
+        </div>
+        <div class="alert alert-success alert-dismissable" ng-show="alreadyInstalledModule" style="width: 145px;
+            float: right;
+            margin-bottom: 0px;
+            text-align: center;
+            font-weight: bold;">
+            <img src="img/running-module.png" height="20" style="top: 5px;
+            left: auto;
+            margin-right: 5px;" class="ng-scope">
+            <a href="#/module-show/{{nonInstalledModuleDetails.moduleId}}"> Installed</a>
+            
         </div>
     </div>
 
@@ -68,9 +79,8 @@
                         <i class="icon-user "> </i> {{owners.name}}
                     </li>
 
-                    <h4> Module Versions</h4>
-
-                    <table>
+                    <h4 ng-hide="alreadyInstalledModule"> Module Versions</h4>
+                    <table ng-hide="alreadyInstalledModule">
                         <tr>
                             <th> Version</th>
                             <th style="min-width: 120px;"> Release Date</th>
@@ -85,8 +95,17 @@
                             <td style="text-align: center;"> {{ModuleVersion.requireOpenmrsVersion}}</td>
                             <td>
                                 <li class="list-group-item" ng-repeat="requireModule in ModuleVersion.requireModules">
-                                    <i class="icon-exclamation-sign"> </i> {{requireModule.module}}
+                                    <img src="img/running-module.png" ng-if="requireModule.isStarted == true" height="20"
+                                        style="top: 5px;left: auto; margin-right:10px;"/>
+                                    <img src="img/stopped-module.png" ng-if="requireModule.isStarted != true" height="20"
+                                        style="top: 5px;left: auto; margin-right:10px;"/> 
+
+                                    <!-- <i class="icon-exclamation-sign"> </i>  -->
+                                    {{requireModule.moduleName}}
                                     ({{requireModule.version}})
+                                    <div style="float:right;" ng-if="requireModule.isInstalled==false"  >
+                                        <span class="badge badge-danger">Not Installed</span>
+                                    </div>
                                 </li>
                                 <li class="list-group-item" ng-if="ModuleVersion.requireModules==null">
                                     No required modules

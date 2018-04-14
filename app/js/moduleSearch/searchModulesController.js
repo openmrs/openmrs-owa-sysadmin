@@ -1,7 +1,7 @@
 var SearchRepoModule = angular.module('searchModuleController', ['OWARoutes']);
 
-SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'SearchModuleService', '$routeParams', 'logger', '$rootScope', '$timeout', 
-    function ($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams, logger, $rootScope, $timeout) {
+SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'SearchModuleService', '$routeParams', 'logger', '$rootScope', '$timeout', 'ModuleService',
+    function ($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams, logger, $rootScope, $timeout, ModuleService) {
 
         //OpenMRS breadcrumbs
         $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", ""]]});
@@ -58,13 +58,14 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
             $scope.isSearching = true;
             $scope.modules = [];
             var searchValue = $scope.searchText.toLowerCase();
-            var requestUrl = "https://addons.openmrs.org/api/v1//addon?&q=" + searchValue;
+            var requestUrl = "https://addons.openmrs.org/api/v1//addon?&q=" + searchValue + "&type=OMOD";
             if (searchValue) {
                 $http.get(requestUrl, {})
                     .success(function (data, status) { // GET REQUEST SUCCESS HANDLE
                         if (data.length > 0) {
                             // Modules Found
                             $scope.moduleFound = true;
+
                             $scope.modules = data;
                         }
                         else {
@@ -84,6 +85,30 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
 
         }
 
+        function buildModuleStructure_keyAsPackageName(callBack) {
+            moduleListResultsKeyAsPackageName = [];
+            var response = ModuleService.getAllModuleDetails();
+            response.then(function (result) {
+                responseType = result[0]; //UPLOAD or DOWNLOAD
+                responseValue = result[1]; // 1- success | 0 - fail
+                responseData = result[2];
+                responseStatus = result[3];
+                if (responseType == "GET") {
+                    if (responseValue == 1) {
+                        moduleData = responseData.results;
+                        for (moduleIndex in moduleData) {
+                            moduleListResultsKeyAsPackageName[moduleData[moduleIndex]['packageName']] = moduleData[moduleIndex];
+                        }
+                        callBack(moduleListResultsKeyAsPackageName);
+                    }
+                    else {
+                        logger.error("Could not get all module information", responseData);
+                        callBack([]);
+                    }
+                }
+            });
+        }
+
         $scope.getSearchModuleDetails = function () {
             //OpenMRS breadcrumbs
             $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", "#/view-search"], ["Module Information", ""]]});
@@ -96,17 +121,68 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
             }
             showLoadingPopUp(); // Show loadingPop to prevent other Actions
             var moduleUuid = $routeParams.UUID;
-            console.log(moduleUuid);
             var responseModuleDetails = SearchModuleService.getSeatchModuleDetails(moduleUuid);
             responseModuleDetails.then(function (resultModule) {
                 if (resultModule[0] == "GET") {
                     if (resultModule[1] == 1) {
                         $scope.onlineDataFound = true;
                         $scope.nonInstalledModuleDetails = resultModule[2];
+                        
+
+                        buildModuleStructure_keyAsPackageName(function(moduleDataWithPackageNameKey) {
+                            console.dir(moduleDataWithPackageNameKey);
+                            moduleVersions = $scope.nonInstalledModuleDetails.versions;
+                            angular.forEach(moduleVersions, function (value, key) {
+                                requiredModules = value.requireModules;
+                                needFixBeforeInstallation = false;
+                                angular.forEach(requiredModules, function (value, key) {
+                                    var requiredModulePackageName = value.module.toString();
+                                    var requiredModuleName = requiredModulePackageName.replace("org.openmrs.module.", "");
+                                    value['moduleName'] = requiredModuleName; 
+                                    console.log(requiredModulePackageName);
+                                    // console.log(requiredModuleUUID);
+                                    if(requiredModulePackageName in moduleDataWithPackageNameKey) {
+                                        value["isInstalled"] = true;
+                                        value["isStarted"] = moduleDataWithPackageNameKey[requiredModulePackageName].started;
+                                        if(!value["isStarted"]) {
+                                            needFixBeforeInstallation = true;
+                                        }
+                                    }
+                                    else {
+                                        value["isInstalled"] = false;
+                                        value["isStarted"] = false;
+                                        needFixBeforeInstallation = true;
+                                        moduleData["message"] = "Module isn't in the installed list for this server - " + requiredModulePackageName;
+                                        logger.error(moduleData["message"]);
+                                    }
+                                })
+                                if(needFixBeforeInstallation) {
+                                    value["buttonName"] = ["Install", "Fix & Install"];
+                                }
+                                else {
+                                    value["buttonName"] = ["Install"];
+                                }
+                            });
+                            console.dir($scope.nonInstalledModuleDetails);
+                        });
+                        
+
                     } else {
                         $scope.onlineDataFound = false;
                         logger.error("Could not find the searched module information", resultModule[2]);
                     }
+
+                    $scope.alreadyInstalledModule = false;
+                    var moduleUUIDWithOutTag = $scope.nonInstalledModuleDetails.moduleId;
+                    var requestUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/module/" + moduleUUIDWithOutTag;
+                    $http.get(requestUrl, {params: {v: 'full'}})
+                    .success(function (data) {
+                        $scope.alreadyInstalledModule = true;
+                    })
+                    .error(function (data) {
+                        $scope.alreadyInstalledModule = false;
+                    });
+
                     hideLoadingPopUp() // hide the loading Popup
                 }
             });
