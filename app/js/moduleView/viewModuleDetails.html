@@ -26,7 +26,7 @@
     <div class="alert alert-success alert-dismissable" ng-if="moduleNewUpdateFound==1">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         Newest version of this module is avialable for upgrade!
-        <button ng-click="updateModule(moduleUpdateURL)" ng-show="moduleUpdateURL" style="margin-left:15px;"><i
+        <button ng-click="updateModule(ModuleViewData.uuid, moduleUpdateURL)" ng-show="moduleUpdateURL" style="margin-left:15px;"><i
                 class="icon-upload"> </i> Update
         </button>
     </div>
@@ -38,6 +38,10 @@
     <!--    // Module update-->
 
     <!--    Module Upgrade Notifications-->
+    <div class="alert alert-success alert-dismissable" ng-show="SEARCH_MODULE_DOWNLOADED_INSTALLED">
+        <a class="close" data-dismiss="alert" aria-label="close">×</a>
+        {{SEARCH_MODULE_DOWNLOADED_INSTALLED}}
+    </div>
 
     <div class="alert alert-success alert-dismissable" ng-show="startupsuccessMsg">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
@@ -63,21 +67,6 @@
     <div class="alert alert-danger alert-dismissable" ng-show="downloadErrorMsg">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
         {{downloadErrorMsg}}
-    </div>
-
-
-    <div class="row" ng-if="isDownloading==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we download the module!</h3>
-            <img src="img/inprogress.gif">
-        </div>
-    </div>
-
-    <div class="row" ng-if="isUploading==true">
-        <div class="col-md-12 col-xs-12 text-center center-block">
-            <h3 style="text-align: center;">Please wait while we upload the module!</h3>
-            <img src="img/inprogress.gif">
-        </div>
     </div>
 
     <!--    Module Upgrade Notifications-->

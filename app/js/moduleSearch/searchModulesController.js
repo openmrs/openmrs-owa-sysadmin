@@ -1,7 +1,7 @@
 var SearchRepoModule = angular.module('searchModuleController', ['OWARoutes']);
 
-SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'SearchModuleService', '$routeParams', 'logger',
-    function ($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams, logger) {
+SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'SearchModuleService', '$routeParams', 'logger', '$rootScope', '$timeout', 
+    function ($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams, logger, $rootScope, $timeout) {
 
         //OpenMRS breadcrumbs
         $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", ""]]});
@@ -19,6 +19,11 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
 
         function hideLoadingPopUp() {
             angular.element('#loadingModal').modal('hide');
+        }
+
+        function hideLoadingPopUpWithCallBack(callBack) {
+            hideLoadingPopUp();
+            callBack();
         }
 
         function alertsClear() {
@@ -190,6 +195,65 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
                 logger.error($scope.downloadErrorMsg, data);
             });
         };
+
+        $scope.updateModuleThroughModuleResource = function(moduleUuid, moduleDownloadURL) {
+            $scope.isDownloading = true;
+            alertsClear();
+            showLoadingPopUp();
+            var uploadUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/moduleaction";
+            moduleData = {  "modules":[moduleUuid],
+                            "action":"install",
+                            "installUri": moduleDownloadURL
+                        }
+            $http.post(uploadUrl, moduleData, {
+                headers: {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+                }
+            }).success(function (data, status, headers, config) {
+                $scope.isUploading = false;
+                hideLoadingPopUp();
+                $rootScope.SEARCH_MODULE_DOWNLOADED_INSTALLED = "Module has been installed successfully."
+                // waitUntilPopUpClosed(moduleUuid);
+                $scope.redirect("index.html#/module-show/" + moduleUuid+"?=Module downloaded and loaded successfully.");
+                
+            }).error(function (data, status, headers, config) {
+                $scope.isDownloading = false;
+                var x2js = new X2JS();
+                var JsonSuccessResponse = x2js.xml_str2json(data);
+                 
+                if (typeof(JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map.string) != "undefined") {
+                    // File Error Catched
+                    if (typeof(JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1]) != "undefined") {
+                        // Error Message given
+                        $scope.downloadErrorMsg = JsonSuccessResponse["org.openmrs.module.webservices.rest.SimpleObject"].map["linked-hash-map"].entry[0].string[1];
+                    }
+                    else {
+                        // Unknown Error Message
+                        $scope.downloadErrorMsg = "Action failed, Could not download and load the " + moduleUuid + " module!"
+                    }
+                }
+                else {
+                    //unknown Error
+                    $scope.downloadErrorMsg = "Action failed, Could not  download and load  the " + moduleUuid + " module!"
+                }
+                
+                hideLoadingPopUp();
+                logger.error($scope.downloadErrorMsg, data);
+            });
+
+            $scope.redirect = function (redirectPage) {
+                $timeout(function(){ 
+                    var elem = document.getElementById("loadingModal");
+                    if(elem.style.display.toLowerCase() == "none") {
+                        window.location = redirectPage;
+                    }
+                    else {
+                        $scope.redirect(redirectPage);
+                    }
+                }, 150); 
+            }
+
+        }
     }]);
 
 
