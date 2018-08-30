@@ -6,7 +6,6 @@ install:
   - npm install -g bower gulp
   - npm install
   - bower install
-  - npm install gulp
 script: gulp
 deploy:
   provider: bintray
