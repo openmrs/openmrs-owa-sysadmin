@@ -2,7 +2,7 @@ var managemodule = angular.module('managemodule',
     ['ngRoute', 'manageModuleController', 'manageModuleService', 'uploadModuleController',
         'searchModuleController', 'searchModuleService', 'systemInfoController', 'systemInfoService',
         'mainController', 'mainService', 'taskViewController', 'taskViewService', 'addNewTaskController', 'logAppender',
-        'serverLogController', 'serverLogService', 'ngClickCopy']);
+        'serverLogController', 'serverLogService', 'ngClickCopy', 'sysAdminCommon']);
 
 managemodule.config(['$routeProvider',
     function ($routeProvider) {
