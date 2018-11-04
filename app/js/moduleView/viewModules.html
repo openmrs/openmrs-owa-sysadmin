@@ -77,7 +77,7 @@
     <div class="row col-12">
         <div class="panel-body" ng-disabled="isStartAllModules" style="width:100%; padding: 0px;" ng-class="{'disabled': disableExpression}">
 
-            <div style="padding-bottom: 10px;">
+            <div style="padding-bottom: 10px;" ng-if="doesWebAdminAllowToChangeModules">
                 <a href="#/upload-module">
                     <button><i class="icon-plus"> </i> Add/Upgrade Modules</button>
                 </a>
@@ -111,7 +111,7 @@
                     <th> Author</th>
                     <th style="min-width: 60px;"> Version</th>
                     <th> Description</th>
-                    <th style="min-width: 190px;"> Actions</th>
+                    <th style="min-width: 190px;" ng-if="doesWebAdminAllowToChangeModules"> Actions</th>
                 </tr>
 
                 <tr ng-repeat="class in AllModuleViewData">
@@ -128,7 +128,7 @@
                     <td valign="top" style="max-width: 60px;">{{class.version}}</td>
                     <td valign="top">{{class.description}}</td>
 
-                    <td valign="top" align="center" valign="middle" style="vertical-align:middle;">
+                    <td valign="top" align="center" valign="middle" style="vertical-align:middle;" ng-if="doesWebAdminAllowToChangeModules">
                         <button ng-click="stopConfirmationShow(class.packageName,class.uuid, class.display)"
                                 ng-if="class.started == true" style="width: 100px;"><img src="img/stop-new-1.png"/>Stop
                         </button>

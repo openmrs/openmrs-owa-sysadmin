@@ -73,7 +73,7 @@
     <div class="row col-12" ng-show="requestModuleViewDetails">
         <div class="panel-body" style="width: 100%;">
             <h2> Module Name : {{ModuleViewData.display}} </h2>
-            <div style="padding-bottom: 10px;">
+            <div style="padding-bottom: 10px;"  ng-if="doesWebAdminAllowToChangeModules">
                 <button ng-click="stopConfirmationShow(ModuleViewData.packageName,ModuleViewData.uuid, ModuleViewData.display)"
                         ng-if="ModuleViewData.started == true" style="width: 100px;"><img src="img/stop-new-1.png"/>Stop
                 </button>

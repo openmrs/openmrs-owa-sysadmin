@@ -1,7 +1,7 @@
 var SearchRepoModule = angular.module('searchModuleController', ['OWARoutes']);
 
-SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'SearchModuleService', '$routeParams', 'logger', '$rootScope', '$timeout', 'ModuleService',
-    function ($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams, logger, $rootScope, $timeout, ModuleService) {
+SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'SearchModuleService', '$routeParams', 'logger', '$rootScope', '$timeout', 'ModuleService', 'commonUtil',
+    function ($scope, $http, OWARoutesUtil, $rootScope, SearchModuleService, $routeParams, logger, $rootScope, $timeout, ModuleService, commonUtil) {
 
         //OpenMRS breadcrumbs
         $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", ""]]});
@@ -15,6 +15,30 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
                 backdrop: 'static',
                 keyboard: false
             });
+        }
+
+        // used to track the Web Admin access property
+        $scope.doesWebAdminAllowToChangeModules = false;
+
+        runModuleViewStartUpActions();
+        function runModuleViewStartUpActions() {
+            var response = commonUtil.checkWebAdminPropertyForUserAccess();
+            response.then(function (result) {
+                setWebAdminPropertyForUserAccess(result);
+                if(!getWebAdminAllowToChangeModules()) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    window.location = "index.html#/module-show/";
+                    return;  
+                }
+            });
+        }
+
+        function setWebAdminPropertyForUserAccess(webAdminProperty) {
+            $scope.doesWebAdminAllowToChangeModules = webAdminProperty;
+        }
+
+        function getWebAdminAllowToChangeModules() {
+            return $scope.doesWebAdminAllowToChangeModules;
         }
 
         function hideLoadingPopUp() {
@@ -110,85 +134,98 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
         }
 
         $scope.getSearchModuleDetails = function () {
-            //OpenMRS breadcrumbs
-            $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", "#/view-search"], ["Module Information", ""]]});
+            var response = commonUtil.checkWebAdminPropertyForUserAccess();
+            response.then(function (result) {
+                if(!result) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    return;  
+                }
+             
+                //OpenMRS breadcrumbs
+                $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Search Module", "#/view-search"], ["Module Information", ""]]});
 
-            if (typeof($scope.nonInstalledModuleDetails) != undefined) {
-                delete $scope.nonInstalledModuleDetails;
-            }
-            if (typeof($scope.onlineDataFound) != undefined) {
-                delete $scope.onlineDataFound;
-            }
-            showLoadingPopUp(); // Show loadingPop to prevent other Actions
-            var moduleUuid = $routeParams.UUID;
-            var responseModuleDetails = SearchModuleService.getSeatchModuleDetails(moduleUuid);
-            responseModuleDetails.then(function (resultModule) {
-                if (resultModule[0] == "GET") {
-                    if (resultModule[1] == 1) {
-                        $scope.onlineDataFound = true;
-                        $scope.nonInstalledModuleDetails = resultModule[2];
-                        
+                if (typeof($scope.nonInstalledModuleDetails) != undefined) {
+                    delete $scope.nonInstalledModuleDetails;
+                }
+                if (typeof($scope.onlineDataFound) != undefined) {
+                    delete $scope.onlineDataFound;
+                }
+                showLoadingPopUp(); // Show loadingPop to prevent other Actions
+                var moduleUuid = $routeParams.UUID;
+                var responseModuleDetails = SearchModuleService.getSeatchModuleDetails(moduleUuid);
+                responseModuleDetails.then(function (resultModule) {
+                    if (resultModule[0] == "GET") {
+                        if (resultModule[1] == 1) {
+                            $scope.onlineDataFound = true;
+                            $scope.nonInstalledModuleDetails = resultModule[2];
+                            
 
-                        buildModuleStructure_keyAsPackageName(function(moduleDataWithPackageNameKey) {
-                            console.dir(moduleDataWithPackageNameKey);
-                            moduleVersions = $scope.nonInstalledModuleDetails.versions;
-                            angular.forEach(moduleVersions, function (value, key) {
-                                requiredModules = value.requireModules;
-                                needFixBeforeInstallation = false;
-                                angular.forEach(requiredModules, function (value, key) {
-                                    var requiredModulePackageName = value.module.toString();
-                                    var requiredModuleName = requiredModulePackageName.replace("org.openmrs.module.", "");
-                                    value['moduleName'] = requiredModuleName; 
-                                    console.log(requiredModulePackageName);
-                                    // console.log(requiredModuleUUID);
-                                    if(requiredModulePackageName in moduleDataWithPackageNameKey) {
-                                        value["isInstalled"] = true;
-                                        value["isStarted"] = moduleDataWithPackageNameKey[requiredModulePackageName].started;
-                                        if(!value["isStarted"]) {
-                                            needFixBeforeInstallation = true;
+                            buildModuleStructure_keyAsPackageName(function(moduleDataWithPackageNameKey) {
+                                console.dir(moduleDataWithPackageNameKey);
+                                moduleVersions = $scope.nonInstalledModuleDetails.versions;
+                                angular.forEach(moduleVersions, function (value, key) {
+                                    requiredModules = value.requireModules;
+                                    needFixBeforeInstallation = false;
+                                    angular.forEach(requiredModules, function (value, key) {
+                                        var requiredModulePackageName = value.module.toString();
+                                        var requiredModuleName = requiredModulePackageName.replace("org.openmrs.module.", "");
+                                        value['moduleName'] = requiredModuleName; 
+                                        console.log(requiredModulePackageName);
+                                        // console.log(requiredModuleUUID);
+                                        if(requiredModulePackageName in moduleDataWithPackageNameKey) {
+                                            value["isInstalled"] = true;
+                                            value["isStarted"] = moduleDataWithPackageNameKey[requiredModulePackageName].started;
+                                            if(!value["isStarted"]) {
+                                                needFixBeforeInstallation = true;
+                                            }
                                         }
+                                        else {
+                                            value["isInstalled"] = false;
+                                            value["isStarted"] = false;
+                                            needFixBeforeInstallation = true;
+                                            moduleData["message"] = "Module isn't in the installed list for this server - " + requiredModulePackageName;
+                                            logger.error(moduleData["message"]);
+                                        }
+                                    })
+                                    if(needFixBeforeInstallation) {
+                                        value["buttonName"] = ["Install", "Fix & Install"];
                                     }
                                     else {
-                                        value["isInstalled"] = false;
-                                        value["isStarted"] = false;
-                                        needFixBeforeInstallation = true;
-                                        moduleData["message"] = "Module isn't in the installed list for this server - " + requiredModulePackageName;
-                                        logger.error(moduleData["message"]);
+                                        value["buttonName"] = ["Install"];
                                     }
-                                })
-                                if(needFixBeforeInstallation) {
-                                    value["buttonName"] = ["Install", "Fix & Install"];
-                                }
-                                else {
-                                    value["buttonName"] = ["Install"];
-                                }
+                                });
+                                console.dir($scope.nonInstalledModuleDetails);
                             });
-                            console.dir($scope.nonInstalledModuleDetails);
-                        });
-                        
+                            
 
-                    } else {
-                        $scope.onlineDataFound = false;
-                        logger.error("Could not find the searched module information", resultModule[2]);
-                    }
+                        } else {
+                            $scope.onlineDataFound = false;
+                            logger.error("Could not find the searched module information", resultModule[2]);
+                        }
 
-                    $scope.alreadyInstalledModule = false;
-                    var moduleUUIDWithOutTag = $scope.nonInstalledModuleDetails.moduleId;
-                    var requestUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/module/" + moduleUUIDWithOutTag;
-                    $http.get(requestUrl, {params: {v: 'full'}})
-                    .success(function (data) {
-                        $scope.alreadyInstalledModule = true;
-                    })
-                    .error(function (data) {
                         $scope.alreadyInstalledModule = false;
-                    });
+                        var moduleUUIDWithOutTag = $scope.nonInstalledModuleDetails.moduleId;
+                        var requestUrl = OWARoutesUtil.getOpenmrsUrl() + "/ws/rest/v1/module/" + moduleUUIDWithOutTag;
+                        $http.get(requestUrl, {params: {v: 'full'}})
+                        .success(function (data) {
+                            $scope.alreadyInstalledModule = true;
+                        })
+                        .error(function (data) {
+                            $scope.alreadyInstalledModule = false;
+                        });
 
-                    hideLoadingPopUp() // hide the loading Popup
-                }
-            });
+                        hideLoadingPopUp() // hide the loading Popup
+                    }
+                });
+            });  
         }
 
         $scope.downloadAndUpdateModule = function (moduleUrl) {
+            if(!getWebAdminAllowToChangeModules()) {
+                logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                window.location = "index.html#/module-show/";
+                return;  
+            }
             $scope.isDownloading = true;
             alertsClear();
             showLoadingPopUp();
@@ -273,6 +310,11 @@ SearchRepoModule.controller('searchModuleCtrl', ['$scope', '$http', 'OWARoutesUt
         };
 
         $scope.updateModuleThroughModuleResource = function(moduleUuid, moduleDownloadURL) {
+            if(!getWebAdminAllowToChangeModules()) {
+                logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                window.location = "index.html#/module-show/";
+                return;  
+            }
             $scope.isDownloading = true;
             alertsClear();
             showLoadingPopUp();

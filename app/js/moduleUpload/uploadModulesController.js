@@ -18,8 +18,8 @@ uploadModule.directive('fileModel', ['$parse', function ($parse) {
 }]);
 
 
-uploadModule.controller('uploadModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'logger',
-    function ($scope, $http, OWARoutesUtil, $rootScope, logger) {
+uploadModule.controller('uploadModuleCtrl', ['$scope', '$http', 'OWARoutesUtil', '$rootScope', 'logger', 'commonUtil',
+    function ($scope, $http, OWARoutesUtil, $rootScope, logger, commonUtil) {
 
         // OpenMRS breadcrumbs
         $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Upload Module", ""]]});
@@ -33,6 +33,30 @@ uploadModule.controller('uploadModuleCtrl', ['$scope', '$http', 'OWARoutesUtil',
                 backdrop: 'static',
                 keyboard: false
             });
+        }
+
+        // used to track the Web Admin access property
+        $scope.doesWebAdminAllowToChangeModules = false;
+
+        runModuleViewStartUpActions();
+        function runModuleViewStartUpActions() {
+            var response = commonUtil.checkWebAdminPropertyForUserAccess();
+            response.then(function (result) {
+                setWebAdminPropertyForUserAccess(result);
+                if(!getWebAdminAllowToChangeModules()) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    window.location = "index.html#/module-show/";
+                    return;  
+                }
+            });
+        }
+
+        function setWebAdminPropertyForUserAccess(webAdminProperty) {
+            $scope.doesWebAdminAllowToChangeModules = webAdminProperty;
+        }
+
+        function getWebAdminAllowToChangeModules() {
+            return $scope.doesWebAdminAllowToChangeModules;
         }
 
         function hideLoadingPopUp() {
@@ -63,7 +87,11 @@ uploadModule.controller('uploadModuleCtrl', ['$scope', '$http', 'OWARoutesUtil',
         }
 
         $scope.uploadFile = function () {
-
+            if(!getWebAdminAllowToChangeModules()) {
+                logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                window.location = "index.html#/module-show/";
+                return;  
+            }
             alertsClear(); // clear all alerts $scope variables
             showLoadingPopUp(); // Show loadingPop to prevent other Actions
 

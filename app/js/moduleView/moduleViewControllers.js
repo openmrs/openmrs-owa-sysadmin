@@ -2,8 +2,8 @@ var manageModuleController = angular.module('manageModuleController', ['OWARoute
 
 
 manageModuleController.controller('ModuleListCtrl',
-    ['$scope', '$location', '$route', '$routeParams', 'OWARoutesUtil', '$http', '$rootScope', 'ModuleService', 'logger', '$rootScope',
-        function ($scope, $location, $route, $routeParams, OWARoutesUtil, $http, $rootScope, ModuleService, logger, $rootScope) {
+    ['$scope', '$location', '$route', '$routeParams', 'OWARoutesUtil', '$http', '$rootScope', 'ModuleService', 'logger', '$rootScope', 'commonUtil',
+        function ($scope, $location, $route, $routeParams, OWARoutesUtil, $http, $rootScope, ModuleService, logger, $rootScope, commonUtil) {
 
             // OpenMRS breadcrumbs
             $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", ""]]});
@@ -20,6 +20,25 @@ manageModuleController.controller('ModuleListCtrl',
                     backdrop: 'static',
                     keyboard: false
                 });
+            }
+
+            // used to track the Web Admin access property
+            $scope.doesWebAdminAllowToChangeModules = false;
+
+            checkWebAdminProperty();
+            function checkWebAdminProperty() {
+                var response = commonUtil.checkWebAdminPropertyForUserAccess();
+                response.then(function (result) {
+                    setWebAdminPropertyForUserAccess(result);
+                });
+            }
+
+            function setWebAdminPropertyForUserAccess(webAdminProperty) {
+                $scope.doesWebAdminAllowToChangeModules = webAdminProperty;
+            }
+
+            function getWebAdminAllowToChangeModules() {
+                return $scope.doesWebAdminAllowToChangeModules;
             }
 
             function hideLoadingPopUp() {
@@ -82,6 +101,10 @@ manageModuleController.controller('ModuleListCtrl',
             }
 
             $scope.updateModule = function(moduleUuid, moduleDownloadURL) {
+                if(!getWebAdminAllowToChangeModules()) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    return;  
+                }
                 $scope.isDownloading = true;
                 alertsClear();
                 showLoadingPopUp();
@@ -136,6 +159,10 @@ manageModuleController.controller('ModuleListCtrl',
             }
 
             $scope.StartModule = function (moduleUuid, resource, moduleDisplayName) {
+                if(!getWebAdminAllowToChangeModules()) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    return;  
+                }
                 $scope.isStartModule = true;
                 alertsClear(); // clear all alerts $scope variables
                 showLoadingPopUp(); // Show loadingPop to prevent other Actions
@@ -186,6 +213,10 @@ manageModuleController.controller('ModuleListCtrl',
             }
 
             $scope.StopModule = function (moduleUuid, resource, moduleDisplayName) {
+                if(!getWebAdminAllowToChangeModules()) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    return;  
+                }
                 $scope.isStopModule = true;
                 alertsClear(); // clear all alerts $scope variables
                 showLoadingPopUp(); // Show loadingPop to prevent other Actions
@@ -306,6 +337,10 @@ manageModuleController.controller('ModuleListCtrl',
             }
 
             $scope.unloadModule = function (moduleUuid, moduleDisplayName) {
+                if(!getWebAdminAllowToChangeModules()) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    return;  
+                }
                 $scope.isUnloadModule = true;
                 alertsClear(); // clear all alerts $scope variables
                 showLoadingPopUp(); // Show loadingPop to prevent other Actions
@@ -353,6 +388,10 @@ manageModuleController.controller('ModuleListCtrl',
 
 
             $scope.StartAllModules = function () {
+                if(!getWebAdminAllowToChangeModules()) {
+                    logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                    return;  
+                }
                 $scope.isStartAllModules = true;
                 alertsClear(); // clear all alerts $scope variables
                 showLoadingPopUp(); // Show loadingPop to prevent other Actions
@@ -615,132 +654,146 @@ manageModuleController.controller('ModuleListCtrl',
             }
 
             $scope.checkAllModulesForUpdate = function () {
+                var response = commonUtil.checkWebAdminPropertyForUserAccess();
+                response.then(function (result) {
+                    if(!result) {
+                        logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                        window.location = "index.html#/module-show/";
+                        return;  
+                    }
+                
+                    //OpenMRS breadcrumbs
+                    $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Check for Updates", ""]]});
 
-                //OpenMRS breadcrumbs
-                $rootScope.$emit("updateBreadCrumb", {breadcrumbs: [["SysAdmin", "#"], ["Modules", "#/module-show"], ["Check for Updates", ""]]});
+                    alertsClear();
+                    showLoadingPopUp();
+                    $scope.searchingForUpdate = true;
+                    var count = 0;
 
-                alertsClear();
-                showLoadingPopUp();
-                $scope.searchingForUpdate = true;
-                var count = 0;
+                    $scope.updateErrorModules = [];
+                    var availableUpdateData = [];
+                    var responseModuleDetails = ModuleService.getAllModuleDetails();
+                    responseModuleDetails.then(function (resultModule) {
+                        if (resultModule[0] == "GET") {
+                            if (resultModule[1] == 1) {
+                                responseModuleDetailsData = resultModule[2].results; //data.results
+                                count = 0;
+                                angular.forEach(responseModuleDetailsData, function (Modulevalue, Modulekey) {
+                                    var moduleCurrentVeriosn = Modulevalue.version;
+                                    var responseUpdate = ModuleService.checkModuleUpdate(Modulevalue.packageName);
+                                    responseUpdate.then(function (resultUpdate) {
+                                        if (resultUpdate[0] == "GET") {
+                                            if (resultUpdate[1] == 1) {
+                                                var UpdateData = resultUpdate[2];
+                                                var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.latestVersion);
+                                                if (compateValue == 1) {
+                                                    var updateObj = {
+                                                        "uuid": Modulevalue.uuid,
+                                                        "name": Modulevalue.name,
+                                                        "display": Modulevalue.display,
+                                                        "author": Modulevalue.author,
+                                                        "description": Modulevalue.description,
+                                                        "version": Modulevalue.version,
+                                                        "newversion": UpdateData.latestVersion,
+                                                        "downloadurl": UpdateData.versions[0].downloadUri
 
-                $scope.updateErrorModules = [];
-                var availableUpdateData = [];
-                var responseModuleDetails = ModuleService.getAllModuleDetails();
-                responseModuleDetails.then(function (resultModule) {
-                    if (resultModule[0] == "GET") {
-                        if (resultModule[1] == 1) {
-                            responseModuleDetailsData = resultModule[2].results; //data.results
-                            count = 0;
-                            angular.forEach(responseModuleDetailsData, function (Modulevalue, Modulekey) {
-                                var moduleCurrentVeriosn = Modulevalue.version;
-                                var responseUpdate = ModuleService.checkModuleUpdate(Modulevalue.packageName);
-                                responseUpdate.then(function (resultUpdate) {
-                                    if (resultUpdate[0] == "GET") {
-                                        if (resultUpdate[1] == 1) {
-                                            var UpdateData = resultUpdate[2];
-                                            var compateValue = version_compare(moduleCurrentVeriosn, UpdateData.latestVersion);
-                                            if (compateValue == 1) {
-                                                var updateObj = {
-                                                    "uuid": Modulevalue.uuid,
-                                                    "name": Modulevalue.name,
-                                                    "display": Modulevalue.display,
-                                                    "author": Modulevalue.author,
-                                                    "description": Modulevalue.description,
-                                                    "version": Modulevalue.version,
-                                                    "newversion": UpdateData.latestVersion,
-                                                    "downloadurl": UpdateData.versions[0].downloadUri
-
+                                                    }
+                                                    availableUpdateData.push(updateObj);
                                                 }
-                                                availableUpdateData.push(updateObj);
+                                            }
+                                            else {
+                                                // error in retrive Module update details
+                                                $scope.updateErrorModules.push(Modulevalue.name);
+                                                $scope.checkUpdateForAllModuleError = "Could not get some the module update details."
+                                                logger.error("Modulevalue.packageName : " + Modulevalue.packageName, resultUpdate[1]);
+                                            }
+                                            count++;
+                                            if(count>=responseModuleDetailsData.length) {
+                                                hideLoadingPopUp();
                                             }
                                         }
                                         else {
                                             // error in retrive Module update details
+                                            if (count >= responseModuleDetailsData.length) {
+                                                $scope.searchingForUpdate = false;
+                                            }
+                                            count++;
+                                            if(count>=responseModuleDetailsData.length) {
+                                                hideLoadingPopUp();
+                                            }
                                             $scope.updateErrorModules.push(Modulevalue.name);
                                             $scope.checkUpdateForAllModuleError = "Could not get some the module update details."
                                             logger.error("Modulevalue.packageName : " + Modulevalue.packageName, resultUpdate[1]);
                                         }
-                                        count++;
-                                        if(count>=responseModuleDetailsData.length) {
-                                            hideLoadingPopUp();
-                                        }
-                                    }
-                                    else {
-                                        // error in retrive Module update details
-                                        if (count >= responseModuleDetailsData.length) {
-                                            $scope.searchingForUpdate = false;
-                                        }
-                                        count++;
-                                        if(count>=responseModuleDetailsData.length) {
-                                            hideLoadingPopUp();
-                                        }
-                                        $scope.updateErrorModules.push(Modulevalue.name);
-                                        $scope.checkUpdateForAllModuleError = "Could not get some the module update details."
-                                        logger.error("Modulevalue.packageName : " + Modulevalue.packageName, resultUpdate[1]);
-                                    }
+                                    });
                                 });
-                            });
-                            $scope.UpdatesFound = true;
-                            $scope.availableUpdateData = availableUpdateData;
+                                $scope.UpdatesFound = true;
+                                $scope.availableUpdateData = availableUpdateData;
+                            }
+                            else {
+                                // error in retrive Module details
+                                $scope.searchingForUpdate = false;
+                                $scope.checkUpdateForAllModuleError = "Could not get the module details.";
+                                hideLoadingPopUp();
+                                logger.error($scope.checkUpdateForAllModuleError, resultModule[1]);
+                            }
                         }
                         else {
-                            // error in retrive Module details
+                            //  Could not fetch Module Details
                             $scope.searchingForUpdate = false;
-                            $scope.checkUpdateForAllModuleError = "Could not get the module details.";
+                            $scope.checkUpdateForAllModuleError = "Could not get the module list.";
                             hideLoadingPopUp();
-                            logger.error($scope.checkUpdateForAllModuleError, resultModule[1]);
+                            logger.error($scope.checkUpdateForAllModuleError + Modulevalue.packageName, resultModule[1]);
                         }
-                    }
-                    else {
-                        //  Could not fetch Module Details
-                        $scope.searchingForUpdate = false;
-                        $scope.checkUpdateForAllModuleError = "Could not get the module list.";
-                        hideLoadingPopUp();
-                        logger.error($scope.checkUpdateForAllModuleError + Modulevalue.packageName, resultModule[1]);
-                    }
 
+                    });
                 });
             }
 
 
             $scope.checkModuleUpdate = function (moduleUuid, modulePackage, currentVersion) {
-
-                alertsClear(); // clear all alerts $scope variables
-                showLoadingPopUp(); // Show loadingPop to prevent other Actions
-                var response = ModuleService.checkModuleUpdate(modulePackage);
+                var response = commonUtil.checkWebAdminPropertyForUserAccess();
                 response.then(function (result) {
-                    responseType = result[0]; //UPLOAD or DOWNLOAD
-                    responseValue = result[1]; // 1- success | 0 - fail
-                    responseData = result[2];
-                    responseStatus = result[3];
-                    if (responseType == "GET") {
-                        if (responseValue == 1) {
-                            // Modules Found
-                            var compateValue = version_compare(currentVersion, responseData.latestVersion);
-                            if (compateValue == 0) {
-                                // Same Version
-                                $scope.moduleNewUpdateFound = "-1"; // same version
-                            }
-                            else if (compateValue == 1) {
-                                // New Version Found
-                                $scope.moduleNewUpdateFound = "1"; // found
-                                $scope.moduleUpdateURL = responseData.versions[0].downloadUri;
-                            }
-                            else if (compateValue == -1) {
-                                // Upto Data - Server contains older version
-                                $scope.moduleNewUpdateFound = "-1"; // no need of update
-                            }
-                        }
-                        else {
-                            // No Modules Found
-                            $scope.moduleNewUpdateFound = false;
-                            logger.error("Could not check module information", responseData);
-                        }
-                        hideLoadingPopUp();
+                    if(!result) {
+                        logger.error("You don't have the permission to perform the action on this page. Module Management privilege required", "");
+                        return;  
                     }
+                
+                    alertsClear(); // clear all alerts $scope variables
+                    showLoadingPopUp(); // Show loadingPop to prevent other Actions
+                    var response = ModuleService.checkModuleUpdate(modulePackage);
+                    response.then(function (result) {
+                        responseType = result[0]; //UPLOAD or DOWNLOAD
+                        responseValue = result[1]; // 1- success | 0 - fail
+                        responseData = result[2];
+                        responseStatus = result[3];
+                        if (responseType == "GET") {
+                            if (responseValue == 1) {
+                                // Modules Found
+                                var compateValue = version_compare(currentVersion, responseData.latestVersion);
+                                if (compateValue == 0) {
+                                    // Same Version
+                                    $scope.moduleNewUpdateFound = "-1"; // same version
+                                }
+                                else if (compateValue == 1) {
+                                    // New Version Found
+                                    $scope.moduleNewUpdateFound = "1"; // found
+                                    $scope.moduleUpdateURL = responseData.versions[0].downloadUri;
+                                }
+                                else if (compateValue == -1) {
+                                    // Upto Data - Server contains older version
+                                    $scope.moduleNewUpdateFound = "-1"; // no need of update
+                                }
+                            }
+                            else {
+                                // No Modules Found
+                                $scope.moduleNewUpdateFound = false;
+                                logger.error("Could not check module information", responseData);
+                            }
+                            hideLoadingPopUp();
+                        }
+                    });
                 });
-
             }
 
             function getIndexNameforAddons(moduleName, moduleuuid) {
