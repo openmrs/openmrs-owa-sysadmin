@@ -185,7 +185,7 @@ taskViewControllerModule.controller('taskViewCtrl', ['$scope', '$http', 'OWARout
             $scope.getAllTaskDetails();
             hideLoadingPopUp();
         }).error(function (data, status, headers, config) {
-            $scope.isActionStatus = [false, 'Could not re-schedule the all tasks.'];
+            $scope.isActionStatus = [false, 'Could not re-schedule all the tasks.'];
             hideLoadingPopUp();
             logger.error("Could not re-schedule all the task.", data);
         });
