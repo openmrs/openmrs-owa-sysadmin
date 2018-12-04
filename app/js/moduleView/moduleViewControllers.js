@@ -410,7 +410,7 @@ manageModuleController.controller('ModuleListCtrl',
                 }).success(function (data, status, headers, config) {
                     $scope.isStartAllModules = false;
                     $scope.getAllModuleDetails();
-                    $scope.startAllModuleSuccess = "Action completed successfully. Please check the module's status";
+                    $scope.startAllModuleSuccess = "Action completed successfully. Please check each module's status";
                     hideLoadingPopUp();
                 }).error(function (data, status, headers, config) {
                         var x2js = new X2JS();
