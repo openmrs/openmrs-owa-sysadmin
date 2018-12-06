@@ -107,16 +107,25 @@
         <div class="bd-callout bd-callout-info" ng-repeat="properties in taskProperties">
             <h4 id="" style="margin-bottom:10px;">New Property</h4>
             <div class="row" style="margin-bottom:10px;">
-                <div style="padding-left: 5px; padding-right: 5px; padding-top: 10px;">Name</div>
-                <div class="col-4 col-xl-4 col-sm-4 form">
-                    <input type="text" placeholder="Enter property name" ng-model="properties.name" style="width:95%; font-size: 18px;" required>
-                </div>
-
-                <div style="padding-left: 5px; padding-right: 5px; padding-top: 10px;">Value</div>
-                <div class="col-4 col-xl-4 col-sm-4 form">
-                    <input type="text" placeholder="Enter property value" ng-model="properties.value" style="width:95%; font-size: 18px;" required>
-                </div>
-                <button class="btn btn-danger" ng-click="removeTaskProperties()"><i class="icon-remove"> </i></button>
+                <table>
+                    <tr style="border: 0px">
+                        <td style="border: 0px;">
+                            <div style="padding-left: 5px;">Name</div>
+                            <div style="padding-top: 5px; padding-left: 5px;">
+                            <input type="text" placeholder="Enter property name" ng-model="properties.name" style="width:95%; font-size: 18px;" required>
+                            </div>
+                        </td>
+                        <td style="border: 0px;">
+                            <div style="padding-left: 5px;">Value</div>
+                            <div style="padding-top: 5px; padding-left: 5px;">
+                            <input type="text" placeholder="Enter property value" ng-model="properties.value" style="width:95%; font-size: 18px;" required>
+                            </div>
+                        </td>
+                        <td style="border: 0px; padding-top: 28px;">
+                            <button class="btn btn-danger" ng-click="removeTaskProperties()"><i class="icon-remove"> </i></button>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
         </div>
