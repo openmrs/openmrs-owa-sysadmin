@@ -25,7 +25,7 @@
     <!--    Module update-->
     <div class="alert alert-success alert-dismissable" ng-if="moduleNewUpdateFound==1">
         <a class="close" data-dismiss="alert" aria-label="close">×</a>
-        Newest version of this module is avialable for upgrade!
+        Newest version of this module is available for upgrade!
         <button ng-click="updateModule(ModuleViewData.uuid, moduleUpdateURL)" ng-show="moduleUpdateURL" style="margin-left:15px;"><i
                 class="icon-upload"> </i> Update
         </button>
@@ -108,7 +108,8 @@
                 </tr>
                 <tr>
                     <td valign="top"><b>Current Status</b></td>
-                    <td valign="top">{{ModuleViewData.started}}</td>
+                    <td valign="top"><div ng-if="ModuleViewData.started == true">Running</div>
+                                     <div ng-if="ModuleViewData.started != true">Stopped</div></td>
                 </tr>
                 <tr>
                     <td valign="top"><b>Required OpenMRS Version</b></td>
