@@ -28,6 +28,9 @@ taskViewControllerModule.controller('taskViewCtrl', ['$scope', '$http', 'OWARout
         if (typeof($scope.requestAllTaskDetails) != undefined) {
             delete $scope.requestAllTaskDetails;
         }
+        if (typeof($scope.isActionStatus) != undefined) {
+            delete $scope.isActionStatus;
+        }
         var response = taskViewService.getAllTaskDetails();
         response.then(function (result) {
             responseType = result[0]; //UPLOAD or DOWNLOAD
