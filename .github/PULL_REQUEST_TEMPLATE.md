@@ -30,11 +30,6 @@ see https://issues.openmrs.org/browse/SAD-
 
   No? -> write tests and add them to this commit `git add . && git commit --amend`
 
-- [ ] I ran `mvn clean package` right before creating this pull request and
-  added all formatting changes to my commit.
-
-  No? -> execute above command
-
 - [ ] All new and existing **tests passed**.
 
   No? -> figure out why and add the fix to your commit. It is your responsibility to make sure your code works.
