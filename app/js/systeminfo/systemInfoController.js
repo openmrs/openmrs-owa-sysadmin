@@ -19,7 +19,7 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                 logTextDocument+=key + " : " + value + "\n";
             }
         });
-        logTextDocument +="\nModule Information (" + $scope.SystemInfoImportantContent['modules']['SystemInfo.Module.repositoryPath'] + ")\n----------------------------------------\n";
+        logTextDocument +="\nModule Information\n----------------------------------------\n";
         indexCount = 1;
         angular.forEach($scope.SystemInfoImportantContent['modules'], function(value, key) {
             if(key!='SystemInfo.Module.repositoryPath') {
@@ -131,7 +131,8 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
                     if (typeof(data.systemInfo["SystemInfo.title.moduleInformation"]) != "undefined")
                     {
                         $scope.moduleInformation = data.systemInfo["SystemInfo.title.moduleInformation"];
-                        $scope.SystemInfoImportantContent["Total Modules"] = keyCount($scope.moduleInformation);
+                        //minus 1 because it contains "SystemInfo.Module.repositoryPath" key too which is not a module
+                        $scope.SystemInfoImportantContent["Total Modules"] = keyCount($scope.moduleInformation) - 1;
                         $scope.SystemInfoImportantContent["modules"] =  $scope.moduleInformation;
                     }
                     else {
