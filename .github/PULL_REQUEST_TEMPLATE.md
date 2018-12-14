@@ -30,8 +30,7 @@ see https://issues.openmrs.org/browse/SAD-
 
   No? -> write tests and add them to this commit `git add . && git commit --amend`
 
-- [ ] I ran `mvn clean package` right before creating this pull request and
-  added all formatting changes to my commit.
+- [ ] I ran `gulp` right before creating this pull request to verify if the project is building properly.
 
   No? -> execute above command
 
