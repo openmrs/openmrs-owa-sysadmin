@@ -29,7 +29,7 @@ SystemInfoControllerModule.controller('systeminfoCtrl', ['$scope','$http','OWARo
         });
 
         $scope.copiedToClipboard = ngCopy(logTextDocument);
-        if(ngCopy(logTextDocument)) {
+        if($scope.copiedToClipboard) {
             $scope.copyToClipboardText = "Copied";
             $scope.copiedToClipboardIcon = "ok";
             $timeout(function(){ $scope.copyToClipboardText = "Copy System Info"; $scope.copiedToClipboardIcon = "copy";  }, 3000);  
