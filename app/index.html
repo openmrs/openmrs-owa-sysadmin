@@ -18,8 +18,8 @@
     <!-- OpenMRS Header-->
           <header ng-controller="mainHomeCtrl">
         <div class="logo">
-            <a href="/openmrs/referenceapplication/home.page">
-                <img src="/openmrs/ms/uiframework/resource/uicommons/images/logo/openmrs-with-title-small.png">
+            <a href="../../referenceapplication/home.page">
+                <img src="../../ms/uiframework/resource/uicommons/images/logo/openmrs-with-title-small.png">
             </a>
         </div>
         <ul class="user-options" data-ng-init="getOpenMRSSession()">
@@ -31,7 +31,7 @@
                     <i class="icon-caret-down link" style="font-size: 0.7em;"></i>
                 </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                    <a href="/openmrs/adminui/myaccount/myAccount.page">
+                    <a href="../../adminui/myaccount/myAccount.page">
                 <button class="dropdown-item dropdown-item-OpenMRSheader" type="button" >My Account</button>
                   </a>  
               </div>  
@@ -49,7 +49,7 @@
               </div>  
             </li>
             <li class="logout" >
-                <a href="/openmrs/appui/header/logout.action?successUrl=openmrs">
+                <a href="../../appui/header/logout.action?successUrl={{getLogoutSuccessPath()}}">
                     Logout
                     <i class="icon-signout small"></i>
                 </a>
@@ -62,7 +62,7 @@
     <!--OpenMRS breadcrumbs-->
     <ul id="breadcrumbs" ng-controller="breadCrumbCtrl" >
         <li>
-            <a href="/openmrs">
+            <a href="../../">
             <i class="icon-home small"></i>
             </a> 
         </li>

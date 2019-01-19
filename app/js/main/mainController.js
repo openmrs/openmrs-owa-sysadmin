@@ -59,6 +59,12 @@ mainControllerModule.controller('mainHomeCtrl', ['$scope','$http','OWARoutesUtil
                 logger.error("Could not fetch the OpenMRS Session information from the server", data);
             });
         }
+
+        $scope.getLogoutSuccessPath = function() {
+            var openMrsUrl = OWARoutesUtil.getOpenmrsUrl();
+            logoutSuccessPath = openMrsUrl.substring(openMrsUrl.lastIndexOf('/') + 1);
+            return logoutSuccessPath;
+        }
     }]);
 
 mainControllerModule.controller('breadCrumbCtrl', ['$scope','$rootScope', function($scope,$rootScope){
