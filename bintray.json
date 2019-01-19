@@ -7,7 +7,7 @@
 
     "version": {
         "name": "1.2.0",
-        "released": "2018-04-15"
+        "released": "2019-01-19"
     },
 
     "files":[{"includePattern": "dist/(.*\\.zip)", "uploadPattern": "$1"}],

@@ -24,7 +24,7 @@ var gutil = require('gulp-util');
 var plugins = gulpLoadPlugins();
 
 var THIS_APP_ID = 'SystemAdministration';
-var THIS_APP_VERSION = '1.2';
+var THIS_APP_VERSION = '1.3.0';
 
 var htmlGlob = ['app/**/*.html'];
 var resourcesGlob = ['app/**/*.{png,svg,jpg,gif}', 'app/**/*.{css,less}', 
