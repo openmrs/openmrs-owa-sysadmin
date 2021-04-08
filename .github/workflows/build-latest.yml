@@ -1,0 +1,45 @@
+name: Build Latest
+
+on:
+  push:
+    branches: [ 'master' ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 5.x ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm install -g bower gulp
+      - run: npm install
+      - run: bower install
+      - run: gulp
+
+      - name: Set up JDK 1.8 and Maven settings file
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+          server-id: openmrs-repo-owa
+          server-username: MAVEN_REPO_USERNAME
+          server-password: MAVEN_REPO_PASSWORD
+
+      - name: Extract the name of the built artifact
+        run: echo "ARTIFACT_NAME=`echo $(find . -maxdepth 1 -name "SystemAdministration-*.zip" -printf '%P')`" >> $GITHUB_ENV
+
+      - name: Deploy to Maven if it is a SNAPSHOT
+        run: mvn deploy:deploy-file -Pdeploy-snapshot
+        if:  contains(env.ARTIFACT_NAME, '-SNAPSHOT')
+        env:
+          MAVEN_REPO_USERNAME: ${{ secrets.MAVEN_REPO_USERNAME }}
+          MAVEN_REPO_PASSWORD: ${{ secrets.MAVEN_REPO_API_KEY }}

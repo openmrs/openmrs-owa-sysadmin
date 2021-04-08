@@ -1,6 +1,6 @@
 {
   "name": "system-administration",
-  "version": "1.3.0",
+  "version": "1.4.0-SNAPSHOT",
   "description": "Open Web App for OpenMRS System Administration ",
   "repository": {
     "type": "git",
