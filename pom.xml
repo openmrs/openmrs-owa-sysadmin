@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.openmrs.owa</groupId>
-    <artifactId>systemadministration</artifactId>
+    <artifactId>sysadmin</artifactId>
     <version>1.4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>openmrs-owa-systemadministration</name>
+    <name>openmrs-owa-sysadmin</name>
     <description>OpenMRS Order Entry OWA</description>
 
     <scm>
