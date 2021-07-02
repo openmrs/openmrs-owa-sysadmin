@@ -70,7 +70,7 @@
         <repository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/public</url>
+            <url>https://mavenrepo.openmrs.org/public</url>
         </repository>
     </repositories>
 
@@ -78,7 +78,7 @@
         <pluginRepository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/public</url>
+            <url>https://mavenrepo.openmrs.org/public</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -98,5 +98,3 @@
         </snapshotRepository>
     </distributionManagement>
 </project>
-
-
