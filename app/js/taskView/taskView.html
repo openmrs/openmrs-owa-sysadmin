@@ -1,3 +1,23 @@
+<style>
+    .module-search-box {
+        width: 85%;
+        color: #363463;
+        display: inline;
+        padding: 5px 10px;
+        margin: 0;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        background-color: #FFF;
+        border: 1px solid #dddddd;
+    }
+
+    .clear-input {
+        width: 14%;
+        float: right;
+        margin-top: 5px;
+        height: 34px;
+    }
+</style>
 
 <div class="container" data-ng-init="getAllTaskDetails()">
     <div class="row">
@@ -21,35 +41,55 @@
         Could not get the task information from the system.
     </div>
 
-
     <div class="row col-12">
         <div class="panel-body" style="width: 100%" ng-show="allTasksData">
 
-            <div style="padding-bottom: 10px;">
-                <a href="#/add-new-task">
-                    <button><i class="icon-plus"> </i> Add Tasks</button>
-                </a>
-                <a> <button ng-click="getAllTaskDetails()"><i class="icon-repeat"> </i> Refresh</button> </a>
-                <a style="float: right;"> <button ng-click="rescheduleAllTasks()"><i class="icon-repeat"> </i> Reschedule All</button> </a>
-                <!--<a> <button ng-click="shutdownAllTasks()"><i class="icon-repeat"> </i> Shutdown All</button> </a>-->
-                <!--<a> <button ng-click="startOnStartupTasks()"><i class="icon-repeat"> </i>Start Startup Tasks</button> </a>-->
-
+            <div style="padding-bottom: 8px;">
+                <a href="#/add-new-task"><button><i class="icon-plus"></i>Add Tasks</button></a>
+                <a><button ng-click="getAllTaskDetails()"><i class="icon-repeat"></i>Refresh</button></a>
+            <div style="float: right">
+                <a><button style="height:44.66px; width: 215px;" ng-click="startCheckedConfirmationShow()"><i class="icon-ok"></i>Start checked tasks</button></a>
+                <a><button style="height:44.66px; width: 215px;" ng-click="stopCheckedConfirmationShow()"><i class="icon-remove"> </i>Stop checked tasks</button></a>
+            </div>
             </div>
 
+            <div>
+                <a style="float: right; padding-bottom: 10px;"><button style="height:44.66px; width: 215px;" class="btn btn-danger" ng-click="unloadCheckedConfirmationShow()"><i class="icon-trash"></i>Delete checked tasks</button></a>
+            </div>
+
+            <div>
+                <input class="module-search-box" type="text" placeholder="Search tasks by name..." ng-model="taskSearchText" ng-change="taskNameSearch()">
+                <button class="clear-input" ng-click="clearInput()">Clear input</button>
+            </div>
+
+            <div>
+                <label>Show tasks only without Last Execution:</label>
+                <input style="padding-bottom: 10px;" type="checkbox" ng-click="catchWithoutLastExecution()">
+                <div style="float:right; padding-bottom: 10px;">
+                    <label for="sortSelect">Sort by:</label>
+                    <select name="sortSelect" id="sortSelect" ng-model="data.model" ng-click="selectHandler()">
+                      <option ng-repeat="option in data.availableOptions" value="{{option.id}}">{{option.name}}</option>
+                    </select>
+                </div>
+            </div>
 
             <table class="layout display responsive-table">
                 <tbody>
                 <tr>
+                    <th style="min-width: 10px;"></th>
                     <th style="min-width: 40px;">Status</th>
-                    <th> Task </th>
-                    <th style="min-width: 350px;"> Schedule </th>
-                    <th> On Startup </th>
-                    <th  style="min-width: 160px;"> Actions </th>
+                    <th>Task</th>
+                    <th style="min-width: 350px;">Schedule</th>
+                    <th>On Startup</th>
+                    <th style="min-width: 160px;">Actions</th>
                 </tr>
 
-                <tr ng-repeat="task in allTasksData">
+                <tr ng-repeat="task in slicedTaskTable">
                     <td valign="top" style="max-width: 30px; vertical-align: middle; text-align:center;">
-                        <img src="img/running-module.png" ng-if="task.started == true" height="20" style="top: 5px;left: auto;" />
+                        <input type="checkbox" ng-click="handleChecklist()">
+                    </td>
+                    <td valign="top" style="max-width: 30px; vertical-align: middle; text-align:center;">
+                        <img src="img/running-module.png" ng-if="task.started == true" height="20" style="top: 5px;left: auto;"/>
                         <img src="img/stopped-module.png" ng-if="task.started != true" height="20" style="top: 5px;left: auto;"/>
                     </td>
                     <td valign="top" style="vertical-align: middle;">
@@ -57,9 +97,9 @@
                     </td>
                     <td valign="top">
                         <ul class="list-group" style="margin-top: 10px;">
-                            <li class="list-group-item"> Runs every : <b>{{task.repeatInterval}} s</b></li>
-                            <li class="list-group-item"> Last Execution : <b>{{task.lastExecutionTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
-                            <li class="list-group-item"> Started : <b>{{task.startTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
+                            <li class="list-group-item">Runs every : <b>{{task.repeatInterval}} s</b></li>
+                            <li class="list-group-item">Last Execution : <b>{{task.lastExecutionTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
+                            <li class="list-group-item">Started : <b>{{task.startTime | date : 'MMM d, y h:mm:ss a'}}</b></li>
                         </ul>
                     </td>
 
@@ -67,23 +107,29 @@
                     <td valign="top" ng-if="task.startOnStartup==false" style="vertical-align: middle;"><b>No</b>(manual)</td>
 
                     <td valign="top" align="center" valign="middle" style="vertical-align:middle;">
-                        <a></a><button ng-click="stopConfirmationShow(task.uuid, task.name)" style="width:160px;" ng-if="task.started == true"> <img src="img/stop-new-1.png" /> Stop</button> </a>
-                        <a><button ng-click="startTask(task.uuid, task.name)" style="width:160px;" ng-if="task.started != true"> <img src="img/start-new-1.png" /> Start</button> </a>
+                        <a></a><button ng-click="stopConfirmationShow(task.uuid, task.name)" style="width:160px;" ng-if="task.started == true"><img src="img/stop-new-1.png"/> Stop</button></a>
+                        <a><button ng-click="startTask(task.uuid, task.name)" style="width:160px;" ng-if="task.started != true"><img src="img/start-new-1.png"/> Start</button></a>
                         <br/>
-                        <a><button style="width:160px; margin-top: 5px;" ng-click="rescheduleTasks(task.uuid, task.name )"> <i class="icon-repeat"></i> Reschedule</button> </a>
+                        <a><button style="width:160px; margin-top: 5px;" ng-click="rescheduleTasks(task.uuid, task.name )"><i class="icon-repeat"></i>Reschedule</button></a>
                         <br/>
-                        <a><button class="btn btn-danger" style="width:160px; margin-top: 5px;" ng-click="unloadConfirmationShow(task.uuid, task.name )"> <i class="icon-trash"></i> Delete</button> </a>
+                        <a><button class="btn btn-danger" style="width:160px; margin-top: 5px;" ng-click="unloadConfirmationShow(task.uuid, task.name )"><i class="icon-trash"></i>Delete</button></a>
                     </td>
                 </tr>
                 </tbody>
             </table>
 
+            <div class="pagination" style="width: 100%; display: flex; justify-content: center; text-align: center;">
+                <div>
+                <a><button ng-click="firstPageButton()">First page</button></a>
+                <a style="margin-right: 20px;"> <button ng-click="previousPageButton()">Previous page</button></a>
+                <span style="vertical-align: middle;"><input type="number" min="1" max="{{numOfPages}}" width="5%" ng-model="activePage" ng-change="handleInputChange()"/> of {{numOfPages}} page(s)</span>
+                <a style="margin-left: 20px;"><button ng-click="nextPageButton()">Next page</button></a>
+                <a><button ng-click="lastPageButton()">Last page</button></a>
+                </div>
+            </div>
         </div>
     </div>
-
-
 </div>
-
 
 <div class="modal fade" id="deleteConfirmation" aria-labelledby="deleteConfirmation" role="dialog">
     <div class="modal-dialog">
@@ -92,9 +138,9 @@
                 <h5 class="modal-title">Do you want to delete {{unloadConfirmModuleData.name}}?</h5>
             </div>
             <form>
-                <div class="modal-footer" >
-                    <button class="btn btn-danger" ng-click="unloadTask(unloadConfirmModuleData.uuid, unloadConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
-                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" ng-click="unloadTask(unloadConfirmModuleData.uuid, unloadConfirmModuleData.name)" data-dismiss="modal"><i class="icon-ok"></i>Yes</button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"></i>No</button>
                 </div>
             </form>
         </div>
@@ -109,8 +155,8 @@
             </div>
             <form>
                 <div class="modal-footer" >
-                    <button class="btn btn-danger" ng-click="stopTask(stopConfirmModuleData.uuid, stopConfirmModuleData.name)" data-dismiss="modal"> <i class="icon-ok"></i> Yes</button>
-                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"> </i> No</button>
+                    <button class="btn btn-danger" ng-click="stopTask(stopConfirmModuleData.uuid, stopConfirmModuleData.name)" data-dismiss="modal"><i class="icon-ok"></i>Yes</button>
+                    <button class=" btn-secondary" data-dismiss="modal"><i class="icon-remove"></i>No</button>
                 </div>
             </form>
         </div>
