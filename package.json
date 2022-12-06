@@ -16,7 +16,7 @@
     "wiredep": "^3.0.0"
   },
   "devDependencies": {
-    "gulp-livereload": "^3.8.1",
+    "gulp-livereload": "^4.0.2",
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
     "jasmine-core": "^2.4.1",
